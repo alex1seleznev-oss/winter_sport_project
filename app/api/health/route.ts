@@ -1,0 +1,1 @@
+export async function GET(){return Response.json({ok:true,service:'winter-sports-hub',season:'2026-2027'})}
