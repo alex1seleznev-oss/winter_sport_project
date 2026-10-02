@@ -4,14 +4,14 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {fetchOfficialHtml} from './lib/fetch-official.mjs';
 import {parseFlgrCalendar,parseFlgrCompetition,FLGR_PARSER_VERSION} from './lib/parse-flgr.mjs';
 mkdirSync('artifacts',{recursive:true});
-const calendarUrl='https://www.flgr-results.ru/calendar';
+const calendarUrl='https://flgr-results.ru/calendar';
 try{
  const {html,...calendarProvenance}=await fetchOfficialHtml(calendarUrl);
  const stages=parseFlgrCalendar(html).filter(s=>s.start_date>='2026-10-01'&&s.start_date<='2027-05-31');
  if(stages.length<5)throw new Error('FLGR_2627_STAGE_COVERAGE_LOW');
  const details=[];
  for(const stage of stages.slice(0,12)){
-   const url='https://www.flgr-results.ru/results/'+stage.event_id;
+   const url='https://flgr-results.ru/results/'+stage.event_id;
    const {html:detailHtml,...provenance}=await fetchOfficialHtml(url);
    const parsed=parseFlgrCompetition(detailHtml,{sourceUrl:url});
    details.push({stage,provenance,metadata:parsed.metadata,counts:parsed.counts,raceCodes:parsed.competitionRows.map(r=>({code:r.code,date:r.date,status:r.status,change_note:r.change_note}))});
