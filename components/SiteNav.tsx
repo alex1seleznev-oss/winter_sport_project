@@ -1,0 +1,2 @@
+import Link from 'next/link';
+export function SiteNav(){return <nav className="siteNav"><Link href="/">Главная</Link><Link href="/calendar">Календарь</Link><Link href="/competitions">Этапы</Link><Link href="/race-center">Race Center</Link><Link href="/analytics">Аналитика</Link><Link href="/media">Статьи</Link><Link href="/athletes">Спортсмены</Link><Link href="/sources">Источники</Link></nav>}
