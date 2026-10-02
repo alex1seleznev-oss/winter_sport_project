@@ -1,0 +1,2 @@
+import {supabase} from '../../../lib/supabase';
+export async function GET(){const [{data:h},{data:u}]=await Promise.all([supabase.from('analysis_hypotheses').select('*').order('created_at',{ascending:false}).limit(20),supabase.from('event_updates').select('*').order('detected_at',{ascending:false}).limit(20)]);return Response.json({hypotheses:h||[],recentChanges:u||[],generatedAt:new Date().toISOString()})}
