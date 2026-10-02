@@ -1,0 +1,11 @@
+{
+ "season":"2026/27",
+ "reviewedOn":"2026-10-02",
+ "scope":"Two official organizer programmes; not the full IBU season, not a DB writer",
+ "sources":[
+  {"key":"kontiolahti-fi","stage":"kontiolahti","venue":"Kontiolahti","from":"2026-11-26","to":"2026-11-29","url":"https://kontiolahtibiathlon.com/kontiolahti-biathlon-world-cup/ohjelma-ja-liput/ohjelma","rows":[["2026-11-26","individual","men","17:10"],["2026-11-27","individual","women","17:10"],["2026-11-28","single_mixed_relay","mixed","14:10"],["2026-11-28","mixed_relay","mixed","16:15"],["2026-11-29","sprint","men","14:00"],["2026-11-29","sprint","women","17:15"]]},
+  {"key":"kontiolahti-en","stage":"kontiolahti","venue":"Kontiolahti","from":"2026-11-26","to":"2026-11-29","url":"https://kontiolahtibiathlon.com/en/kontiolahti-biathlon-world-cup/program-and-tickets","rows":[["2026-11-26","individual","men","17:10"],["2026-11-27","individual","women","17:10"],["2026-11-28","single_mixed_relay","mixed","14:10"],["2026-11-28","mixed_relay","mixed","16:15"],["2026-11-29","sprint","men","14:00"],["2026-11-29","sprint","women","17:55"]]},
+  {"key":"hochfilzen-en","stage":"hochfilzen","venue":"Hochfilzen","from":"2026-12-04","to":"2026-12-06","url":"https://www.biathlon-hochfilzen.at/competition-program.html","rows":[["2026-12-04","sprint","women","11:25"],["2026-12-04","sprint","men","14:15"],["2026-12-05","pursuit","women","12:15"],["2026-12-05","pursuit","men","14:30"],["2026-12-06","relay","women","11:30"],["2026-12-06","relay","men","14:15"]]}
+ ],
+ "timePolicy":"Clocks are raw source values, not MSK; no timezone inferred, all startTimeMsk=null. Kontiolahti women sprint has a known cross-language clock conflict."
+}

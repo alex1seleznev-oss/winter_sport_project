@@ -1,0 +1,33 @@
+name: Biathlon organizer review
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '47 */12 * * *'
+  push:
+    branches: ['automation/biathlon-provenance']
+permissions:
+  contents: read
+concurrency:
+  group: biathlon-organizer-review
+  cancel-in-progress: false
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node --test tests/biathlon-programme.test.mjs
+      - run: node scripts/check-biathlon-programmes.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: biathlon-programme-review
+          path: artifacts/biathlon-programme-review.json
+          retention-days: 7
