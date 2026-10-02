@@ -1,0 +1,3 @@
+import Link from 'next/link';
+import {getCompetition} from '../lib/data';
+export async function RaceStageLink({competitionId}:{competitionId:number|null}){if(!competitionId)return null;const c=await getCompetition(String(competitionId));if(!c)return null;return <section className="panel"><small>СВЯЗАННЫЙ ЭТАП</small><h2>{c.name}</h2><Link className="watchButton" href={`/competitions/${c.id}`}>Все гонки этапа →</Link></section>}
