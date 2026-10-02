@@ -1,0 +1,3 @@
+function mean(a){return a.length?a.reduce((s,x)=>s+x,0)/a.length:null}
+export function features(rows){const r=[...rows].sort((a,b)=>String(b.result_date).localeCompare(String(a.result_date))).slice(0,8);const behind=r.map(x=>Number(x.time_behind_seconds)).filter(Number.isFinite);const ranks=r.map(x=>Number(x.rank)).filter(Number.isFinite);const misses=r.map(x=>Number(x.shooting_misses)).filter(Number.isFinite);return {sample:r.length,mean_rank:mean(ranks),mean_time_behind:mean(behind),mean_misses:mean(misses),recent_best_rank:ranks.length?Math.min(...ranks):null};}
+if(import.meta.url===`file://${process.argv[1]}`)console.log('Athlete feature builder ready');
