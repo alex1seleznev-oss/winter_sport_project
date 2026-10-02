@@ -13,30 +13,35 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
       - name: Install (lockfile preferred; bootstrap report until committed)
         run: |
           if [ -f package-lock.json ]; then npm ci; else npm install; fi
-      - name: Domain and publication regression tests
+      - name: Deterministic domain and parser tests
         run: node --test tests/*.test.mjs
-      - name: Existing parser unit tests
-        run: node scripts/test-parsers.mjs
+      - name: Export semantic-core CSV
+        run: node scripts/export-semantic-core.mjs
       - name: Dependency audit report
+        if: ${{ !cancelled() }}
         run: npm audit --json > dependency-audit.json || true
       - name: Production build
+        if: ${{ !cancelled() }}
         run: npm run build
         env:
           MEDIA_UPLOADS_ENABLED: 'false'
           MEDIA_LEGAL_REVIEW_APPROVED: 'false'
-      - name: Preserve exact resolved dependencies and audit
+      - name: Preserve resolved dependencies and audit
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: platform-build-evidence
           path: |
             package-lock.json
             dependency-audit.json
+            artifacts/semantic-core.csv
           retention-days: 7
