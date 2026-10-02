@@ -1,17 +1,20 @@
 import {load} from 'cheerio';
-export const FLGR_PARSER_VERSION='flgr-results/1.0.0';
+export const FLGR_PARSER_VERSION='flgr-results/1.0.1';
 export class FlgrContractError extends Error{constructor(code){super(code);this.name='FlgrContractError';this.code=code}}
 const fail=code=>{throw new FlgrContractError(code)};
 const clean=v=>String(v??'').replace(/\u00a0/g,' ').replace(/\s+/gu,' ').trim();
-const dateRe=/\b(\d{2})\.(\d{2})\.(20\d{2})\b/;
-const rangeRe=/\b(\d{2})\.(\d{2})\.(20\d{2})\s*[-–—]\s*(\d{2})\.(\d{2})\.(20\d{2})\b/;
+const dateRe=/(?:^|[^0-9])(\d{2})\.(\d{2})\.(20\d{2})(?=$|[^0-9])/;
+const rangeRe=/(?:^|[^0-9])(\d{2})\.(\d{2})\.(20\d{2})\s*[-–—]\s*(\d{2})\.(\d{2})\.(20\d{2})(?=$|[^0-9])/;
 function iso(d,m,y){const s=`${y}-${m}-${d}`;const parsed=new Date(s+'T00:00:00Z');if(Number.isNaN(parsed.getTime())||parsed.toISOString().slice(0,10)!==s)fail('FLGR_DATE_INVALID');return s}
 export function parseFlgrCalendar(html){
  if(typeof html!=='string'||Buffer.byteLength(html)>2*1024*1024)fail('FLGR_DOCUMENT_SIZE_INVALID');
  const $=load(html);$('script,style,noscript,template').remove();
  const stages=[];
  $('tr').each((_,tr)=>{
-   const row=$(tr);const text=clean(row.text());const link=row.find('a[href*="/results/"]').first().attr('href')||'';
+   const row=$(tr);
+   const cells=row.find('th,td').toArray().map(td=>clean($(td).text())).filter(Boolean);
+   const text=clean(cells.join(' '));
+   const link=row.find('a[href*="/results/"]').first().attr('href')||'';
    const m=link.match(/\/results\/(\d+)/);const period=text.match(rangeRe);
    if(!m||!period||!/(Этап\s+кубка\s+России|ЭКР)/iu.test(text))return;
    const href=new URL(link,'https://www.flgr-results.ru').href;
@@ -21,7 +24,7 @@ export function parseFlgrCalendar(html){
  const unique=new Map(stages.map(s=>[s.event_id,s]));
  return [...unique.values()];
 }
-function inferGender(text){if(/(женщины|жен\\.?|women)/iu.test(text))return'female';if(/(мужчины|муж\\.?|men)/iu.test(text))return'male';return null}
+function inferGender(text){if(/(?:^|[^а-яё])(женщины|жен\.?|women)(?=$|[^а-яё])/iu.test(text))return'female';if(/(?:^|[^а-яё])(мужчины|муж\.?|men)(?=$|[^а-яё])/iu.test(text))return'male';return null}
 export function parseFlgrCompetition(html,{sourceUrl=null}={}){
  if(typeof html!=='string'||Buffer.byteLength(html)>2*1024*1024)fail('FLGR_DOCUMENT_SIZE_INVALID');
  const $=load(html);$('script,style,noscript,template').remove();
@@ -34,7 +37,7 @@ export function parseFlgrCompetition(html,{sourceUrl=null}={}){
    const code=cells.find(x=>/^\d{4,6}$/.test(x)&&!/^20\d{2}$/.test(x))||text.match(/(?:^|\s)(\d{4,6})(?=\s|$)/)?.[1]||null;
    if(!code)return;
    const derived=/(чистое\s+время|общий\s+зач[её]т|итоговый\s+зач[её]т)/iu.test(text);
-   const cancelled=/\bотмен[а-яё]*\b/iu.test(text);
+   const cancelled=/(?:^|[^а-яё])отмен[а-яё]*(?=$|[^а-яё])/iu.test(text);
    const change=(text.match(/(?:Изменено|Перенесено|Добавлено)[^.]*\.?/iu)||[])[0]||null;
    rows.push({code,date:iso(dm[1],dm[2],dm[3]),gender:inferGender(text),status:cancelled?'cancelled':'scheduled',derived,change_note:change,text});
  });
