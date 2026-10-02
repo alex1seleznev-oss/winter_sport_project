@@ -1,0 +1,23 @@
+name: Winter Sports Source Monitor
+on:
+  schedule:
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check official sources and platform health
+        shell: bash
+        run: |
+          set -e
+          echo "Winter Sports Hub source monitor"
+          for url in             "https://www.biathlonworld.com/calendar"             "https://www.fis-ski.com/DB/cross-country/calendar-results.html"             "https://biathlonrus.com/"             "https://flgr.ru/"; do
+            code=$(curl -L -A "WinterSportsHub/1.0" -s -o /dev/null -w "%{http_code}" "$url" || true)
+            echo "$code $url"
+          done
+          if [ -n "$SYNC_ENDPOINT" ]; then curl -fsS "$SYNC_ENDPOINT" || true; fi
+        env:
+          SYNC_ENDPOINT: ${{ secrets.SYNC_ENDPOINT }}
