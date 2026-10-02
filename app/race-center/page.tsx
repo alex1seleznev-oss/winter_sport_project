@@ -1,2 +1,3 @@
-import {supabase} from '../../lib/supabase';
-export default async function RaceCenter(){const {data}=await supabase.from('events').select('*').order('event_date').limit(30);return <main><header><div className="eyebrow">RACE CENTER · 26/27</div><h1>Гонки, эфиры, контекст.</h1><p className="lead">Здесь будут старт-листы, погода, трансляции, результаты и аналитика по каждой гонке.</p></header><div className="races">{(data||[]).map((r:any)=><article className={'race '+(r.sport==='cross_country'?'ski':'bio')} key={r.id}><div className="date"><b>{r.event_date}</b><span>{r.start_time_msk?.slice(0,5)||'—'} МСК</span></div><div className="raceMain"><div className="tags"><i>{r.sport==='biathlon'?'БИАТЛОН':'ЛЫЖИ'}</i><i>{r.gender==='men'?'М':r.gender==='women'?'Ж':'МИКСТ'}</i></div><h3>{r.discipline}{r.distance?' · '+r.distance:''}</h3><p>{r.series} · {r.location}</p></div></article>)}</div></main>}
+import {permanentRedirect} from 'next/navigation';
+// Remove a second, incomplete event listing; individual /race-center/[id] URLs stay unchanged.
+export default function RaceCenter(){permanentRedirect('/calendar')}
