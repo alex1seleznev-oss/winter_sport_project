@@ -1,6 +1,24 @@
-// Read-only source reachability. HTML byte counts are NOT race results or evidence of semantic verification.
-const base='https://www.flgr-results.ru';
-async function check(path){const url=base+path;try{const response=await fetch(url,{redirect:'error',signal:AbortSignal.timeout(15000),headers:{'user-agent':'WinterSportsHub/1.1 discovery'}});const status=response.status;await response.body?.cancel();return {url,httpStatus:status,reachable:response.ok}}catch{return {url,httpStatus:null,reachable:false}}}
-const checks=await Promise.all([check('/athletes'),check('/results')]);
-console.log(JSON.stringify({source:'FLGR Results',mode:'reachability_only',checks,parserConfigured:false,imported:false},null,2));
-if(checks.some(c=>!c.reachable))process.exitCode=1;
+// Read-only semantic contract monitor for the official FLGR Results calendar.
+// It never writes sports data. The scheduled Winter Sports Sync process performs reviewed comparisons.
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {fetchOfficialHtml} from './lib/fetch-official.mjs';
+import {parseFlgrCalendar,parseFlgrCompetition,FLGR_PARSER_VERSION} from './lib/parse-flgr.mjs';
+mkdirSync('artifacts',{recursive:true});
+const calendarUrl='https://www.flgr-results.ru/calendar';
+try{
+ const {html,...calendarProvenance}=await fetchOfficialHtml(calendarUrl);
+ const stages=parseFlgrCalendar(html).filter(s=>s.start_date>='2026-10-01'&&s.start_date<='2027-05-31');
+ if(stages.length<5)throw new Error('FLGR_2627_STAGE_COVERAGE_LOW');
+ const details=[];
+ for(const stage of stages.slice(0,12)){
+   const url='https://www.flgr-results.ru/results/'+stage.event_id;
+   const {html:detailHtml,...provenance}=await fetchOfficialHtml(url);
+   const parsed=parseFlgrCompetition(detailHtml,{sourceUrl:url});
+   details.push({stage,provenance,metadata:parsed.metadata,counts:parsed.counts,raceCodes:parsed.competitionRows.map(r=>({code:r.code,date:r.date,status:r.status,change_note:r.change_note}))});
+ }
+ const report={ok:true,mode:'semantic_contract_read_only',parserVersion:FLGR_PARSER_VERSION,imported:false,calendarProvenance,stageCount:stages.length,stages:details};
+ writeFileSync('artifacts/flgr-official-contract.json',JSON.stringify(report,null,2));console.log(JSON.stringify({ok:true,stageCount:stages.length,checked:details.length,parserVersion:FLGR_PARSER_VERSION,imported:false},null,2));
+}catch(error){
+ const report={ok:false,mode:'semantic_contract_read_only',parserVersion:FLGR_PARSER_VERSION,imported:false,checkedAt:new Date().toISOString(),error:error.code||error.message};
+ writeFileSync('artifacts/flgr-official-contract.json',JSON.stringify(report,null,2));console.error(JSON.stringify(report));process.exitCode=1;
+}

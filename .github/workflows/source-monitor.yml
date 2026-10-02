@@ -11,18 +11,25 @@ concurrency:
 jobs:
   monitor:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '22'
-      - run: node scripts/check-official-sources.mjs
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Check official endpoints
+        run: node scripts/check-official-sources.mjs
+      - name: Verify FLGR Results semantic contract
+        run: node scripts/ingest-flgr.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
           name: official-source-health
-          path: artifacts/official-source-health.json
+          path: |
+            artifacts/official-source-health.json
+            artifacts/flgr-official-contract.json
           retention-days: 3
