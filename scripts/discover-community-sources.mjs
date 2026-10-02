@@ -1,0 +1,4 @@
+const seeds=[
+ ['VK shlaegreid','https://vk.ru/shlaegreid'],['VK bestskiers','https://vk.ru/bestskiers'],['VK biathlon','https://vk.ru/biathlon'],['VK norways_biathletes','https://vk.ru/norways_biathletes'],['VK lizzerinofficial','https://vk.ru/lizzerinofficial'],['Instagram teamlaegreid','https://www.instagram.com/teamlaegreid/'],['Telegram Радиолыжи','https://t.me/s/radiolyzhi'],['Telegram Lizzerin','https://t.me/s/ski_lizzer1n']
+];
+for(const [name,url] of seeds){try{const r=await fetch(url,{redirect:'follow',headers:{'user-agent':'Mozilla/5.0 WinterSportsHub/1.0'}});const text=await r.text();console.log(JSON.stringify({name,url,status:r.status,bytes:text.length,reachable:r.ok,checkedAt:new Date().toISOString()}));}catch(e){console.log(JSON.stringify({name,url,reachable:false,error:String(e)}))}}
