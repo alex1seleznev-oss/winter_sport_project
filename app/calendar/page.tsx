@@ -2,10 +2,8 @@ import {SiteNav} from '../../components/SiteNav';
 import {RaceFilters,RaceList} from '../../components/RaceList';
 import {getRaces} from '../../lib/data';
 import {normalizeFilters} from '../../lib/domain.mjs';
+import {calendarWindow} from '../../lib/calendar-window.mjs';
 import {pageMetadata} from '../../lib/seo';
 export const dynamic='force-dynamic';
-export const metadata=pageMetadata('Календарь биатлона и лыжных гонок 2026–2027','Опубликованные гонки сезона 2026–2027: даты, московское время, Россия и международные серии. Предварительные и отменённые старты отмечены отдельно.','/calendar');
-export default async function Calendar({searchParams}:{searchParams:Promise<Record<string,string|string[]|undefined>>}) {
- const filters=normalizeFilters(await searchParams); const result=await getRaces(filters);
- return <main id="main-content"><SiteNav/><header><div className="eyebrow">КАЛЕНДАРЬ · 2026/27</div><h1>Каждый старт.<br/>С источником.</h1><p className="lead">Фильтруйте гонки по виду спорта и серии. Время указано по Москве; отсутствие времени не означает старт в полночь.</p></header><RaceFilters {...filters}/><div className="calendarList"><RaceList {...result}/></div></main>;
-}
+export const metadata=pageMetadata('Календарь биатлона и лыжных гонок 2026–2027','Опубликованные гонки сезона: даты, московское время, Россия и международные серии.','/calendar');
+export default async function Calendar({searchParams}:{searchParams:Promise<Record<string,string|string[]|undefined>>}){const params=await searchParams;const filters=normalizeFilters(params);const when=typeof params.when==='string'&&['today','tomorrow','week'].includes(params.when)?params.when:'season';const range=calendarWindow(when);const result=await getRaces({...filters,from:range.from,to:range.to});return <main id="main-content"><SiteNav/><header className="calendarHeader"><div className="eyebrow">КАЛЕНДАРЬ · 2026/27</div><h1 className="detailTitle">Календарь гонок</h1><p className="lead">{range.label}. Время по Москве. Отсутствие времени не означает старт в полночь.</p></header><RaceFilters {...filters} when={when}/><div className="calendarList"><RaceList {...result}/></div></main>}
