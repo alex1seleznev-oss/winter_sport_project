@@ -1,0 +1,2 @@
+/* Prevent intrinsic-width overflow on narrow race cards. */
+.tags{flex-wrap:wrap}.raceMain,.panel,.competition{min-width:0}.race{grid-template-columns:120px minmax(0,1fr) 160px}.race h3,.competition h2,.panel h2{overflow-wrap:anywhere}.competition .status{display:inline-block;margin-top:12px}.raceMain p{overflow-wrap:anywhere}.siteFooter a{line-height:1.7}@media(max-width:800px){.race{grid-template-columns:85px minmax(0,1fr)}.race .tags i{max-width:100%}.detailFacts{gap:12px}.heroLinks a{max-width:100%}}

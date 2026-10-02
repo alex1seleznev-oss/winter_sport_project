@@ -2,7 +2,7 @@ name: Platform quality
 on:
   pull_request:
   push:
-    branches: [main, 'automation/platform-foundation']
+    branches: [main]
 permissions:
   contents: read
 concurrency:
@@ -11,40 +11,74 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: 22
-      - name: Install (lockfile preferred; bootstrap report until committed)
-        run: |
-          if [ -f package-lock.json ]; then npm ci; else npm install; fi
-      - name: Deterministic domain and parser tests
-        run: node --test tests/*.test.mjs
-      - name: Export semantic-core CSV
+          node-version: '22'
+          cache: npm
+      - name: Reproducible installation
+        run: npm ci
+      - name: Deterministic regression tests
+        run: npm test
+      - name: Export semantic core
         run: node scripts/export-semantic-core.mjs
-      - name: Dependency audit report
-        if: ${{ !cancelled() }}
-        run: npm audit --json > dependency-audit.json || true
+      - name: Dependency audit
+        run: npm audit --audit-level=high --json > dependency-audit.json
       - name: Production build
-        if: ${{ !cancelled() }}
         run: npm run build
         env:
           MEDIA_UPLOADS_ENABLED: 'false'
           MEDIA_LEGAL_REVIEW_APPROVED: 'false'
-      - name: HTTP smoke and fail-closed API checks
-        run: node scripts/runtime-smoke.mjs
-      - name: Preserve resolved dependencies and test evidence
+      - name: HTTP and API regression checks
+        run: npm run test:http
+      - name: Install test browsers
+        run: npx --no-install playwright install --with-deps chromium webkit
+      - name: Browser tests on desktop Chromium and mobile WebKit
+        run: npx --no-install playwright test
+      - name: Agent-browser verification of production build
+        run: |
+          set -euo pipefail
+          npx --no-install agent-browser install --with-deps
+          npm run start -- -H 127.0.0.1 -p 4174 >/tmp/wsh-browser-server.log 2>&1 &
+          server=$!
+          trap 'npx --no-install agent-browser --session wsh-ci close || true; kill "$server" || true' EXIT
+          for i in $(seq 1 40); do if curl --fail --silent http://127.0.0.1:4174/legal >/dev/null; then break; fi; sleep 1; done
+          npx --no-install agent-browser --session wsh-ci open http://127.0.0.1:4174/
+          npx --no-install agent-browser --session wsh-ci snapshot -i > artifacts/agent-browser-snapshot.txt
+          npx --no-install agent-browser --session wsh-ci screenshot artifacts/screenshots/agent-browser-home.png
+        env:
+          VERCEL_ENV: preview
+          MEDIA_UPLOADS_ENABLED: 'false'
+          MEDIA_LEGAL_REVIEW_APPROVED: 'false'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: platform-build-evidence
+          name: followthrough-platform-evidence
           path: |
-            package-lock.json
+            artifacts/
             dependency-audit.json
-            artifacts/semantic-core.csv
-            artifacts/runtime-smoke.json
-          retention-days: 7
+            test-results/
+          retention-days: 3
+  fis-live-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run test:source
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: followthrough-fis-live-evidence
+          path: artifacts/fis-live-contract.json
+          retention-days: 3

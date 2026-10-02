@@ -1,0 +1,3 @@
+// Security containment: v1 accepted any platform-verified JWT and used service privileges.
+// Source checks now run read-only in GitHub Actions. No DB client, credentials or external fetches here.
+Deno.serve((req: Request) => Response.json({ok:false,code:'PIPELINE_REVIEW_REQUIRED',pipeline:'sync-official-sources',mode:'paused_no_writes',note:'Privileged ingestion requires scoped authorization and reviewed writes. Read-only source checks are separate.'},{status:req.method==='POST'?503:405,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Allow':'POST','Retry-After':'3600'}}));

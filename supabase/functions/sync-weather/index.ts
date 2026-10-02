@@ -1,0 +1,2 @@
+// Security containment: v1 lacked application authorization, ignored write errors and guessed venue coordinates.
+Deno.serve((req: Request) => Response.json({ok:false,code:'PIPELINE_REVIEW_REQUIRED',pipeline:'sync-weather',mode:'paused_no_writes',note:'Weather import requires reviewed venue coordinates, explicit UTC timestamps, deduplication and scoped authorization. Weather does not change race status.'},{status:req.method==='POST'?503:405,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Allow':'POST','Retry-After':'3600'}}));
