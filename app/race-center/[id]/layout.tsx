@@ -1,2 +1,0 @@
-import {getRace} from '../../../lib/data';import {RaceViewerTools} from '../../../components/RaceViewerTools';
-export default async function RaceLayout({children,params}:{children:React.ReactNode;params:Promise<{id:string}>}){const r=await getRace((await params).id);return <>{children}{r&&<section className="raceSupport" aria-label="Сохранение гонки и справочник"><RaceViewerTools id={r.id} sport={r.sport} discipline={r.discipline} eventDate={r.event_date}/></section>}</>}
