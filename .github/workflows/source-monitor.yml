@@ -18,6 +18,15 @@ jobs:
         env:
           SUPABASE_URL: https://wmiypacyraepljalppub.supabase.co
           SUPABASE_PUBLISHABLE_KEY: sb_publishable__26areTx9RGKKlrakjV9lg_3IP9DwSQ
+      - name: Update near-term weather
+        run: |
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $SUPABASE_PUBLISHABLE_KEY" \
+            -H "Content-Type: application/json" \
+            -X POST "$SUPABASE_URL/functions/v1/sync-weather"
+        env:
+          SUPABASE_URL: https://wmiypacyraepljalppub.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable__26areTx9RGKKlrakjV9lg_3IP9DwSQ
       - name: Verify public platform health
         run: |
           for url in             "https://www.biathlonworld.com/calendar?CupLevel=1&SeasonId=2627"             "https://www.fis-ski.com/DB/cross-country/calendar-results.html?categorycode=WC&seasoncode=2027&sectorcode=CC"             "https://biathlonrus.com/"             "https://flgr.ru/"; do
