@@ -18,6 +18,15 @@ jobs:
         env:
           SUPABASE_URL: https://wmiypacyraepljalppub.supabase.co
           SUPABASE_PUBLISHABLE_KEY: sb_publishable__26areTx9RGKKlrakjV9lg_3IP9DwSQ
+      - name: Collect public federation/news context
+        run: |
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $SUPABASE_PUBLISHABLE_KEY" \
+            -H "Content-Type: application/json" \
+            -X POST "$SUPABASE_URL/functions/v1/sync-public-context"
+        env:
+          SUPABASE_URL: https://wmiypacyraepljalppub.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable__26areTx9RGKKlrakjV9lg_3IP9DwSQ
       - name: Update near-term weather
         run: |
           curl --fail --silent --show-error \
