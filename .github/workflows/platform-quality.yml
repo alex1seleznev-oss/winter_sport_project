@@ -35,7 +35,9 @@ jobs:
         env:
           MEDIA_UPLOADS_ENABLED: 'false'
           MEDIA_LEGAL_REVIEW_APPROVED: 'false'
-      - name: Preserve resolved dependencies and audit
+      - name: HTTP smoke and fail-closed API checks
+        run: node scripts/runtime-smoke.mjs
+      - name: Preserve resolved dependencies and test evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
@@ -44,4 +46,5 @@ jobs:
             package-lock.json
             dependency-audit.json
             artifacts/semantic-core.csv
+            artifacts/runtime-smoke.json
           retention-days: 7
