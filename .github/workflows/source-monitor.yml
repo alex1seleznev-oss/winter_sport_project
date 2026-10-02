@@ -1,44 +1,28 @@
 name: Winter Sports Source Monitor
 on:
   schedule:
-    - cron: "17 */3 * * *"
+    - cron: '17 */3 * * *'
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: official-source-monitor
+  cancel-in-progress: false
 jobs:
   monitor:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - name: Invoke Supabase official-source synchronizer
-        run: |
-          curl --fail --silent --show-error \
-            -H "Authorization: Bearer $SUPABASE_PUBLISHABLE_KEY" \
-            -H "Content-Type: application/json" \
-            -X POST "$SUPABASE_URL/functions/v1/sync-official-sources"
-        env:
-          SUPABASE_URL: https://wmiypacyraepljalppub.supabase.co
-          SUPABASE_PUBLISHABLE_KEY: sb_publishable__26areTx9RGKKlrakjV9lg_3IP9DwSQ
-      - name: Collect public federation/news context
-        run: |
-          curl --fail --silent --show-error \
-            -H "Authorization: Bearer $SUPABASE_PUBLISHABLE_KEY" \
-            -H "Content-Type: application/json" \
-            -X POST "$SUPABASE_URL/functions/v1/sync-public-context"
-        env:
-          SUPABASE_URL: https://wmiypacyraepljalppub.supabase.co
-          SUPABASE_PUBLISHABLE_KEY: sb_publishable__26areTx9RGKKlrakjV9lg_3IP9DwSQ
-      - name: Update near-term weather
-        run: |
-          curl --fail --silent --show-error \
-            -H "Authorization: Bearer $SUPABASE_PUBLISHABLE_KEY" \
-            -H "Content-Type: application/json" \
-            -X POST "$SUPABASE_URL/functions/v1/sync-weather"
-        env:
-          SUPABASE_URL: https://wmiypacyraepljalppub.supabase.co
-          SUPABASE_PUBLISHABLE_KEY: sb_publishable__26areTx9RGKKlrakjV9lg_3IP9DwSQ
-      - name: Verify public platform health
-        run: |
-          for url in             "https://www.biathlonworld.com/calendar?CupLevel=1&SeasonId=2627"             "https://www.fis-ski.com/DB/cross-country/calendar-results.html?categorycode=WC&seasoncode=2027&sectorcode=CC"             "https://biathlonrus.com/"             "https://flgr.ru/"; do
-            code=$(curl -L -A "WinterSportsHub/1.0" -s -o /dev/null -w "%{http_code}" "$url" || true)
-            echo "$code $url"
-          done
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: node scripts/check-official-sources.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: official-source-health
+          path: artifacts/official-source-health.json
+          retention-days: 3

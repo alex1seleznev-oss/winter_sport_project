@@ -1,0 +1,2 @@
+// Security containment: no service-role writes or third-party requests until scoped authorization and publication semantics are reviewed.
+Deno.serve((req: Request) => Response.json({ok:false,code:'PIPELINE_REVIEW_REQUIRED',pipeline:'sync-public-context',mode:'paused_no_writes',note:'Social discovery is not verified publication. Existing unreviewed material remains private.'},{status:req.method==='POST'?503:405,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Allow':'POST','Retry-After':'3600'}}));
