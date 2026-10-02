@@ -21,6 +21,8 @@ jobs:
         run: node scripts/ingest-fis.mjs
       - name: Public Telegram intelligence
         run: node scripts/ingest-public-telegram.mjs
+      - name: Community source reachability
+        run: node scripts/discover-community-sources.mjs
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
