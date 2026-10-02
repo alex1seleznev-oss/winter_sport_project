@@ -15,6 +15,8 @@ jobs:
           node-version: 22
       - name: FLGR discovery and ingestion
         run: node scripts/ingest-flgr.mjs
+      - name: FIS results ingestion
+        run: node scripts/ingest-fis.mjs
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
