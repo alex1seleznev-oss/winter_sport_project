@@ -21,7 +21,7 @@ export function parseFlgrCalendar(html){
  const unique=new Map(stages.map(s=>[s.event_id,s]));
  return [...unique.values()];
 }
-function inferGender(text){if(/\b(женщины|жен\.?|women)\b/iu.test(text))return'female';if(/\b(мужчины|муж\.?|men)\b/iu.test(text))return'male';return null}
+function inferGender(text){if(/(женщины|жен\\.?|women)/iu.test(text))return'female';if(/(мужчины|муж\\.?|men)/iu.test(text))return'male';return null}
 export function parseFlgrCompetition(html,{sourceUrl=null}={}){
  if(typeof html!=='string'||Buffer.byteLength(html)>2*1024*1024)fail('FLGR_DOCUMENT_SIZE_INVALID');
  const $=load(html);$('script,style,noscript,template').remove();
