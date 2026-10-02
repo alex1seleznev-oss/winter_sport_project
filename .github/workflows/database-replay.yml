@@ -1,0 +1,69 @@
+name: Database replay and review guard
+on:
+  pull_request:
+  push:
+    branches: ['automation/reconciliation-guard', main]
+permissions:
+  contents: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: ci-ephemeral-only
+          POSTGRES_DB: wsh_ci
+        options: >-
+          --health-cmd "pg_isready -U postgres -d wsh_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Verify exact exported migration text
+        run: node scripts/check-migration-history.mjs
+      - name: Replay historical migrations and test review preconditions
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          set -euo pipefail
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/bootstrap.sql
+          for file in database/history/*.sql; do
+            docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < "$file"
+          done
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/boundary-and-seed.sql
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/proposed/review_receipts.sql
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/review-guard.sql | tee artifacts/review-guard.txt
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/negative-review.sql | tee artifacts/negative-review.txt
+      - name: Real concurrent transaction test
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: bash database/tests/concurrency.sh
+      - name: Dump and restore the synthetic database into a separate database
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          set -euo pipefail
+          docker exec "$PG_CONTAINER" pg_dump -U postgres -d wsh_ci -Fc -f /tmp/wsh-ci.dump
+          docker exec "$PG_CONTAINER" createdb -U postgres wsh_restore
+          docker exec "$PG_CONTAINER" pg_restore -U postgres -d wsh_restore --exit-on-error /tmp/wsh-ci.dump
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_restore -v ON_ERROR_STOP=1 < database/tests/restore-check.sql | tee artifacts/restore-check.txt
+          docker exec "$PG_CONTAINER" rm /tmp/wsh-ci.dump
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: database-replay-proof
+          path: |
+            artifacts/migration-history.json
+            artifacts/review-guard.txt
+            artifacts/negative-review.txt
+            artifacts/concurrency-check.json
+            artifacts/restore-check.txt
+          retention-days: 7
