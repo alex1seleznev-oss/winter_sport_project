@@ -1,0 +1,42 @@
+name: Platform quality
+on:
+  pull_request:
+  push:
+    branches: [main, 'automation/platform-foundation']
+permissions:
+  contents: read
+concurrency:
+  group: platform-quality-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install (lockfile preferred; bootstrap report until committed)
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+      - name: Domain and publication regression tests
+        run: node --test tests/*.test.mjs
+      - name: Existing parser unit tests
+        run: node scripts/test-parsers.mjs
+      - name: Dependency audit report
+        run: npm audit --json > dependency-audit.json || true
+      - name: Production build
+        run: npm run build
+        env:
+          MEDIA_UPLOADS_ENABLED: 'false'
+          MEDIA_LEGAL_REVIEW_APPROVED: 'false'
+      - name: Preserve exact resolved dependencies and audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-build-evidence
+          path: |
+            package-lock.json
+            dependency-audit.json
+          retention-days: 7

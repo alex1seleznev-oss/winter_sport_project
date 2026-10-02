@@ -1,0 +1,5 @@
+import type {NextConfig} from 'next';
+// Baseline CSP: inline Next.js bootstrap remains allowed. Nonce-based strict CSP is a separate migration.
+const csp=["default-src 'self'",`script-src 'self' 'unsafe-inline'${process.env.NODE_ENV==='development'?" 'unsafe-eval'":''}`,"style-src 'self' 'unsafe-inline'","img-src 'self' data: https:","font-src 'self'","connect-src 'self' https://wmiypacyraepljalppub.supabase.co https://wmiypacyraepljalppub.storage.supabase.co","media-src 'self' https://wmiypacyraepljalppub.storage.supabase.co","object-src 'none'","base-uri 'self'","frame-ancestors 'none'","frame-src 'none'","form-action 'self'"].join('; ');
+const config:NextConfig={poweredByHeader:false,async headers(){return [{source:'/:path*',headers:[{key:'X-Content-Type-Options',value:'nosniff'},{key:'Referrer-Policy',value:'strict-origin-when-cross-origin'},{key:'X-Frame-Options',value:'DENY'},{key:'Permissions-Policy',value:'camera=(), microphone=(), geolocation=(), payment=()'},{key:'Content-Security-Policy',value:csp}]},{source:'/api/:path*',headers:[{key:'X-Robots-Tag',value:'noindex, nofollow'}]}]}};
+export default config;

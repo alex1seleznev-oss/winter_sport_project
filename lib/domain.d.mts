@@ -1,0 +1,13 @@
+export function safeHttpsUrl(value: unknown): string | null;
+export function raceStatus(value: string): string;
+export function moscowDate(now?: Date): string;
+export function validDate(value: unknown): value is string;
+export function raceStart(date: string | null, time?: string | null): string | null;
+export function formatDate(value: string | null): string;
+export function sportLabel(value: string): string;
+export function genderLabel(value: string): string;
+export function normalizeFilters(params?: Record<string, string | string[] | undefined>): {sport?: string;scope?: string};
+export function jsonForHtml(value: unknown): string;
+export const MEDIA_MIME_TYPES: Readonly<Record<string,string>>;
+export const MEDIA_MAX_BYTES: number;
+export function validateMediaRequest(value: unknown): value is {mimeType:string;sizeBytes:number;rightsStatus:string;rightsEvidence:string};
