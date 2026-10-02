@@ -1,3 +1,11 @@
-import {supabase} from '../../lib/supabase';
-const label=(s:string)=>s==='biathlon'?'Биатлон':'Лыжные гонки';
-export default async function Calendar(){const {data}=await supabase.from('events').select('*').order('event_date').order('start_time_msk');return <main><header><div className="eyebrow">КАЛЕНДАРЬ · 2026/27</div><h1>Все старты.</h1><p className="lead">Россия и международные серии · время показано по Москве.</p></header><div className="calendarList">{(data||[]).map((r:any)=><article className={'race '+(r.sport==='cross_country'?'ski':'bio')} key={r.id}><div className="date"><b>{r.event_date||'Уточняется'}</b><span>{r.start_time_msk?.slice(0,5)||'—'} МСК</span></div><div className="raceMain"><div className="tags"><i>{label(r.sport)}</i><i>{r.scope==='russia'?'РОССИЯ':'МИР'}</i><i>{r.gender==='men'?'М':r.gender==='women'?'Ж':'МИКСТ'}</i></div><h3>{r.discipline}{r.distance?' · '+r.distance:''}</h3><p>{r.series} · {r.location||''} {r.country?'· '+r.country:''}</p></div><div className="actions"><span className={'status '+r.status}>{r.status==='tentative'?'УТОЧНЯЕТСЯ':'ПОДТВЕРЖДЕНО'}</span></div></article>)}</div></main>}
+import {SiteNav} from '../../components/SiteNav';
+import {RaceFilters,RaceList} from '../../components/RaceList';
+import {getRaces} from '../../lib/data';
+import {normalizeFilters} from '../../lib/domain.mjs';
+import {pageMetadata} from '../../lib/seo';
+export const dynamic='force-dynamic';
+export const metadata=pageMetadata('Календарь биатлона и лыжных гонок 2026–2027','Опубликованные гонки сезона 2026–2027: даты, московское время, Россия и международные серии. Предварительные и отменённые старты отмечены отдельно.','/calendar');
+export default async function Calendar({searchParams}:{searchParams:Promise<Record<string,string|string[]|undefined>>}) {
+ const filters=normalizeFilters(await searchParams); const result=await getRaces(filters);
+ return <main id="main-content"><SiteNav/><header><div className="eyebrow">КАЛЕНДАРЬ · 2026/27</div><h1>Каждый старт.<br/>С источником.</h1><p className="lead">Фильтруйте гонки по виду спорта и серии. Время указано по Москве; отсутствие времени не означает старт в полночь.</p></header><RaceFilters {...filters}/><div className="calendarList"><RaceList {...result}/></div></main>;
+}

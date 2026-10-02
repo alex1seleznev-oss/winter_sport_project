@@ -1,0 +1,14 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {safeHttpsUrl,raceStatus,moscowDate,validDate,raceStart,normalizeFilters,jsonForHtml,validateMediaRequest,MEDIA_MAX_BYTES} from '../lib/domain.mjs';
+test('reject executable and insecure URLs',()=>{for(const v of ['javascript:alert(1)','data:text/html,x','http://example.com','https://user:pass@example.com','https://127.0.0.1/x','https://example.com:9999'])assert.equal(safeHttpsUrl(v),null);assert.equal(safeHttpsUrl('https://www.fis-ski.com/a'),'https://www.fis-ski.com/a')});
+test('date only never invents a midnight start',()=>{assert.equal(raceStart('2026-11-27',null),'2026-11-27');assert.equal(raceStart('2026-11-27','12:30:00'),'2026-11-27T12:30:00+03:00')});
+test('calendar and clock validation',()=>{assert.equal(validDate('2027-02-30'),false);assert.equal(validDate('2028-02-29'),true);assert.equal(raceStart('2026-11-27','24:00'),null);assert.equal(raceStart('bad',null),null)});
+test('Moscow day changes at UTC 21:00',()=>{assert.equal(moscowDate(new Date('2026-10-02T21:01:00Z')),'2026-10-03')});
+test('cancelled and completed are not labelled confirmed',()=>{assert.equal(raceStatus('cancelled'),'Отменено');assert.equal(raceStatus('completed'),'Завершено');assert.equal(raceStatus('provisional'),'Проект календаря');assert.equal(raceStatus('scheduled'),'Запланировано')});
+test('query filters only accept known scalar values',()=>{assert.deepEqual(normalizeFilters({sport:'cross_country',scope:'russia'}),{sport:'cross_country',scope:'russia'});assert.deepEqual(normalizeFilters({sport:['biathlon'],scope:'all'}),{sport:undefined,scope:undefined})});
+test('JSON-LD cannot close its script element',()=>{assert.ok(!jsonForHtml({x:'</script><script>alert(1)</script>'}).includes('<'))});
+const valid={mimeType:'video/mp4',sizeBytes:1024,rightsStatus:'owned',rightsEvidence:'Original footage owned by the operator'};
+test('media validation permits supported owned files',()=>assert.equal(validateMediaRequest(valid),true));
+test('media rejects oversized and executable content',()=>{assert.equal(validateMediaRequest({...valid,sizeBytes:MEDIA_MAX_BYTES+1}),false);assert.equal(validateMediaRequest({...valid,mimeType:'image/svg+xml'}),false);assert.equal(validateMediaRequest({...valid,mimeType:'__proto__'}),false)});
+test('media requires evidence and a positive integer size',()=>{assert.equal(validateMediaRequest({...valid,rightsEvidence:''}),false);assert.equal(validateMediaRequest({...valid,sizeBytes:0}),false);assert.equal(validateMediaRequest({...valid,sizeBytes:NaN}),false)});

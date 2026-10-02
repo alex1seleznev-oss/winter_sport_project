@@ -1,0 +1,50 @@
+name: Platform quality
+on:
+  pull_request:
+  push:
+    branches: [main, 'automation/platform-foundation']
+permissions:
+  contents: read
+concurrency:
+  group: platform-quality-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install (lockfile preferred; bootstrap report until committed)
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+      - name: Deterministic domain and parser tests
+        run: node --test tests/*.test.mjs
+      - name: Export semantic-core CSV
+        run: node scripts/export-semantic-core.mjs
+      - name: Dependency audit report
+        if: ${{ !cancelled() }}
+        run: npm audit --json > dependency-audit.json || true
+      - name: Production build
+        if: ${{ !cancelled() }}
+        run: npm run build
+        env:
+          MEDIA_UPLOADS_ENABLED: 'false'
+          MEDIA_LEGAL_REVIEW_APPROVED: 'false'
+      - name: HTTP smoke and fail-closed API checks
+        run: node scripts/runtime-smoke.mjs
+      - name: Preserve resolved dependencies and test evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: platform-build-evidence
+          path: |
+            package-lock.json
+            dependency-audit.json
+            artifacts/semantic-core.csv
+            artifacts/runtime-smoke.json
+          retention-days: 7
