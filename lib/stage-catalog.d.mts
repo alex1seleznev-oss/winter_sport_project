@@ -1,0 +1,13 @@
+import type {Competition,Race} from './data';
+export type StageFilters={sport:string;scope:string;month:string;status:string;programme:string;q:string};
+export type StageModel={competition:Competition;races:Race[];summary:{total:number;active:number;cancelled:number;timed:number;excluded:number}|null};
+export function stagePlace(c:Pick<Competition,'location'>):string;
+export function stageCountry(c:Pick<Competition,'country'>):string;
+export function stageSeries(value:string):string;
+export function stageStatus(value:string):string;
+export function stageDateRange(from:string,to:string):string;
+export function normalizeStageFilters(params?:Record<string,string|string[]|undefined>):StageFilters;
+export function catalogueModels(competitions:Competition[],races:Race[]|null):StageModel[];
+export function filterStageModels(models:StageModel[],filters:StageFilters):StageModel[];
+export function groupProgramme(races:Race[]):{date:string;races:Race[]}[];
+export function programmeSources(races:Race[]):string[];
