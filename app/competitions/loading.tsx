@@ -1,0 +1,1 @@
+export default function Loading(){return <div role="status" aria-live="polite" style={{maxWidth:1440,margin:'auto',padding:48,minHeight:'40vh',color:'#bdd2e3'}}><h2>Загружаем этапы и программы…</h2><p>Проверяем доступность опубликованных данных.</p></div>}
