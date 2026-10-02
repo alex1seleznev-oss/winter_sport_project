@@ -1,5 +1,5 @@
 import {load} from 'cheerio';
-export const FIS_PARSER_VERSION='cc-individual-table/2.0.0';
+export const FIS_PARSER_VERSION='cc-individual-table/2.0.1';
 export class FisContractError extends Error {constructor(code){super(code);this.name='FisContractError';this.code=code}}
 const fail=code=>{throw new FisContractError(code)};
 const clean=value=>String(value??'').replace(/\s+/gu,' ').trim();
@@ -10,7 +10,7 @@ export function seconds(raw){
  return Math.round(parts.reduce((n,v)=>n*60+v,0)*1000)/1000;
 }
 const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-function parseDate(text){const m=clean(text).match(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),\s+(\d{4})\b/);if(!m)return null;const date=`${m[3]}-${String(months.indexOf(m[1])+1).padStart(2,'0')}-${m[2].padStart(2,'0')}`;return new Date(date+'T00:00:00Z').toISOString().slice(0,10)===date?date:null}
+function parseDate(text){const m=clean(text).match(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),\s+(\d{4})\b/);if(!m)return null;const date=`${m[3]}-${String(months.indexOf(m[1])+1).padStart(2,'0')}-${m[2].padStart(2,'0')}`;const parsed=new Date(date+'T00:00:00Z');return !Number.isNaN(parsed.getTime())&&parsed.toISOString().slice(0,10)===date?date:null}
 export function parseFisDocument(html,{sourceUrl=null,expected={}}={}){
  if(typeof html!=='string'||Buffer.byteLength(html)>2*1024*1024)fail('FIS_DOCUMENT_SIZE_INVALID');
  const $=load(html);$('script,style,noscript,template').remove();
@@ -19,7 +19,10 @@ export function parseFisDocument(html,{sourceUrl=null,expected={}}={}){
  const title=clean($('title').text()),location=clean($('h1').first().text());
  const years=title.match(/\b(20\d{2})\/(20\d{2})\b/);
  const date=parseDate($('time').first().text());
- const body=clean($('body').text());const at=body.indexOf(location);
+ // Preserve block boundaries even when upstream HTML is minified. Do not mutate result cells.
+ const headerDom=$('body').clone();
+ headerDom.find('h1,h2,h3,h4,div,p,time,section,article,li,br').append(' ');
+ const body=clean(headerDom.text());const at=body.indexOf(location);
  const header=body.slice(at+location.length,at+location.length+1200);
  const identity=header.match(/\b(Men|Women)'s\s+(.+?)\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d/);
  let raceId=null;
@@ -37,7 +40,7 @@ export function parseFisDocument(html,{sourceUrl=null,expected={}}={}){
   if(el.is('a.table-row')){
    const href=el.attr('href')||'';let athleteUrl;try{athleteUrl=new URL(href,'https://www.fis-ski.com')}catch{fail('FIS_ATHLETE_ID_INVALID')}
    const competitorId=athleteUrl.searchParams.get('competitorid');
-   if(athleteUrl.hostname!=='www.fis-ski.com'||!/^\d+$/.test(competitorId||''))fail('FIS_ATHLETE_ID_INVALID');
+   if(athleteUrl.protocol!=='https:'||athleteUrl.username||athleteUrl.password||athleteUrl.hostname!=='www.fis-ski.com'||!/^\d+$/.test(competitorId||''))fail('FIS_ATHLETE_ID_INVALID');
    const cells=el.find('.g-row.justify-sb').first().children('div').toArray().map(c=>clean($(c).text()));
    if(cells.length!==9)fail('FIS_COLUMN_CONTRACT_MISMATCH');
    const [rankRaw,bibRaw,fisCode,athlete,yearRaw,nation,timeRaw,gapRaw,pointsRaw]=cells;
