@@ -11,11 +11,14 @@ if(ee||ce||!events||!competitions)throw new Error('PUBLIC_CALENDAR_READ_FAILED')
 const reconciliation=buildReconciliation(baseline,competitions,events);
 const urls=[...new Set(events.map(e=>e.source_url).filter(u=>/^https:\/\/(?:www\.|fis\.|data\.)?flgr-results\.ru\/results\/\d+$/.test(u||'')))];
 const sources=[];
-for(const url of urls){try{
+for(const databaseUrl of urls){try{
+ // Federation links to www.flgr-results.ru. Preserve stored alias and actual fetched URL separately.
+ const id=new URL(databaseUrl).pathname.match(/^\/results\/(\d+)$/)?.[1];
+ const url=`https://www.flgr-results.ru/results/${id}`;
  const {html,...receipt}=await fetchOfficialHtml(url);const parsed=parseFlgrCompetition(html,{sourceUrl:url});
- const checks=events.filter(e=>e.source_url===url).map(e=>{const code=e.external_key.match(/^flgr-2627-(\d+)$/)?.[1];const rows=parsed.competitionRows.filter(r=>r.code===code);const row=rows[0];const gender=row?.gender==='female'?'women':row?.gender==='male'?'men':row?.gender;return {eventId:e.id,code,rowCount:rows.length,dateMatches:row?.date===e.event_date,statusMatches:row?.status===e.status,genderMatches:gender===e.gender,dbShape:raceShape(e.discipline,e.distance),sourceText:row?.text??null}});
- sources.push({receipt,counts:parsed.counts,checks,identityStatusChecksPass:checks.every(c=>c.rowCount===1&&c.dateMatches&&c.statusMatches&&c.genderMatches)});
-}catch(error){sources.push({url,error:error.code||error.message,identityStatusChecksPass:false})}}
+ const checks=events.filter(e=>e.source_url===databaseUrl).map(e=>{const code=e.external_key.match(/^flgr-2627-(\d+)$/)?.[1];const rows=parsed.competitionRows.filter(r=>r.code===code);const row=rows[0];const gender=row?.gender==='female'?'women':row?.gender==='male'?'men':row?.gender;return {eventId:e.id,code,rowCount:rows.length,dateMatches:row?.date===e.event_date,statusMatches:row?.status===e.status,genderMatches:gender===e.gender,dbShape:raceShape(e.discipline,e.distance),sourceText:row?.text??null}});
+ sources.push({databaseUrl,receipt,counts:parsed.counts,checks,identityStatusChecksPass:checks.every(c=>c.rowCount===1&&c.dateMatches&&c.statusMatches&&c.genderMatches)});
+}catch(error){sources.push({databaseUrl,error:error.code||error.message,identityStatusChecksPass:false})}}
 const report={checkedAt:new Date().toISOString(),...reconciliation,sources,publicEventCount:events.length,allSourceIdentityChecksPass:sources.length>0&&sources.every(s=>s.identityStatusChecksPass),databaseWrites:0,privateQueueRead:false,scope:'Provisional source slots vs public database; not approval or a whole-season finality guarantee'};
 writeFileSync('artifacts/flgr-reconciliation.json',JSON.stringify(report,null,2));
 const quote=v=>'"'+String(v??'').replaceAll('"','""')+'"';
