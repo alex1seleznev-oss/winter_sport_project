@@ -29,7 +29,7 @@ jobs:
           node-version: '24'
       - name: Verify exact exported migration text
         run: node scripts/check-migration-history.mjs
-      - name: Replay all historical application migrations in isolated PostgreSQL
+      - name: Replay historical migrations and test review preconditions
         env:
           PG_CONTAINER: ${{ job.services.postgres.id }}
         run: |
@@ -41,6 +41,11 @@ jobs:
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/boundary-and-seed.sql
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/proposed/review_receipts.sql
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/review-guard.sql | tee artifacts/review-guard.txt
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/negative-review.sql | tee artifacts/negative-review.txt
+      - name: Real concurrent transaction test
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: bash database/tests/concurrency.sh
       - name: Dump and restore the synthetic database into a separate database
         env:
           PG_CONTAINER: ${{ job.services.postgres.id }}
@@ -58,5 +63,7 @@ jobs:
           path: |
             artifacts/migration-history.json
             artifacts/review-guard.txt
+            artifacts/negative-review.txt
+            artifacts/concurrency-check.json
             artifacts/restore-check.txt
           retention-days: 7
