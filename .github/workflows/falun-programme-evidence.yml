@@ -1,9 +1,6 @@
 name: Falun official programme evidence
 on:
   workflow_dispatch:
-  push:
-    branches: ['fix/falun-reviewed-completion']
-    paths: ['.github/workflows/falun-programme-evidence.yml']
 permissions:
   contents: read
 jobs:
