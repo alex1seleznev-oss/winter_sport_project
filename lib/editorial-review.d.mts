@@ -1,0 +1,1 @@
+export function resolveReviewedRows<T extends {slug:string}>(rows:unknown[],manifest:T[],now?:number):{articles:(T&{id:number;body:string;author:string;publishedAt:string;updatedAt:string})[];withheldSlugs:string[];partial:boolean};
