@@ -1,0 +1,3 @@
+import {editorialBlocks,inlineParts} from '../../lib/editorial-content.mjs';import styles from './Editorial.module.css';
+function Inline({value,sources}:{value:string;sources:string[]}){return <>{inlineParts(value).map((p,i)=>p.kind==='source'?<sup key={i}><a href={'#source-'+p.id} aria-label={`Источник ${sources.indexOf(p.id!)+1}`}>[{sources.indexOf(p.id!)+1}]</a></sup>:p.kind==='strong'?<strong key={i}>{p.text}</strong>:p.text)}</>}
+export function ArticleBody({body,sources}:{body:string;sources:string[]}){return <div className={styles.body}>{editorialBlocks(body).map((b,i)=>b.kind==='heading'?(b.level===3?<h3 key={i} id={b.id}>{b.text}</h3>:<h2 key={i} id={b.id}>{b.text}</h2>):<p key={i}><Inline value={b.text} sources={sources}/></p>)}</div>}

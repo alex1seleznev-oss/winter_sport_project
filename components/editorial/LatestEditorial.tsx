@@ -1,0 +1,2 @@
+import Link from 'next/link';import {getEditorial} from '../../lib/editorial';import {ArticleCards} from './ArticleCards';import styles from './Editorial.module.css';
+export async function LatestEditorial(){const data=await getEditorial();if(data.unavailable||!data.articles.length)return null;return <section className={styles.latest}><div className={styles.sectionTitle}><h2>Не только протокол.</h2><Link href="/media">Все материалы →</Link></div><ArticleCards articles={data.articles.slice(0,3)} compact/></section>}
