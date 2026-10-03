@@ -1,10 +1,5 @@
 name: FLGR verified transport diagnostic
 on:
-  push:
-    branches: ['fix/flgr-verified-transport']
-    paths:
-      - '.github/workflows/flgr-transport-diagnostic.yml'
-      - 'scripts/diagnose-flgr-transport.mjs'
   workflow_dispatch:
 permissions:
   contents: read
