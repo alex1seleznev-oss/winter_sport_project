@@ -1,0 +1,30 @@
+name: FIS cross-country editorial research
+on:
+  workflow_dispatch:
+  push:
+    branches: ['editorial/xc-season-202526']
+    paths: ['scripts/editorial/collect-xc-evidence.mjs','.github/workflows/xc-editorial-research.yml']
+permissions:
+  contents: read
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Read official historical documents
+        run: node scripts/editorial/collect-xc-evidence.mjs
+      - name: Export exact public source revision for local review
+        if: always()
+        run: git archive --format=tar HEAD > artifacts/xc-evidence/repository.tar
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: xc-editorial-source-evidence
+          path: artifacts/xc-evidence/
+          retention-days: 3
