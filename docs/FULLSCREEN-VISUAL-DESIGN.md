@@ -1,0 +1,20 @@
+# Fullscreen real-athlete visual release
+
+## User-authorized scope
+Replace the homepage's text-only opening with a genuinely viewport-wide editorial cover and create a full-width /athletes photo story. Five requested names: Sturla Holm Laegreid, Johannes Klaebo, Savely Korostelev, Ole Einar Bjoerndalen and Eduard Latypov. Only real images with documented reuse licences; no face synthesis, jersey replacement, AI upscaling or false current-season participation. Dark navy and ice-blue identity retained. Ordinary calendar, verified articles, reading library, source hierarchy and database policies remain unchanged.
+
+## Image provenance and limitation
+Four high-resolution original photographs selected after viewing originals and checking source identity/metadata. Fifth image, Eduard Latypov, is an explicitly limited285×390archiveportrait. It gets a full-screen typographic scene with a small un-upscaled authentic photograph, not a falsely high-resolution cover. A better licensed original is still required for a large photographic Latypov background.
+
+Commons source research37137091270/artifact11279065581; original-byte run37137519380/artifact11279640044 fetched7verified originals and deferred2remainingrequests after429limits. Rate-limit retry honoredRetry-After, never switched proxies or disabledTLS. Published choices all came from successful byte-verified files, including Latypov's identical original already received in the earlier research artifact. Unused failed candidates are not claimed downloaded. ExactsourceSHA256/SHA1,caption,date,author/licence andrawdimensions in content/visual/athletes.json. DerivedWebPfiles keep source licence and are attributed in every scene and on /photo-credits. Only resize/reencode and responsive viewport framing, no facial or equipment alteration.
+
+Prepared-assets workflow37137910863 used the user-authorized GitHub write capability to commit only public/athletes,generatedassetmanifest,packageJSONandlock to design/fullscreen-athletes. It did not grant public Supabase writes, create owner accounts, modify protected main directly or enable raw-media uploads. Contents-write is limited by explicit repository/branch checks and stagedpathallowlist; token used only in GitHub download/push steps, not image processing or external source requests. Assets are now committed, not dependent on expiring artifacts. Runtime does not call Wikimedia or external animationCDNs.
+
+## Skills actually read and applied
+- nextlevelbuilder/ui-ux-pro-max-skill .claude/skills/ui-ux-pro-max/SKILL.md, blob41f8e2fd7f8c568228d0b55186ebe3f7b4007377: contrast, keyboard/touch targets, responsive layouts, image dimensions and performant modern editorial hierarchy. This does not claim its optional design-database search script was executed.
+- greensock/gsap-skills skills/gsap-react/SKILL.md, blobe2e51805457943cd4982fe792b858c14fa2c3c8f: scoped context, client effect, cleanup, no SSR animation execution.
+- installed HyperFrames GSAP reference: transforms/timeline principles and matchMedia reduced-motion cleanup, applied to the website rather than claiming a generated video.
+GSAP runtime3.15.0 pinned in actualpackage-lock. Dynamicimport only inside effect; transforms/opacity on current-scene nodes, cleanup on selection/unmount, manual buttons/noautoplay/no scroll hijacking. Text and imagery remain usable withoutanimation; no-JS gallery provides allphotos withoutinteractivecarousel.
+
+## Quality gates
+Verify all derivativebytehashes/MIME/size, originalSHA/size/licence links, fullviewportbox, mobileoverflow, actualimagecompletion, scenechanging/keyboard/reducedmotion/noJS, imagefailure fallback and unchangedcalendar/readerlibrary. A malformed or hiddenpublishedarticle is not repaired fromphoto metadata. Staging fullvisualscreenshots must be opened beforemerge; VercelGitHubstatus aftermerge is deployment evidence, not an authenticated runtime-log audit. No claim physicalphone/printer tested. Futurephotoorigins,legalrights,editorialdata and privilegegates stay separately reviewable.
