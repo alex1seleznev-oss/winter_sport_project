@@ -9,6 +9,7 @@ on:
       - '.github/workflows/data-ingestion.yml'
       - 'scripts/ingest-flgr.mjs'
       - 'scripts/lib/fetch-*.mjs'
+      - 'scripts/lib/parse-flgr.mjs'
 permissions:
   contents: read
 jobs:
@@ -23,6 +24,8 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
+      - name: Inspect live official calendar contract
+        run: node scripts/inspect-flgr-calendar.mjs
       - name: FLGR source availability, not results ingestion
         run: node scripts/ingest-flgr.mjs
       - name: FIS calendar discovery, not verified publication
