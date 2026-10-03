@@ -1,0 +1,24 @@
+{
+ "version":1,
+ "policy":"Public read-only watch. No credentials, login, private groups, media downloads, database writes or fact publication.",
+ "sources":[
+  {"key":"tg-radiolyzhi","name":"Радиолыжи","kind":"community","adapter":"telegram","sport":"cross_country","url":"https://t.me/radiolyzhi","fetchUrl":"https://t.me/s/radiolyzhi","handle":"radiolyzhi"},
+  {"key":"tg-lizzerin","name":"Lizzerin","kind":"community","adapter":"telegram","sport":"cross_country","url":"https://t.me/s/ski_lizzer1n","fetchUrl":"https://t.me/s/ski_lizzer1n","handle":"ski_lizzer1n"},
+  {"key":"tg-skiclassics","name":"Лыжная классика","kind":"community","adapter":"telegram","sport":"cross_country","url":"https://t.me/skiclassics","fetchUrl":"https://t.me/s/skiclassics","handle":"skiclassics"},
+  {"key":"tg-sbr","name":"Канал СБР","kind":"official_social","adapter":"telegram","sport":"biathlon","url":"https://t.me/russianbiathlon","fetchUrl":"https://t.me/s/russianbiathlon","handle":"russianbiathlon"},
+  {"key":"sports-biathlon","name":"Sports.ru · биатлон","kind":"media","adapter":"sports_index","sport":"biathlon","url":"https://www.sports.ru/biathlon/","fetchUrl":"https://www.sports.ru/biathlon/"},
+  {"key":"sports-skiing","name":"Sports.ru · лыжные гонки","kind":"media","adapter":"sports_index","sport":"cross_country","url":"https://www.sports.ru/skiing/","fetchUrl":"https://www.sports.ru/skiing/"},
+  {"key":"sports-rss","name":"Sports.ru · RSS","kind":"media","adapter":"rss","sport":"mixed","url":"https://www.sports.ru/rss/topnews.xml","fetchUrl":"https://www.sports.ru/rss/topnews.xml"},
+  {"key":"skisport","name":"Журнал Лыжный спорт","kind":"media","adapter":"skisport_index","sport":"mixed","url":"https://skisport.ru/","fetchUrl":"https://skisport.ru/"}
+ ],
+ "notConnected":[
+  {"key":"vk-shlaegreid","url":"https://vk.ru/shlaegreid","reason":"authorized_vk_api_not_connected"},
+  {"key":"vk-bestskiers","url":"https://vk.ru/bestskiers","reason":"authorized_vk_api_not_connected"},
+  {"key":"vk-biathlon","url":"https://vk.ru/biathlon","reason":"authorized_vk_api_not_connected"},
+  {"key":"vk-norways_biathletes","url":"https://vk.ru/norways_biathletes","reason":"authorized_vk_api_not_connected"},
+  {"key":"vk-lizzerinofficial","url":"https://vk.ru/lizzerinofficial","reason":"authorized_vk_api_not_connected"},
+  {"key":"instagram-teamlaegreid","url":"https://www.instagram.com/teamlaegreid","reason":"authorized_api_not_connected"},
+  {"key":"championat","url":"https://www.championat.com/biathlon/","reason":"previous_response_was_login_interstitial"},
+  {"key":"tg-flgrussia","url":"https://t.me/flgrussia","reason":"previous_preview_redirected_to_profile"}
+ ]
+}
