@@ -10,6 +10,7 @@ on:
       - 'scripts/ingest-flgr.mjs'
       - 'scripts/lib/fetch-*.mjs'
       - 'scripts/lib/parse-flgr.mjs'
+      - 'tests/flgr-calendar-dates.test.mjs'
 permissions:
   contents: read
 jobs:
@@ -24,8 +25,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - name: Inspect live official calendar contract
-        run: node scripts/inspect-flgr-calendar.mjs
+      - run: node --test tests/fetch-official.test.mjs tests/flgr-transport.test.mjs tests/flgr-calendar-dates.test.mjs
       - name: FLGR source availability, not results ingestion
         run: node scripts/ingest-flgr.mjs
       - name: FIS calendar discovery, not verified publication
