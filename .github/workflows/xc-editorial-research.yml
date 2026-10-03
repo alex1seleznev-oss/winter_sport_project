@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: ['editorial/xc-season-202526']
-    paths: ['scripts/editorial/collect-xc-evidence.mjs','.github/workflows/xc-editorial-research.yml']
+    paths: ['scripts/editorial/collect-xc-evidence.mjs','scripts/editorial/verify-xc-projection.py','content/editorial/xc-season-2526.json','.github/workflows/xc-editorial-research.yml']
 permissions:
   contents: read
 jobs:
@@ -19,9 +19,13 @@ jobs:
           node-version: '24'
       - name: Read official historical documents
         run: node scripts/editorial/collect-xc-evidence.mjs
-      - name: Export exact public source revision for local review
-        if: always()
-        run: git archive --format=tar HEAD > artifacts/xc-evidence/repository.tar
+      - name: Install isolated PDF inspection tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y poppler-utils
+          python -m pip install --disable-pip-version-check pdfplumber==0.11.9
+      - name: Verify all standing totals and exact leader score cells
+        run: python scripts/editorial/verify-xc-projection.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
