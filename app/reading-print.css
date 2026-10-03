@@ -1,0 +1,14 @@
+/* Print only the currently opened editorial article. No effect on screen or calendar pages. */
+@media print {
+ body:has([data-reviewed-article]) {background:#fff!important;color:#000!important;}
+ body:has([data-reviewed-article]) nav,body:has([data-reviewed-article]) footer,body:has([data-reviewed-article]) .skipLink,[data-reader-tools],[data-reader-related] {display:none!important;}
+ body:has([data-reviewed-article]) main {max-width:none!important;padding:0!important;background:#fff!important;}
+ body:has([data-reviewed-article]) main>div:has(>[data-reviewed-article]) {display:block!important;}
+ body:has([data-reviewed-article]) main>div:has(>[data-reviewed-article])>aside {display:none!important;}
+ body:has([data-reviewed-article]) main header,body:has([data-reviewed-article]) main header * {color:#000!important;background:transparent!important;}
+ [data-reviewed-article],[data-reviewed-article] * {color:#000!important;background:transparent!important;box-shadow:none!important;}
+ [data-reviewed-article] button,[data-reviewed-article] select,[data-reviewed-article] label {display:none!important;}
+ [data-reviewed-article] h2,[data-reviewed-article] h3 {break-after:avoid;}
+ #article-sources a[href]::after {content:' (' attr(href) ')';font-size:9pt;overflow-wrap:anywhere;}
+ #article-sources {break-before:auto;font-size:10pt;}
+}

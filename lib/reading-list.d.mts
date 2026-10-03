@@ -1,0 +1,12 @@
+export type ReadingEntry={slug:string;revision:string;read:boolean;savedAt:number};
+export type ReadingData={version:1;items:ReadingEntry[]};
+export type ReadingAction={kind:'remove';slug:string}|{kind:'save';slug:string;revision:string}|{kind:'read';slug:string;revision:string;read:boolean};
+export type ReadingArticle={slug:string;title:string;dek:string;bodySha256:string;sport:string;articleType:string;readMinutes:number};
+export const READING_KEY:string,MAX_SAVED:number,MAX_READING_BYTES:number;
+export function emptyReading():ReadingData;
+export function validArticleSlug(value:unknown):boolean;
+export function validArticleRevision(value:unknown):boolean;
+export function parseReading(raw:string|null,now?:number):ReadingData;
+export function changeReading(data:ReadingData,action:ReadingAction,now?:number):ReadingData;
+export function readingState(entry:ReadingEntry|undefined,revision:string):'not_saved'|'updated'|'read'|'unread';
+export function readingRows<T extends {slug:string;bodySha256:string}>(data:ReadingData,articles:T[]):{entry:ReadingEntry;article:T|null;state:string}[];
