@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: ['editorial/women-season-study']
-    paths: ['scripts/editorial/collect-women-season.mjs','.github/workflows/women-season-research.yml']
+    paths: ['scripts/editorial/collect-women-season.mjs','scripts/editorial/verify-women-projection.mjs','content/editorial/full-season-women-2526.json','lib/season-ledger.mjs','tests/women-ledger.test.mjs','.github/workflows/women-season-research.yml']
 permissions:
   contents: read
 jobs:
@@ -17,7 +17,9 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '24'
+      - run: node --test tests/season-ledger.test.mjs tests/women-ledger.test.mjs
       - run: node scripts/editorial/collect-women-season.mjs
+      - run: node scripts/editorial/verify-women-projection.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
