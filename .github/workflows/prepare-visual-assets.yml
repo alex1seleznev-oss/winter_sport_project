@@ -1,0 +1,61 @@
+name: Prepare and commit reviewed photo assets
+on:
+  push:
+    branches: ['design/fullscreen-athletes']
+    paths: ['scripts/visual/prepare-assets.mjs','.github/workflows/prepare-visual-assets.yml']
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: prepare-visual-assets
+  cancel-in-progress: false
+jobs:
+  prepare:
+    if: github.repository == 'alex1seleznev-oss/winter_sport_project' && github.ref == 'refs/heads/design/fullscreen-athletes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Retrieve two fixed source artifacts from this repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 37137519380 --repo alex1seleznev-oss/winter_sport_project --name athlete-originals --dir .photo-originals
+          gh run download 37137091270 --repo alex1seleznev-oss/winter_sport_project --name athlete-photo-research --dir .photo-research
+      - name: Pin animation runtime and use locked image processing dependency
+        run: npm install --ignore-scripts --save-exact gsap@3.15.0
+      - name: Create derivatives only after verifying each exact original
+        run: node scripts/visual/prepare-assets.mjs
+      - name: Commit only reviewed assets and exact dependency files to the design branch
+        env:
+          PUSH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- public/athletes content/visual/assets.json package.json package-lock.json
+          git diff --cached --name-only | while read -r f; do case "$f" in public/athletes/*.webp|content/visual/assets.json|package.json|package-lock.json) ;; *) exit 1 ;; esac; done
+          git diff --cached --quiet && exit 0
+          auth=$(printf 'x-access-token:%s' "$PUSH_TOKEN" | base64 -w0)
+          current=$(git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" ls-remote origin refs/heads/design/fullscreen-athletes | cut -f1)
+          test "$current" = "$GITHUB_SHA"
+          git commit -m 'Add licensed optimized real-athlete photos and pinned GSAP runtime'
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" push origin HEAD:refs/heads/design/fullscreen-athletes
+      - name: Export inspectable public asset bundle
+        run: |
+          mkdir -p artifacts/visual-assets
+          cp content/visual/assets.json artifacts/visual-assets/
+          cp -r public/athletes artifacts/visual-assets/
+          cp package.json package-lock.json artifacts/visual-assets/
+          git rev-parse HEAD > artifacts/visual-assets/commit.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reviewed-visual-assets
+          path: artifacts/visual-assets/
+          retention-days: 3
