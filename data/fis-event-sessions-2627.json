@@ -1,0 +1,1076 @@
+{
+  "reviewedAt": "2026-10-03T19:34:55.682Z",
+  "captureRun": "https://github.com/alex1seleznev-oss/winter_sport_project/actions/runs/37148386427",
+  "parserVersion": "fis-event-detail/1.1.0",
+  "stages": [
+    {
+      "venue": "Ruka",
+      "country": "FIN",
+      "eventId": "63002",
+      "seasonCode": "2027",
+      "category": "WC",
+      "startDate": "2026-11-27",
+      "endDate": "2026-11-29",
+      "competitionKey": "fis-wc-2627-ruka",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63002&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2026-11-27",
+          "codex": "0001",
+          "raceId": "52085",
+          "event": "10km Interval Start Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2026-11-27",
+          "codex": "0578",
+          "raceId": "52084",
+          "event": "10km Interval Start Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2026-11-28",
+          "codex": "0003",
+          "raceId": "52087",
+          "event": "1.2km Sprint Qualification Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2026-11-28",
+          "codex": "0005",
+          "raceId": "52089",
+          "event": "1.2km Sprint Final Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2026-11-28",
+          "codex": "0002",
+          "raceId": "52086",
+          "event": "1.2km Sprint Qualification Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2026-11-28",
+          "codex": "0004",
+          "raceId": "52088",
+          "event": "1.2km Sprint Final Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2026-11-29",
+          "codex": "0007",
+          "raceId": "52091",
+          "event": "20km Mass Start Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2026-11-29",
+          "codex": "0006",
+          "raceId": "52090",
+          "event": "20km Mass Start Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        }
+      ]
+    },
+    {
+      "venue": "Trondheim",
+      "country": "NOR",
+      "eventId": "63003",
+      "seasonCode": "2027",
+      "category": "WC",
+      "startDate": "2026-12-04",
+      "endDate": "2026-12-06",
+      "competitionKey": "fis-wc-2627-trondheim",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63003&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2026-12-04",
+          "codex": "0008",
+          "raceId": "52093",
+          "event": "10km Interval Start Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-04",
+          "codex": "0579",
+          "raceId": "52092",
+          "event": "10km Interval Start Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-05",
+          "codex": "0010",
+          "raceId": "52095",
+          "event": "1.4km Sprint Qualification Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-05",
+          "codex": "0012",
+          "raceId": "52097",
+          "event": "1.4km Sprint Final Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-05",
+          "codex": "0009",
+          "raceId": "52094",
+          "event": "1.4km Sprint Qualification Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-05",
+          "codex": "0011",
+          "raceId": "52096",
+          "event": "1.4km Sprint Final Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-06",
+          "codex": "0014",
+          "raceId": "52099",
+          "event": "20km Skiathlon Classic/Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-06",
+          "codex": "0013",
+          "raceId": "52098",
+          "event": "20km Skiathlon Classic/Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        }
+      ]
+    },
+    {
+      "venue": "Davos",
+      "country": "SUI",
+      "eventId": "63004",
+      "seasonCode": "2027",
+      "category": "WC",
+      "startDate": "2026-12-11",
+      "endDate": "2026-12-13",
+      "competitionKey": "fis-wc-2627-davos",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63004&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2026-12-11",
+          "codex": "0015",
+          "raceId": "52101",
+          "event": "5km Heat Mass Start Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-11",
+          "codex": "0580",
+          "raceId": "52100",
+          "event": "5km Heat Mass Start Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-12",
+          "codex": "0017",
+          "raceId": "52103",
+          "event": "1.2km Sprint Qualification Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-12",
+          "codex": "0019",
+          "raceId": "52105",
+          "event": "1.2km Sprint Final Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-12",
+          "codex": "0016",
+          "raceId": "52102",
+          "event": "1.2km Sprint Qualification Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-12",
+          "codex": "0018",
+          "raceId": "52104",
+          "event": "1.2km Sprint Final Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-13",
+          "codex": "0021",
+          "raceId": "52107",
+          "event": "1.4km Team Sprint Qualification Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-13",
+          "codex": "0023",
+          "raceId": "52109",
+          "event": "1.4km Team Sprint Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-13",
+          "codex": "0020",
+          "raceId": "52106",
+          "event": "1.4km Team Sprint Qualification Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2026-12-13",
+          "codex": "0022",
+          "raceId": "52108",
+          "event": "1.4km Team Sprint Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        }
+      ]
+    },
+    {
+      "venue": "Les Rousses",
+      "country": "FRA",
+      "eventId": "63001",
+      "seasonCode": "2027",
+      "category": "SWC",
+      "startDate": "2027-01-01",
+      "endDate": "2027-01-03",
+      "competitionKey": "fis-tds-2627-lesrousses",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63001&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2027-01-01",
+          "codex": "0024",
+          "raceId": "52111",
+          "event": "1.3km Sprint Qualification Classic",
+          "category": "SWC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Paris",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-01",
+          "codex": "0025",
+          "raceId": "52112",
+          "event": "1.3km Sprint Final Classic",
+          "category": "SWC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Paris",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-01",
+          "codex": "0581",
+          "raceId": "52110",
+          "event": "1.3km Sprint Qualification Classic",
+          "category": "SWC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Paris",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-01",
+          "codex": "0026",
+          "raceId": "52113",
+          "event": "1.3km Sprint Final Classic",
+          "category": "SWC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Paris",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-02",
+          "codex": "0028",
+          "raceId": "52115",
+          "event": "20km Mass Start Classic",
+          "category": "SWC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Paris",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-02",
+          "codex": "0027",
+          "raceId": "52114",
+          "event": "20km Mass Start Classic",
+          "category": "SWC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Paris",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-03",
+          "codex": "0030",
+          "raceId": "52117",
+          "event": "15km Pursuit Free",
+          "category": "SWC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Paris",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-03",
+          "codex": "0029",
+          "raceId": "52116",
+          "event": "15km Pursuit Free",
+          "category": "SWC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Paris",
+          "cancelled": false
+        }
+      ]
+    },
+    {
+      "venue": "Oberstdorf",
+      "country": "GER",
+      "eventId": "63005",
+      "seasonCode": "2027",
+      "category": "SWC",
+      "startDate": "2027-01-05",
+      "endDate": "2027-01-06",
+      "competitionKey": "fis-tds-2627-oberstdorf",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63005&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2027-01-05",
+          "codex": "0031",
+          "raceId": "52119",
+          "event": "15km Mass Start Classic",
+          "category": "SWC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Berlin",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-05",
+          "codex": "0582",
+          "raceId": "52118",
+          "event": "15km Mass Start Classic",
+          "category": "SWC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Berlin",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-06",
+          "codex": "0033",
+          "raceId": "52121",
+          "event": "5km Heat Mass Start Free",
+          "category": "SWC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Berlin",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-06",
+          "codex": "0032",
+          "raceId": "52120",
+          "event": "5km Heat Mass Start Free",
+          "category": "SWC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Berlin",
+          "cancelled": false
+        }
+      ]
+    },
+    {
+      "venue": "Val di Fiemme",
+      "country": "ITA",
+      "eventId": "63006",
+      "seasonCode": "2027",
+      "category": "SWC",
+      "startDate": "2027-01-08",
+      "endDate": "2027-01-10",
+      "competitionKey": "fis-tds-2627-valdifiemme",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63006&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2027-01-08",
+          "codex": "0034",
+          "raceId": "52123",
+          "event": "15km Skiathlon Classic/Free",
+          "category": "SWC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-08",
+          "codex": "0583",
+          "raceId": "52122",
+          "event": "15km Skiathlon Classic/Free",
+          "category": "SWC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-09",
+          "codex": "0036",
+          "raceId": "52125",
+          "event": "1.5km Sprint Qualification Free",
+          "category": "SWC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-09",
+          "codex": "0038",
+          "raceId": "52127",
+          "event": "1.5km Sprint Final Free",
+          "category": "SWC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-09",
+          "codex": "0035",
+          "raceId": "52124",
+          "event": "1.5km Sprint Qualification Free",
+          "category": "SWC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-09",
+          "codex": "0037",
+          "raceId": "52126",
+          "event": "1.5km Sprint Final Free",
+          "category": "SWC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-10",
+          "codex": "0040",
+          "raceId": "52129",
+          "event": "10km Mass Start Free",
+          "category": "SWC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-10",
+          "codex": "0039",
+          "raceId": "52128",
+          "event": "10km Mass Start Free",
+          "category": "SWC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        }
+      ]
+    },
+    {
+      "venue": "Engadin",
+      "country": "SUI",
+      "eventId": "63007",
+      "seasonCode": "2027",
+      "category": "WC",
+      "startDate": "2027-01-22",
+      "endDate": "2027-01-24",
+      "competitionKey": "fis-wc-2627-engadin",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63007&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2027-01-22",
+          "codex": "0041",
+          "raceId": "52131",
+          "event": "4x5km Relay Classic/Free",
+          "category": "WC",
+          "gender": "mixed",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-23",
+          "codex": "0043",
+          "raceId": "52133",
+          "event": "1.5km Sprint Qualification Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-23",
+          "codex": "0045",
+          "raceId": "52135",
+          "event": "1.5km Sprint Final Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-23",
+          "codex": "0042",
+          "raceId": "52132",
+          "event": "1.5km Sprint Qualification Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-23",
+          "codex": "0044",
+          "raceId": "52134",
+          "event": "1.5km Sprint Final Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-24",
+          "codex": "0047",
+          "raceId": "52137",
+          "event": "20km Mass Start Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-24",
+          "codex": "0046",
+          "raceId": "52136",
+          "event": "20km Mass Start Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Zurich",
+          "cancelled": false
+        }
+      ]
+    },
+    {
+      "venue": "Toblach/Dobbiaco",
+      "country": "ITA",
+      "eventId": "63008",
+      "seasonCode": "2027",
+      "category": "WC",
+      "startDate": "2027-01-29",
+      "endDate": "2027-01-31",
+      "competitionKey": "fis-wc-2627-toblach",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63008&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2027-01-29",
+          "codex": "0048",
+          "raceId": "52139",
+          "event": "10km Interval Start Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-29",
+          "codex": "0584",
+          "raceId": "52138",
+          "event": "10km Interval Start Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-30",
+          "codex": "0050",
+          "raceId": "52141",
+          "event": "1.3km Sprint Qualification Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-30",
+          "codex": "0052",
+          "raceId": "52143",
+          "event": "1.3km Sprint Final Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-30",
+          "codex": "0049",
+          "raceId": "52140",
+          "event": "1.3km Sprint Qualification Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-30",
+          "codex": "0051",
+          "raceId": "52142",
+          "event": "1.3km Sprint Final Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-31",
+          "codex": "0054",
+          "raceId": "52145",
+          "event": "20km Mass Start Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        },
+        {
+          "date": "2027-01-31",
+          "codex": "0053",
+          "raceId": "52144",
+          "event": "20km Mass Start Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Rome",
+          "cancelled": false
+        }
+      ]
+    },
+    {
+      "venue": "Lahti",
+      "country": "FIN",
+      "eventId": "63009",
+      "seasonCode": "2027",
+      "category": "WC",
+      "startDate": "2027-02-12",
+      "endDate": "2027-02-14",
+      "competitionKey": "fis-wc-2627-lahti",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63009&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2027-02-12",
+          "codex": "0055",
+          "raceId": "52147",
+          "event": "1.3km Sprint Qualification Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2027-02-12",
+          "codex": "0056",
+          "raceId": "52148",
+          "event": "1.3km Sprint Final Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2027-02-12",
+          "codex": "0585",
+          "raceId": "52146",
+          "event": "1.3km Sprint Qualification Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2027-02-12",
+          "codex": "0057",
+          "raceId": "52149",
+          "event": "1.3km Sprint Final Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2027-02-13",
+          "codex": "0059",
+          "raceId": "52151",
+          "event": "20km Skiathlon Classic/Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2027-02-13",
+          "codex": "0058",
+          "raceId": "52150",
+          "event": "20km Skiathlon Classic/Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2027-02-14",
+          "codex": "0061",
+          "raceId": "52153",
+          "event": "10km Interval Start Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        },
+        {
+          "date": "2027-02-14",
+          "codex": "0060",
+          "raceId": "52152",
+          "event": "10km Interval Start Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Helsinki",
+          "cancelled": false
+        }
+      ]
+    },
+    {
+      "venue": "Oslo",
+      "country": "NOR",
+      "eventId": "63010",
+      "seasonCode": "2027",
+      "category": "WC",
+      "startDate": "2027-03-13",
+      "endDate": "2027-03-14",
+      "competitionKey": "fis-wc-2627-oslo",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63010&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2027-03-13",
+          "codex": "0586",
+          "raceId": "52154",
+          "event": "50km Mass Start Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        },
+        {
+          "date": "2027-03-14",
+          "codex": "0062",
+          "raceId": "52155",
+          "event": "50km Mass Start Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        }
+      ]
+    },
+    {
+      "venue": "Drammen",
+      "country": "NOR",
+      "eventId": "63011",
+      "seasonCode": "2027",
+      "category": "WC",
+      "startDate": "2027-03-16",
+      "endDate": "2027-03-16",
+      "competitionKey": "fis-wc-2627-drammen",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63011&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2027-03-16",
+          "codex": "0063",
+          "raceId": "52157",
+          "event": "1.1km Sprint Qualification Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        },
+        {
+          "date": "2027-03-16",
+          "codex": "0064",
+          "raceId": "52158",
+          "event": "1.1km Sprint Final Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        },
+        {
+          "date": "2027-03-16",
+          "codex": "0587",
+          "raceId": "52156",
+          "event": "1.1km Sprint Qualification Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        },
+        {
+          "date": "2027-03-16",
+          "codex": "0065",
+          "raceId": "52159",
+          "event": "1.1km Sprint Final Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Oslo",
+          "cancelled": false
+        }
+      ]
+    },
+    {
+      "venue": "Ulricehamn",
+      "country": "SWE",
+      "eventId": "63012",
+      "seasonCode": "2027",
+      "category": "WC",
+      "startDate": "2027-03-19",
+      "endDate": "2027-03-21",
+      "competitionKey": "fis-wc-2627-ulricehamn",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63012&seasoncode=2027&sectorcode=CC",
+      "rows": [
+        {
+          "date": "2027-03-19",
+          "codex": "0066",
+          "raceId": "52161",
+          "event": "10km Interval Start Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Stockholm",
+          "cancelled": false
+        },
+        {
+          "date": "2027-03-19",
+          "codex": "0588",
+          "raceId": "52160",
+          "event": "10km Interval Start Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Stockholm",
+          "cancelled": false
+        },
+        {
+          "date": "2027-03-20",
+          "codex": "0068",
+          "raceId": "52163",
+          "event": "1.3km Sprint Qualification Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Stockholm",
+          "cancelled": false
+        },
+        {
+          "date": "2027-03-20",
+          "codex": "0070",
+          "raceId": "52165",
+          "event": "1.3km Sprint Final Free",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Stockholm",
+          "cancelled": false
+        },
+        {
+          "date": "2027-03-20",
+          "codex": "0067",
+          "raceId": "52162",
+          "event": "1.3km Sprint Qualification Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Stockholm",
+          "cancelled": false
+        },
+        {
+          "date": "2027-03-20",
+          "codex": "0069",
+          "raceId": "52164",
+          "event": "1.3km Sprint Final Free",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Stockholm",
+          "cancelled": false
+        },
+        {
+          "date": "2027-03-21",
+          "codex": "0072",
+          "raceId": "52167",
+          "event": "20km Mass Start Classic",
+          "category": "WC",
+          "gender": "men",
+          "localTime": null,
+          "sourceTimezone": "Europe/Stockholm",
+          "cancelled": false
+        },
+        {
+          "date": "2027-03-21",
+          "codex": "0071",
+          "raceId": "52166",
+          "event": "20km Mass Start Classic",
+          "category": "WC",
+          "gender": "women",
+          "localTime": null,
+          "sourceTimezone": "Europe/Stockholm",
+          "cancelled": false
+        }
+      ]
+    }
+  ]
+}

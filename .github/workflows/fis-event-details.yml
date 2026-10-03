@@ -10,6 +10,9 @@ on:
       - 'scripts/check-fis-event-details.mjs'
       - 'scripts/lib/parse-fis-event-detail.mjs'
       - 'tests/fis-event-detail.test.mjs'
+      - 'scripts/lib/reconcile-fis-sessions.mjs'
+      - 'tests/fis-session-review.test.mjs'
+      - 'data/fis-event-sessions-2627.json'
 permissions:
   contents: read
 concurrency:
@@ -28,6 +31,8 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci --ignore-scripts
+      - name: Session identity and review-plan regression tests
+        run: node --test tests/fis-event-detail.test.mjs tests/fis-session-review.test.mjs tests/fis-session-viewer.test.mjs
       - name: Read official season structure and retain evidence
         run: node scripts/check-fis-event-details.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
