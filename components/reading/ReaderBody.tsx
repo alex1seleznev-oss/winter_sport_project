@@ -1,0 +1,3 @@
+'use client';
+import {useState} from 'react';import {Printer,Type} from 'lucide-react';import styles from './Reading.module.css';
+export function ReaderBody({children}:{children:React.ReactNode}){const [large,setLarge]=useState(false);return <section className={styles.reader} aria-label="Текст статьи"><div className={styles.textTools} data-reader-tools><button type="button" aria-pressed={large} onClick={()=>setLarge(!large)}><Type size={16} aria-hidden="true"/>Крупнее текст</button><button type="button" onClick={()=>window.print()}><Printer size={16} aria-hidden="true"/>Печать статьи</button></div><div className={large?styles.enlarged:styles.normal} data-reading-size={large?'large':'normal'}>{children}</div></section>}
