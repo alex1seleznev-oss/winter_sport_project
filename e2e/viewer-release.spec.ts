@@ -14,8 +14,12 @@ test('guide hub and article render sources, navigation and no horizontal overflo
 test('gender, status and Russian search work together without changing source records',async({page})=>{
  await page.goto('/calendar');await page.locator('select[name="gender"]').selectOption('women');await page.locator('select[name="state"]').selectOption('not_cancelled');
  await page.getByRole('searchbox').fill('рука спринт');await page.getByRole('button',{name:'Показать',exact:true}).click();
- await expect(page.locator('.race')).toHaveCount(1);await expect(page.locator('.race')).toContainText('Женщины');await expect(page.locator('.race')).toContainText('Спринт');
- await page.getByText('Название в источнике',{exact:true}).click();await expect(page.getByText('Sprint C',{exact:true})).toBeVisible();
+ const races=page.locator('.race');await expect(races).toHaveCount(2);
+ for(const race of [races.nth(0),races.nth(1)]){await expect(race).toContainText('Женщины');await expect(race).toContainText('Спринт');}
+ await expect(races.nth(0).locator('h3')).toContainText('квалификация');await expect(races.nth(1).locator('h3')).toContainText('финал');
+ for(const [index,sourceTitle] of ['Sprint Qualification Classic','Sprint Final Classic'].entries()){
+  const race=races.nth(index);await race.getByText('Название в источнике',{exact:true}).click();await expect(race.getByText(sourceTitle,{exact:true})).toBeVisible();
+ }
  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content',/noindex/);
 });
 test('ICS endpoint returns stable UTF8 calendar and rejects unpublished or malformed requests',async({request},info)=>{
