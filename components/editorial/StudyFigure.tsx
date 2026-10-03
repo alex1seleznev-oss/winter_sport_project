@@ -1,0 +1,2 @@
+import {DataFigure} from './DataFigure';import {SeasonComparison} from './SeasonComparison';import {WomenSeasonComparison} from './WomenSeasonComparison';
+export function StudyFigure({kind}:{kind:string}){if(kind==='women-jeanmonnot')return <WomenSeasonComparison/>;if(kind==='women-oeberg-vittozzi')return <WomenSeasonComparison initialLeft="hanna-oeberg" initialRight="vittozzi"/>;if(kind==='men-samuelsson-jacquelin')return <SeasonComparison initialLeft="samuelsson" initialRight="jacquelin"/>;return <DataFigure kind={kind}/>}

@@ -1,0 +1,2 @@
+import data from '../../content/editorial/full-season-women-2526.json';import {ComparisonView} from './ComparisonView';
+export function WomenSeasonComparison({initialLeft='jeanmonnot',initialRight='hanna-oeberg',interactive=false}:{initialLeft?:string;initialRight?:string;interactive?:boolean}){return <ComparisonView data={data} initialLeft={initialLeft} initialRight={initialRight} interactive={interactive}/>}
