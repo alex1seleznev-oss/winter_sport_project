@@ -3,10 +3,17 @@ on:
   schedule:
     - cron: '17 */3 * * *'
   workflow_dispatch:
+  push:
+    branches: [main, 'fix/flgr-verified-transport']
+    paths:
+      - '.github/workflows/source-monitor.yml'
+      - 'scripts/check-official-sources.mjs'
+      - 'scripts/lib/fetch-*.mjs'
+      - 'tests/flgr-transport.test.mjs'
 permissions:
   contents: read
 concurrency:
-  group: official-source-monitor
+  group: official-source-monitor-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   monitor:
@@ -19,6 +26,7 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
+      - run: node --test tests/fetch-official.test.mjs tests/flgr-transport.test.mjs
       - run: node scripts/check-official-sources.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()

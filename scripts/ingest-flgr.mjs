@@ -1,7 +1,7 @@
 // Read-only semantic contract monitor for the official FLGR Results calendar.
 // It never writes sports data. The scheduled Winter Sports Sync process performs reviewed comparisons.
 import {mkdirSync,writeFileSync} from 'node:fs';
-import {fetchOfficialHtml} from './lib/fetch-official.mjs';
+import {fetchOfficialHtml,describeSourceError} from './lib/fetch-official.mjs';
 import {parseFlgrCalendar,parseFlgrCompetition,FLGR_PARSER_VERSION} from './lib/parse-flgr.mjs';
 mkdirSync('artifacts',{recursive:true});
 const calendarUrl='https://flgr-results.ru/calendar';
@@ -19,6 +19,6 @@ try{
  const report={ok:true,mode:'semantic_contract_read_only',parserVersion:FLGR_PARSER_VERSION,imported:false,calendarProvenance,stageCount:stages.length,stages:details};
  writeFileSync('artifacts/flgr-official-contract.json',JSON.stringify(report,null,2));console.log(JSON.stringify({ok:true,stageCount:stages.length,checked:details.length,parserVersion:FLGR_PARSER_VERSION,imported:false},null,2));
 }catch(error){
- const report={ok:false,mode:'semantic_contract_read_only',parserVersion:FLGR_PARSER_VERSION,imported:false,checkedAt:new Date().toISOString(),error:error.code||error.message};
+ const report={ok:false,mode:'semantic_contract_read_only',parserVersion:FLGR_PARSER_VERSION,imported:false,checkedAt:new Date().toISOString(),error:error.code||error.message,failure:describeSourceError(error)};
  writeFileSync('artifacts/flgr-official-contract.json',JSON.stringify(report,null,2));console.error(JSON.stringify(report));process.exitCode=1;
 }

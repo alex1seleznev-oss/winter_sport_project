@@ -3,6 +3,12 @@ on:
   schedule:
     - cron: '23 */6 * * *'
   workflow_dispatch:
+  push:
+    branches: [main, 'fix/flgr-verified-transport']
+    paths:
+      - '.github/workflows/data-ingestion.yml'
+      - 'scripts/ingest-flgr.mjs'
+      - 'scripts/lib/fetch-*.mjs'
 permissions:
   contents: read
 jobs:
