@@ -1,0 +1,3 @@
+import {SiteNav} from '../../components/SiteNav';import {MySeason} from '../../components/personal/MySeason';import {getStageCatalogue} from '../../lib/stage-data';import {moscowDate} from '../../lib/domain.mjs';import {pageMetadata} from '../../lib/seo';
+export const dynamic='force-dynamic';export const metadata=pageMetadata('Мой сезон — избранные этапы и гонки','Локальная подборка гонок Winter Sports Hub без регистрации. Избранное хранится в вашем браузере.','/my-season',false);
+export default async function Saved(){const catalogue=await getStageCatalogue();return <main id="main-content"><SiteNav/><MySeason {...catalogue} today={moscowDate()}/></main>}
