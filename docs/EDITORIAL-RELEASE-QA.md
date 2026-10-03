@@ -1,0 +1,9 @@
+# Editorial release QA
+
+The first candidate c6a310376b7fd2722543dd0e757c9d8dd158325b built successfully and passed pure tests, 15 HTTP checks and 84 of 86 browser scenarios. The two failures were the same form-accessibility defect in Chromium and WebKit: a wrapping label included select options in its accessible name. ArticleFilters now has separate explicit labels and controls. Tests retain the exact accessible names and the real filtering interaction. No failed test was removed or replaced with an ID-only lookup.
+
+Original full bodies in Supabase exactly match the six independently written local Markdown hashes in manifest. Before publication anonymous access showed zero articles; after the bounded six-row publication it showed six complete bodies. PostgreSQL length is character count, not UTF-8 byte count: total 26,833 characters / 48,162 bytes, about 3,715 whitespace-delimited words. A diagnostic threshold of 5,000 characters per article was too high and was not interpreted as missing content. All six bodies have 4,034–4,673 characters and 7,290–8,401 UTF-8 bytes. Full content is confirmed by SHA-256, not arbitrary length alone.
+
+Primary source receipts cover 18 official HTML pages plus final IBU Datacenter standings. Transport checks do not imply every sentence of every source is correct. Only the cited reviewed facts are used; public-profile search snippets are not the final points source. Version conflicts in summary prose are not resolved by popularity or source count. No unpublished media-queue posts were promoted.
+
+Desktop magazine and mobile article screenshots from the first run were visually inspected. Final exact-head tests, latest screenshots and production deployment must be recorded separately after execution. Prepared files alone are not evidence of successful website publication.
