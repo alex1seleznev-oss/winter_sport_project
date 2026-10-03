@@ -1,0 +1,133 @@
+[
+  {
+    "key": "laegreid",
+    "sourceSha256": "7cf17712089e087113d8a108b54f2b69b662ac32220621bbfc08c97d3b1daeaf",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "variants": [
+      {
+        "src": "/athletes/laegreid-720.webp",
+        "width": 720,
+        "height": 905,
+        "bytes": 59524,
+        "sha256": "a4b75546a86502b303e71d3580810bcebc8587b2d650897426e3ab88295a55c0"
+      },
+      {
+        "src": "/athletes/laegreid-1280.webp",
+        "width": 1280,
+        "height": 1609,
+        "bytes": 129140,
+        "sha256": "e367b713f03175ea1af185ab0bb92233963864aed011296e90b6a626215db4ee"
+      },
+      {
+        "src": "/athletes/laegreid-1920.webp",
+        "width": 1920,
+        "height": 2413,
+        "bytes": 229032,
+        "sha256": "1faf3ae381e97549ba83df6cb090dc854e96df135136b135df7109e9e86faaf7"
+      }
+    ]
+  },
+  {
+    "key": "klaebo",
+    "sourceSha256": "367d941807b38ccad6d61af461bb9fc05d43a44641fdf1267dbf263ba5bf2810",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "variants": [
+      {
+        "src": "/athletes/klaebo-720.webp",
+        "width": 720,
+        "height": 480,
+        "bytes": 49804,
+        "sha256": "aff226f9da242e543838862ffdd78e7ca733bda29a85de04d17f5b0b6cdfa571"
+      },
+      {
+        "src": "/athletes/klaebo-1280.webp",
+        "width": 1280,
+        "height": 854,
+        "bytes": 111954,
+        "sha256": "52919275a7ddf5f59fda0109f38da319ff7aa716fa183486ace5a5468d7cc372"
+      },
+      {
+        "src": "/athletes/klaebo-1920.webp",
+        "width": 1920,
+        "height": 1280,
+        "bytes": 188122,
+        "sha256": "d3450818d6b78807dc5891195d62c50d6b176ce961de4013d44eb1662e3e19e0"
+      }
+    ]
+  },
+  {
+    "key": "korostelev",
+    "sourceSha256": "75c892a7f92333a9b2bc8bd84ea8c6a6c35694a3babf678e8c4f7d58e31ae86c",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "variants": [
+      {
+        "src": "/athletes/korostelev-720.webp",
+        "width": 720,
+        "height": 961,
+        "bytes": 52880,
+        "sha256": "8bec7e8713bdc8966b888061bcecbcf6716242ef69030632315f6eed5678affc"
+      },
+      {
+        "src": "/athletes/korostelev-1280.webp",
+        "width": 1280,
+        "height": 1709,
+        "bytes": 123452,
+        "sha256": "a7e55efe38790c7a04afc112102472d7c9f47ae777e5befe8c3c84ffc2f4f25a"
+      },
+      {
+        "src": "/athletes/korostelev-1920.webp",
+        "width": 1920,
+        "height": 2564,
+        "bytes": 239304,
+        "sha256": "92d2ceea6a3c34fde85e469d6a56855b4d202bffbbad8c30604c3599d3627e62"
+      }
+    ]
+  },
+  {
+    "key": "bjoerndalen",
+    "sourceSha256": "9445bbd98257ba65fb691989622def18d32311a2371693d110846f98a2a6fbfb",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "variants": [
+      {
+        "src": "/athletes/bjoerndalen-720.webp",
+        "width": 720,
+        "height": 480,
+        "bytes": 31712,
+        "sha256": "aa8d316546480b03ada6be16a30a639857d04a2da317b1978b041dc4f32399a8"
+      },
+      {
+        "src": "/athletes/bjoerndalen-1280.webp",
+        "width": 1280,
+        "height": 853,
+        "bytes": 64820,
+        "sha256": "0a99bdd52b675232db8f8a47918cab59b1958e2b7f5e0244ef3d116259d5936b"
+      },
+      {
+        "src": "/athletes/bjoerndalen-1920.webp",
+        "width": 1920,
+        "height": 1280,
+        "bytes": 114720,
+        "sha256": "b645293c6a4f71bcf4f40436765a07ea023e9972da2eadbcb0ad630c06f2090a"
+      }
+    ]
+  },
+  {
+    "key": "latypov",
+    "sourceSha256": "fe750856dc4898e89199e48e79ec74510c1a2188794eb124aec6da96bc6fbda9",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "variants": [
+      {
+        "src": "/athletes/latypov-285.webp",
+        "width": 285,
+        "height": 390,
+        "bytes": 13506,
+        "sha256": "4645d5a6ea01b78579c2864364acaa8ef9f03a419960c1b777782c518ab4e231"
+      }
+    ]
+  }
+]

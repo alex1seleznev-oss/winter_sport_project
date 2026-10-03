@@ -13,9 +13,10 @@ for(const [venue,eventid,expectedRows] of stages){
  const url=`https://www.fis-ski.com/DB/general/event-details.html?eventid=${eventid}&seasoncode=2027&sectorcode=CC`;
  try{
   const {html,...provenance}=await fetchOfficialHtml(url);
+  writeFileSync(`artifacts/fis-event-${eventid}.html`,html);
   const parsed=parseFisEventDetail(html,{sourceUrl:url});
   const summary=summarizeFisSessions(parsed);
-  checks.push({venue,eventid,expectedRows,...summary,ok:summary.rows===expectedRows,provenance});
+  checks.push({venue,eventid,expectedRows,...summary,ok:summary.rows===expectedRows,rows:parsed.rows,provenance});
  }catch(error){checks.push({venue,eventid,expectedRows,ok:false,error:error.message});}
 }
 const report={checkedAt:new Date().toISOString(),parserVersion:FIS_EVENT_DETAIL_VERSION,scope:'official FIS 2026/27 event-detail session structure; read-only',checks,requiresAttention:checks.some(x=>!x.ok),databaseWrites:0};
