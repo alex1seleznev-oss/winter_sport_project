@@ -1,0 +1,25 @@
+name: FIS supplementary editorial evidence
+on:
+  push:
+    branches: ['editorial/xc-season-202526']
+    paths: ['scripts/editorial/collect-xc-supplement.mjs','.github/workflows/xc-editorial-supplement.yml']
+permissions:
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: node scripts/editorial/collect-xc-supplement.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: xc-supplement-evidence
+          path: artifacts/xc-supplement/
+          retention-days: 3
