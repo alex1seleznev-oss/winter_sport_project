@@ -1,0 +1,3 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {homeSeason,featureProgramme} from '../lib/home-season.mjs';
+test('failed programme request is not mislabelled as absent programme',()=>{assert.match(featureProgramme(null),/не удалось/);assert.match(featureProgramme({total:0}),/ещё не внесена/);assert.match(featureProgramme({total:6}),/^6 записей/)});
+test('scheduled race in cancelled stage is not promoted as next event',()=>{const r={id:1,competition_id:2,event_date:'2026-11-27',start_time_msk:null,status:'scheduled'};const m={competition:{id:2,status:'cancelled',end_date:'2026-11-29'},races:[r]};const h=homeSeason([m],'2026-11-20');assert.deepEqual(h.races,[]);assert.equal(h.totalRaces,1)});

@@ -1,0 +1,2 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {countLabel} from '../lib/count-label.mjs';
+test('Russian counters follow singular/few/many including teens',()=>{for(const [n,s] of [[0,'этапов'],[1,'этап'],[2,'этапа'],[5,'этапов'],[11,'этапов'],[12,'этапов'],[14,'этапов'],[21,'этап'],[22,'этапа'],[111,'этапов']])assert.equal(countLabel(n,'этап','этапа','этапов'),`${n} ${s}`);assert.throws(()=>countLabel(-1,'a','b','c'))});
