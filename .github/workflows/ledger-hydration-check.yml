@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: ['editorial/botn-season-ledger']
-    paths: ['scripts/editorial/check-hydration.mjs','.github/workflows/ledger-hydration-check.yml']
+    paths: ['components/editorial/SeasonComparison.tsx','scripts/editorial/check-hydration.mjs','.github/workflows/ledger-hydration-check.yml']
 permissions:
   contents: read
 jobs:
