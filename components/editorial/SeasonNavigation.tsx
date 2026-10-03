@@ -1,0 +1,2 @@
+import Link from 'next/link';import styles from './SeasonComparison.module.css';
+export function SeasonNavigation({category}:{category:'men'|'women'}){return <nav className={styles.articleLinks} aria-label="Категории анализа сезона"><Link href="/media/season-2025-26" aria-current={category==='men'?'page':undefined}>Мужчины · 6 спортсменов</Link><Link href="/media/season-2025-26/women" aria-current={category==='women'?'page':undefined}>Женщины · 6 спортсменок</Link><Link href="/media">Статьи редакции →</Link></nav>}
