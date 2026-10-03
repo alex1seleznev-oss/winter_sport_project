@@ -1,0 +1,28 @@
+name: Historical season editorial research
+on:
+  workflow_dispatch:
+  push:
+    branches: ['editorial/botn-season-ledger']
+    paths: ['scripts/editorial/collect-season.mjs','scripts/editorial/verify-season-projection.mjs','content/editorial/full-season-2526.json','.github/workflows/season-editorial-research.yml']
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: node scripts/editorial/collect-season.mjs
+      - name: Check all projected results against raw official documents
+        run: node scripts/editorial/verify-season-projection.mjs | tee artifacts/season-research/projection-check.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: historical-season-source-evidence
+          path: artifacts/season-research/
+          retention-days: 7
