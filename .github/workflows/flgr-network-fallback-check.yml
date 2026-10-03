@@ -1,0 +1,34 @@
+name: FLGR Results network fallback check
+on:
+  push:
+    branches: ['fix/flgr-results-network-fallback']
+    paths:
+      - 'scripts/ingest-flgr.mjs'
+      - 'scripts/check-official-sources.mjs'
+      - 'scripts/lib/fetch-official.mjs'
+      - '.github/workflows/flgr-network-fallback-check.yml'
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: npm ci --ignore-scripts
+      - name: Check all official source documents
+        run: node scripts/check-official-sources.mjs
+      - name: Parse FLGR Results season contract
+        if: ${{ !cancelled() }}
+        run: node scripts/ingest-flgr.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: flgr-network-fallback-evidence
+          path: artifacts/
+          retention-days: 3
