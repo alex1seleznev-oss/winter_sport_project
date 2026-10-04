@@ -5,6 +5,7 @@ import {ArrowDown,ArrowUpRight,ChevronLeft,ChevronRight} from 'lucide-react';
 import {athleteVisuals,visualCopy} from '../../lib/athlete-visuals';
 import {AthletePhoto} from './AthletePhoto';
 import styles from './FullScreen.module.css';
+import collageStyles from './HeroCollage.module.css';
 
 export function FullscreenHero(){
  const [active,setActive]=useState(0),[motion,setMotion]=useState('initial'),root=useRef<HTMLElement>(null),photo=athleteVisuals[active];
@@ -21,7 +22,7 @@ export function FullscreenHero(){
  const change=(n:number)=>setActive((n+athleteVisuals.length)%athleteVisuals.length);
  return <section ref={root} className={styles.hero} data-fullscreen-hero data-motion={motion} data-active-athlete={photo.key} aria-label="Лица зимнего спорта">
   <AthletePhoto key={photo.key} photo={photo} eager/>
-  <div className={styles.heroCollage} data-hero-collage aria-hidden="true">{collage.map((p,i)=>{const v=p.variants.find(v=>v.width===1280)||p.variants.at(-1)||p.variants[0];return <span key={p.key} className={styles.heroCollagePanel} data-collage-athlete={p.key} data-collage-index={i} style={{backgroundImage:`url("${v.src}")`}}/>})}</div>
+  <div className={collageStyles.heroCollage} data-hero-collage aria-hidden="true">{collage.map((p,i)=>{const v=p.variants.find(v=>v.width===1280)||p.variants.at(-1)||p.variants[0];return <span key={p.key} className={collageStyles.heroCollagePanel} data-collage-athlete={p.key} data-collage-index={i} style={{backgroundImage:`url("${v.src}")`}}/>})}</div>
   <div className={styles.shade} aria-hidden="true"/>
   <div className={styles.heroLead}><span className={styles.kicker}>WINTER SPORTS HUB / 2026–27</span><h1>Весь сезон.<br/><span>В вашем ритме.</span></h1><p>Биатлон и лыжные гонки.<br/>Люди. Гонки. Настоящие истории.</p></div>
   <div className={styles.identity} data-star-copy><span className={styles.sport}>{photo.sport} / Фотохроника</span><p className={styles.given}>{photo.given}</p><h2 className={styles.family}>{photo.family}</h2><p className={styles.tagline}>{visualCopy[photo.key]}</p><div className={styles.heroActions}><Link href="/competitions" className={styles.primary}>Открыть этапы <ArrowUpRight size={18} aria-hidden="true"/></Link><Link href={photo.href} prefetch={false}>{photo.cta}</Link></div></div>
