@@ -30,7 +30,7 @@ export function syndication(items){const groups=new Map(),byUrl=new Map(items.ma
  return [...groups].filter(([,v])=>v.size>1).map(([key,urls])=>({key,urls:[...urls].sort(),independentConfirmation:false}));}
 export function delta(previous,current){
  const empty={baselineAvailable:false,newReferences:[],changedReferences:[],missingNotDeletion:[],sourceStateChanges:[],notify:false};
- if(!previous||previous.parserVersion!==current.parserVersion||previous.configHash!==current.configHash)return empty;
+ if(!previous||previous.parserVersion!==current.parserVersion||previous.configHash!==current.configHash){const key=i=>i.sourceKey+'|'+i.url+'|'+i.revision;return {...empty,newReferences:current.items.map(key)};}
  const key=i=>i.sourceKey+'|'+i.url,old=new Map(previous.items.map(i=>[key(i),i])),next=new Map(current.items.map(i=>[key(i),i]));
  const newReferences=[...next.keys()].filter(k=>!old.has(k)),changedReferences=[...next.keys()].filter(k=>old.has(k)&&old.get(k).revision!==next.get(k).revision),missingNotDeletion=[...old.keys()].filter(k=>!next.has(k));
  const oldStates=new Map(previous.sources.map(s=>[s.key,s.status]));const sourceStateChanges=current.sources.filter(s=>oldStates.get(s.key)!==s.status).map(s=>({key:s.key,from:oldStates.get(s.key)||'unknown',to:s.status}));
