@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "profiles": {
+    "economy": {"maxInputTokens": 12000, "maxOutputTokens": 2500, "maxToolCalls": 8, "timeoutMs": 45000},
+    "balanced": {"maxInputTokens": 24000, "maxOutputTokens": 5000, "maxToolCalls": 14, "timeoutMs": 90000},
+    "expert": {"maxInputTokens": 48000, "maxOutputTokens": 8000, "maxToolCalls": 20, "timeoutMs": 150000},
+    "deterministic": {"maxInputTokens": 0, "maxOutputTokens": 0, "maxToolCalls": 0, "timeoutMs": 180000}
+  },
+  "hardLimits": {"maxJobsPerRootEvent": 24, "maxDependencyDepth": 8, "maxAttemptsPerJob": 3},
+  "notes": "Budgets are ceilings. Model IDs remain separate configuration and may change without altering agent contracts."
+}

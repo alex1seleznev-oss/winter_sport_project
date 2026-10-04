@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {loadAgentRegistry} from '../lib/agents/registry.mjs';
+import {buildEditorialPipeline,buildPhotoPipeline,assertPipeline} from '../lib/agents/pipelines.mjs';
+
+const registry=loadAgentRegistry();
+
+test('editorial pipeline is research -> fact -> draft/visual -> QA -> publisher with no discovery-to-publish shortcut',()=>{const g=buildEditorialPipeline({registry,eventRef:'event:123',sourceRefs:['https://example.org/source']});assert.equal(g.length,6);assert.deepEqual(g.map(j=>j.agentId),['research','fact-check','editorial-writer','visual-director','qa','publisher']);const publisher=g.at(-1);const fact=g[1],qa=g[4];assert.deepEqual(new Set(publisher.dependencies),new Set([qa.jobId,fact.jobId]));assert.equal(g[0].dependencies.length,0);assert.equal(assertPipeline(g).jobs,6)});
+test('photo pipeline cannot skip curator or named-person review path',()=>{const g=buildPhotoPipeline({registry,athleteRef:'athlete:klaebo'});assert.deepEqual(g.map(j=>j.agentId),['photo-scout','media-curator','visual-director','qa']);assert.equal(g[2].payload.namedPersonMedia,true);assert.equal(g[1].dependencies[0],g[0].jobId);assert.equal(g[2].dependencies[0],g[1].jobId);assertPipeline(g)});
+test('budget profiles are bounded and deterministic has no model token/tool budget',()=>{const b=JSON.parse(readFileSync('config/agents/budgets.json','utf8'));for(const p of ['economy','balanced','expert','deterministic'])assert.ok(b.profiles[p]);assert.equal(b.profiles.deterministic.maxInputTokens,0);assert.equal(b.profiles.deterministic.maxToolCalls,0);assert.ok(b.hardLimits.maxJobsPerRootEvent<=24);assert.ok(b.hardLimits.maxDependencyDepth<=8);assert.ok(b.hardLimits.maxAttemptsPerJob<=3)});
+test('pipeline validator rejects cycles and external dependency injection',()=>{const g=buildPhotoPipeline({registry,athleteRef:'athlete:test'});const cyclic=g.map(j=>({...j,dependencies:[...j.dependencies]}));cyclic[0].dependencies=[cyclic.at(-1).jobId];assert.throws(()=>assertPipeline(cyclic),/PIPELINE_CYCLE/);const external=g.map(j=>({...j,dependencies:[...j.dependencies]}));external[1].dependencies=['outside'];assert.throws(()=>assertPipeline(external),/PIPELINE_EXTERNAL_DEPENDENCY/)});
