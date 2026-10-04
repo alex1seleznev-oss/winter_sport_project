@@ -1,7 +1,7 @@
 // Public source GETs only. No source credentials, private API or database client.
 import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';import {hash,normalize,syndication,delta,VERSION} from './model.mjs';import {telegram,rss,mediaIndex} from './parsers.mjs';
 const config=JSON.parse(readFileSync(new URL('../../config/public-media-watch.json',import.meta.url),'utf8'));
-const allowed=new Set(['https://t.me/s/radiolyzhi','https://t.me/s/ski_lizzer1n','https://t.me/s/skiclassics','https://t.me/s/russianbiathlon','https://www.sports.ru/biathlon/','https://www.sports.ru/skiing/','https://www.sports.ru/rss/topnews.xml','https://skisport.ru/']);
+const allowed=new Set(['https://t.me/s/radiolyzhi','https://t.me/s/ski_lizzer1n','https://t.me/s/skiclassics','https://t.me/s/russianbiathlon','https://t.me/s/penalty150','https://www.sports.ru/biathlon/','https://www.sports.ru/skiing/','https://www.sports.ru/rss/topnews.xml','https://skisport.ru/']);
 const out='artifacts/media-watch';mkdirSync(out,{recursive:true});
 const now=new Date();const packet={schemaVersion:2,parserVersion:VERSION,configHash:hash(config),startedAt:now.toISOString(),sources:[],items:[],notConnected:config.notConnected,calendarWrites:0,databaseWrites:0,publishedFacts:0};
 for(const source of config.sources){let receipt=null;
