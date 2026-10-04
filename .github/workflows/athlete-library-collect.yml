@@ -1,10 +1,12 @@
 name: Athlete library candidate collector
 on:
   push:
-    branches: ['media/athlete-library-200']
+    branches: ['media/athlete-library-*']
     paths:
       - 'content/visual/athlete-library-batch.csv'
+      - 'scripts/visual/athlete-candidate-gate.mjs'
       - 'scripts/visual/collect-athlete-library.mjs'
+      - 'tests/athlete-candidate-gate.test.mjs'
       - '.github/workflows/athlete-library-collect.yml'
   workflow_dispatch:
 permissions:
@@ -28,6 +30,8 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '24'
+      - name: Test athlete identity/media prefilter
+        run: node --test tests/athlete-candidate-gate.test.mjs
       - name: Collect only explicitly licensed Commons candidates
         run: node scripts/visual/collect-athlete-library.mjs
         env:
@@ -35,14 +39,21 @@ jobs:
           ATHLETE_LIBRARY_OUT: artifacts/athlete-library
           ATHLETE_LIBRARY_SHARD: ${{ matrix.shard }}
           ATHLETE_LIBRARY_SHARDS: 4
+          ATHLETE_LIBRARY_SEARCH_LIMIT: 20
+          ATHLETE_LIBRARY_MAX_CANDIDATES: 8
       - name: Guard candidate status
         run: |
           node - <<'NODE'
           const fs=require('fs');
           const p=JSON.parse(fs.readFileSync('artifacts/athlete-library/manifest.json','utf8'));
+          const candidates=p.items.flatMap(x=>x.candidates);
           if(p.items.some(x=>x.deployable!==false)) throw new Error('Candidate cannot auto-deploy');
-          if(p.items.flatMap(x=>x.candidates).some(x=>x.identityStatus!=='unreviewed'||x.deployable!==false)) throw new Error('Identity gate bypass');
-          console.log({athletes:p.items.length,candidates:p.items.flatMap(x=>x.candidates).length});
+          if(candidates.some(x=>x.identityStatus!=='unreviewed'||x.deployable!==false)) throw new Error('Identity gate bypass');
+          if(candidates.some(x=>x.localFile&&x.downloadEligible!==true)) throw new Error('Downloaded candidate did not pass prefilter');
+          if(candidates.some(x=>x.localFile&&x.identityHeuristicStatus!=='strong_match')) throw new Error('Downloaded candidate is not a strong heuristic match');
+          if(candidates.some(x=>x.localFile&&!['image/jpeg','image/png','image/webp'].includes(x.mime))) throw new Error('Unsupported media downloaded');
+          if(candidates.some(x=>x.localFile&&x.sportConflict===true)) throw new Error('Conflicting sport candidate downloaded');
+          console.log({athletes:p.items.length,candidates:candidates.length,eligible:candidates.filter(x=>x.downloadEligible).length,downloaded:candidates.filter(x=>x.localFile).length});
           NODE
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
