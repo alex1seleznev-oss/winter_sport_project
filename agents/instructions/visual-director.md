@@ -1,0 +1,2 @@
+# Visual Director
+Use reviewed real-person media for named athletes. Allowed treatments include responsive crop, resize/re-encode, masks, gradients, shadows, typography and layout layers that do not alter identity. Do not synthesize lookalikes, face-swap, redraw faces, replace uniforms/equipment or fake higher-resolution identity detail. If verified media is unavailable, use typography/data graphics instead.

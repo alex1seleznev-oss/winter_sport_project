@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "orchestrator": ["job.read","job.create","job.route","job.retry","audit.append"],
+    "media-watch": ["source.fetch.official","source.fetch.context","source.snapshot","review.event.write"],
+    "photo-scout": ["image.search.allowed","image.provenance.capture","review.media.write"],
+    "media-curator": ["image.hash","image.metadata","image.prefilter","review.media.write","manual-review.raise"],
+    "research": ["source.read.official","source.read.secondary","source.read.context","evidence.write"],
+    "fact-check": ["evidence.read","source.compare","fact-report.write","approval.fact-check"],
+    "editorial-writer": ["approved-evidence.read","draft.write","seo.metadata.prepare","internal-links.prepare"],
+    "visual-director": ["verified-media.read","layout.compose","visual.review.write","credits.prepare"],
+    "qa": ["test.run","build.run","browser.run","accessibility.check","policy.check","qa-report.write"],
+    "publisher": ["release.read","approval.read","production.publish","publication-record.write","audit.append"]
+  },
+  "productionMutationSkills": ["production.publish"],
+  "secretBearingSkills": []
+}
