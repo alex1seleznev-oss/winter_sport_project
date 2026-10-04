@@ -3,8 +3,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '19 */6 * * *'
-  push:
-    branches: ['automation/public-media-watch']
 permissions:
   contents: read
 concurrency:
@@ -17,6 +15,7 @@ jobs:
     permissions:
       contents: read
       actions: read
+      id-token: write
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -28,12 +27,15 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Deterministic public-source parser tests
         run: node --test tests/public-media-watch*.test.mjs
-      - name: Read previous trusted report (short retention, no database access)
+      - name: Read previous trusted report
         run: python scripts/media-watch/previous.py
         env:
           GH_TOKEN: ${{ github.token }}
-      - name: Read public pages and feeds (no source credentials or database writes)
+      - name: Read public pages and feeds
         run: node scripts/media-watch/run.mjs
+      - name: Upload bounded delta to private review queue
+        if: success()
+        run: node scripts/media-watch/upload.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
