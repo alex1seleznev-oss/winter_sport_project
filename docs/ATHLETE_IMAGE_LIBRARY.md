@@ -1,11 +1,13 @@
 # Winter Sports Hub — Athlete Image Library
 
-Version: 1.0 · 2026-10-04
+Version: 1.1 · 2026-10-04
 
 ## Purpose
 Build and maintain a persistent library of real athlete photographs for Winter Sports Hub. The library is used for homepage heroes, article/stage cards, subtle background layers, historical stories and editorial graphics.
 
-Target: ~200 priority athletes, with at least one reviewed real photograph per athlete. The seed roster is split into current international cross-country (25 men + 25 women), current Russian cross-country (25 + 25), current international biathlon (20 + 20), current Russian biathlon (20 + 20), and 20 historical stars.
+The first roster seeds about 200 priority athlete identities. **200 is not a cap.** The library is designed to grow by additional batches to hundreds or thousands of reviewed photographs and as many relevant athletes as the product needs. One athlete may have several reviewed photographs for different uses: action, portrait, podium/emotion, archival context, wide hero crop and mobile-safe crop.
+
+The seed roster starts with current international and Russian cross-country and biathlon athletes plus historical stars. Future roster batches may be added without changing the identity and rights gates below.
 
 ## Non-negotiable identity rule
 1. A named real athlete must be represented by a real source photograph. Do not publish an AI-generated lookalike, reconstructed face, face swap or a synthetic body presented as the athlete.
@@ -42,6 +44,8 @@ Official ranking sources define the priority roster. FIS/IBU standings and FLGR/
 - `90_PENDING_RIGHTS/` — URL/metadata only when reuse is unclear.
 - `99_MANIFEST/` — roster, provenance and review status.
 
+The repository is the operational source of truth for the collection pipeline and public deployable assets. Any ChatGPT Library copy is a working/reference surface and must not bypass repository review status.
+
 ## File naming
 Deployable source photo:
 `{sport}_{scope}_{sex}_{slug}_{year}_{source}.{ext}`
@@ -59,9 +63,23 @@ Do not rename a file in a way that implies a wrong athlete or date.
 - capture date/event when known;
 - SHA-256 of source bytes when copied;
 - review state: `candidate`, `identity_reviewed`, `rights_reviewed`, `deployable`, `rejected`;
+- automatic prefilter signals/reasons when available;
 - notes about crop/derivative processing.
 
 A file cannot be `deployable` unless both identity and rights are reviewed.
+
+## Automatic candidate prefilter
+Automatic collection is a research accelerator, not identity approval.
+
+Before candidate bytes are downloaded into the review artifact, the collector applies a conservative prefilter:
+- supported still-image MIME type only (`image/jpeg`, `image/png`, `image/webp`);
+- strong canonical first/family-name evidence after common Nordic transliteration normalization;
+- expected sport context in title/categories/description;
+- no obvious conflicting sport context such as hockey, gymnastics or orienteering.
+
+A candidate that does not pass this prefilter may still be a correct athlete. It remains metadata for manual review rather than being silently rejected. A candidate that passes is still `identityStatus=unreviewed` and `deployable=false` until a separate identity and rights review is completed.
+
+Search depth and candidates-per-athlete are configuration values, not fixed product limits. Batches and shards are used so the library can scale without turning one workflow run into an unbounded job.
 
 ## Visual selection
 Prefer, in order:
@@ -72,6 +90,8 @@ Prefer, in order:
 
 For homepage/background use prefer >=1600 px on the long side. For cards prefer >=800 px. Smaller originals may still be archived but must not be enlarged above source dimensions.
 
+For each high-priority athlete, aim over time to keep more than one usable composition when rights allow: at least one strong action/hero image and one crop-friendly portrait/card image. Do not collect near-duplicates merely to increase a numeric count.
+
 ## Website usage
 - Homepage hero: real photo layers only; large typography, dark navy masks/gradients and responsive crops are allowed.
 - Article cards: if a reviewed photo exists for the primary athlete, use it with visible credit path. If not, keep a typographic/metric card; never invent a face.
@@ -80,17 +100,19 @@ For homepage/background use prefer >=1600 px on the long side. For cards prefer 
 - Historical pages: label archival date/context so an old photo is not mistaken for 2026/27 participation.
 
 ## Collection workflow
-1. Refresh priority roster from official standings/rankings.
+1. Refresh or extend priority roster from official standings/rankings and curated historical needs.
 2. Search approved/reviewable sources by canonical and transliterated names.
 3. Record candidates and licence metadata before downloading.
-4. Download rights-cleared but not-yet-identified candidate bytes only into `80_IDENTITY_REVIEW`; never into public website assets.
-5. Verify visually that the image is actually the named athlete. After identity review, move it to the appropriate sport folder.
-6. Verify byte hash, dimensions and licence.
-7. Mark deployable and create web derivatives without enlarging the source.
-8. Add visible attribution route on the site.
-9. Run mobile/desktop visual QA and regression tests before merge/deploy.
+4. Apply the automatic media/name/sport prefilter.
+5. Download rights-cleared strong-match candidate bytes only into the identity-review artifact; never directly into public website assets.
+6. Manually/agent-review visually that the image is actually the named athlete. Keep ambiguous aliases or older surnames for explicit review rather than auto-rejection.
+7. Verify byte hash, dimensions and licence.
+8. Mark deployable only after identity + rights review and create web derivatives without enlarging the source.
+9. Add visible attribution route on the site.
+10. Run mobile/desktop visual QA and regression tests before merge/deploy.
+11. Add additional batches whenever product coverage exposes missing athletes or weak visual choices; there is no fixed final library size.
 
-## Current ranking anchors for this roster
+## Current ranking anchors for the seed roster
 - FIS Cross-Country 2025/26 final overall standings (men/women).
 - FLGR Cup of Russia 2026 / FLGR rating 2025/26.
 - IBU World Cup 2025/26 final Total Score.
@@ -100,6 +122,8 @@ The roster file stores which entries are exact ranking selections versus a curat
 
 ## Maintenance
 - Review the roster before each winter season and after major retirements/returns.
+- Add new athletes and extra useful photographs when editorial/design coverage needs them; do not treat the initial seed count as a quota.
 - Keep historical stars even after retirement, but move them to `05_LEGENDS`.
 - Do not delete an older licensed photo merely because a newer one appears; keep the best source and provenance history.
+- Prefer quality/diversity of composition over duplicate counts.
 - If rights change or provenance becomes uncertain, remove it from deployable assets first and keep only metadata pending review.
