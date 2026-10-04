@@ -86,6 +86,37 @@ Every task passed between agents must contain:
 ## Permission model
 Discovery agents are read-only against production data. Review agents may write review artifacts. Publisher is the only production mutation role. Photo Scout and Media Curator can never set `deployable=true`; that requires the explicit identity/rights gate.
 
+## Runtime decision — v1
+The first production implementation will use the OpenAI Agents SDK in TypeScript, running inside the existing application infrastructure rather than a separate bot fleet.
+
+- **Agent runtime:** OpenAI Agents SDK for typed agents, tools, handoffs, guardrails and tracing.
+- **Orchestrator runtime:** a server-side TypeScript worker/API route deployed with the Winter Sports Hub application on Vercel.
+- **Durable state / queue:** Supabase Postgres tables for jobs, dependencies, attempts, evidence references, approvals and audit records.
+- **Recurring triggers:** existing GitHub Actions for bounded scheduled collectors; Vercel cron/server routes may enqueue work where low-latency dispatch is useful.
+- **Specialist execution:** one registry entry per role; the orchestrator selects the role, model profile and allowed tools, then persists the result before any handoff.
+- **Publication:** deterministic publisher code, not an autonomous general-purpose model, performs production mutation only after the required gates are satisfied.
+
+This keeps orchestration, storage and approvals under project control while allowing model choice to be changed per role without redesigning the pipeline.
+
+## Model routing policy
+Do not use the strongest model for every task.
+
+- `economy`: routing, classification, deduplication, metadata extraction and routine Media Watch triage.
+- `balanced`: ambiguous media review, evidence synthesis and routine fact checks.
+- `expert`: final editorial writing, difficult research conflicts and complex visual/editorial decisions.
+- `deterministic`: QA tests, rights/identity state transitions, database mutations and publishing whenever rules can be expressed in code.
+
+Model IDs are configuration, not architecture. They may be upgraded or downgraded without changing agent contracts. Escalation to a more expensive profile is allowed only when confidence or task complexity crosses a configured threshold.
+
+## Cost controls
+- Hard monthly API budget and per-job token/tool-call ceilings.
+- Cache shared system instructions and stable project context.
+- Deduplicate source material before model calls.
+- Use deterministic code before model inference whenever possible.
+- Run expensive Research/Writer/Visual stages only for events that pass Media Watch triage.
+- Batch low-priority collection/review work where practical.
+- Log tokens, tool calls and estimated cost per agent/job so cost can be attributed and tuned.
+
 ## Automation model
 GitHub Actions remains the execution scheduler for bounded recurring jobs. Supabase can hold durable queues/job state. Each workflow calls one specialist worker rather than embedding all logic in one script. The orchestrator dispatches the next job only after dependency conditions are satisfied.
 
