@@ -42,6 +42,7 @@ jobs:
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/proposed/review_receipts.sql
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/review-guard.sql | tee artifacts/review-guard.txt
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/negative-review.sql | tee artifacts/negative-review.txt
+          docker exec "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 -c "insert into public.agent_jobs(agent_key,idempotency_key,status,payload) values ('source_scout','ci:legacy:pre','awaiting_review','{\"kind\":\"pre_migration_fixture\"}'::jsonb);"
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/proposed/agent_fabric_jobs.sql
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/proposed/agent_fabric_legacy_compat.sql
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/agent-queue.sql | tee artifacts/agent-queue.txt
