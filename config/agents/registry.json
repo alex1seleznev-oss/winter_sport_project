@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "agents": [
+    {"id":"orchestrator","purpose":"Route jobs, dependencies and retries","productionWrite":false,"reviewWrite":true,"inputs":["event","job-result"],"outputs":["job"]},
+    {"id":"media-watch","purpose":"Monitor approved sources and emit deltas","productionWrite":false,"reviewWrite":true,"inputs":["source-config"],"outputs":["source-snapshot","candidate-event"]},
+    {"id":"photo-scout","purpose":"Collect image candidates and provenance","productionWrite":false,"reviewWrite":true,"inputs":["athlete","event","source"],"outputs":["media-candidate"]},
+    {"id":"media-curator","purpose":"Deduplicate and prefilter athlete media","productionWrite":false,"reviewWrite":true,"inputs":["media-candidate"],"outputs":["curated-media-candidate","manual-review"]},
+    {"id":"research","purpose":"Build evidence packets from multiple sources","productionWrite":false,"reviewWrite":true,"inputs":["candidate-event","topic"],"outputs":["evidence-packet"]},
+    {"id":"fact-check","purpose":"Validate claims and conflicts","productionWrite":false,"reviewWrite":true,"inputs":["evidence-packet","draft"],"outputs":["fact-check-report","approved-evidence"]},
+    {"id":"editorial-writer","purpose":"Create article drafts from approved evidence","productionWrite":false,"reviewWrite":true,"inputs":["approved-evidence"],"outputs":["article-draft"]},
+    {"id":"visual-director","purpose":"Compose layouts using verified real-person media","productionWrite":false,"reviewWrite":true,"inputs":["article-draft","verified-media"],"outputs":["visual-package"]},
+    {"id":"qa","purpose":"Run build, browser, source, accessibility and policy checks","productionWrite":false,"reviewWrite":true,"inputs":["article-draft","visual-package","code-change"],"outputs":["qa-report","release-candidate"]},
+    {"id":"publisher","purpose":"Promote reviewed release candidates to production-facing state","productionWrite":true,"reviewWrite":true,"inputs":["release-candidate","qa-report","fact-check-report"],"outputs":["publication-record"]}
+  ],
+  "gates": {
+    "namedPersonMedia": ["identity-reviewed", "rights-reviewed"],
+    "articlePublication": ["fact-check-passed", "qa-passed"],
+    "productionMutation": ["publisher-only"]
+  }
+}
