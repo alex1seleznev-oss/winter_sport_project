@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "policy": {
+    "externalCode": "review-license-pin-test-before-use",
+    "credentials": "never-in-job-payload",
+    "productionMutation": "publisher-only",
+    "namedPersonMedia": "identity-and-rights-reviewed"
+  },
+  "skills": [
+    {"id":"source.fetch.official","origin":"project","implementation":"scripts/media-watch/run.mjs","risk":"read-network","review":"deterministic-tests"},
+    {"id":"source.fetch.context","origin":"project","implementation":"scripts/media-watch/run.mjs","risk":"read-network","review":"review-only-output"},
+    {"id":"source.snapshot","origin":"project","implementation":"scripts/media-watch/model.mjs","risk":"review-write","review":"provenance-hash"},
+    {"id":"image.search.allowed","origin":"project","implementation":"scripts/visual/collect-athlete-library.mjs","risk":"read-network","review":"allowlisted-hosts-and-licenses"},
+    {"id":"image.provenance.capture","origin":"project","implementation":"scripts/visual/collect-athlete-library.mjs","risk":"review-write","review":"rights-metadata"},
+    {"id":"image.prefilter","origin":"project","implementation":"scripts/visual/athlete-candidate-gate.mjs","risk":"review-write","review":"identity-remains-unreviewed"},
+    {"id":"test.run","origin":"project","implementation":"npm test","risk":"local-execution","review":"ci"},
+    {"id":"build.run","origin":"project","implementation":"npm run build","risk":"local-execution","review":"ci"},
+    {"id":"browser.run","origin":"project","implementation":"playwright","risk":"local-execution","review":"ci"},
+    {"id":"production.publish","origin":"project","implementation":"disabled-pending-adapter","risk":"production-write","review":"fact-check-plus-qa-plus-auth"}
+  ]
+}

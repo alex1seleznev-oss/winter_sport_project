@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "types": {
+    "source-snapshot": {"producer":["media-watch"],"consumers":["research","fact-check"],"validator":"validateSourceSnapshot"},
+    "candidate-event": {"producer":["media-watch"],"consumers":["research"],"validator":"validateCandidateEvent"},
+    "media-candidate": {"producer":["photo-scout"],"consumers":["media-curator"],"validator":"validateMediaCandidate"},
+    "curated-media-candidate": {"producer":["media-curator"],"consumers":["visual-director"],"validator":"validateCuratedMediaCandidate"},
+    "manual-review": {"producer":["media-curator","fact-check","qa"],"consumers":["orchestrator"],"validator":"validateManualReview"},
+    "evidence-packet": {"producer":["research"],"consumers":["fact-check"],"validator":"validateEvidencePacket"},
+    "fact-check-report": {"producer":["fact-check"],"consumers":["qa","publisher"],"validator":"validateFactCheckReport"},
+    "approved-evidence": {"producer":["fact-check"],"consumers":["editorial-writer"],"validator":"validateApprovedEvidence"},
+    "article-draft": {"producer":["editorial-writer"],"consumers":["visual-director","qa"],"validator":"validateArticleDraft"},
+    "visual-package": {"producer":["visual-director"],"consumers":["qa"],"validator":"validateVisualPackage"},
+    "qa-report": {"producer":["qa"],"consumers":["publisher"],"validator":"validateQaReport"},
+    "release-candidate": {"producer":["qa"],"consumers":["publisher"],"validator":"validateReleaseCandidate"},
+    "publication-record": {"producer":["publisher"],"consumers":["orchestrator"],"validator":"validatePublicationRecord"}
+  }
+}
