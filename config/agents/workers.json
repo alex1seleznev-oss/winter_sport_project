@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "workers": {
+    "orchestrator": {"mode":"internal","enabled":true},
+    "media-watch": {"mode":"github-action","enabled":true,"workflow":".github/workflows/public-media-watch.yml","entrypoint":"scripts/media-watch/run.mjs"},
+    "photo-scout": {"mode":"github-action","enabled":true,"workflow":".github/workflows/athlete-library-collect.yml","entrypoint":"scripts/visual/collect-athlete-library.mjs","phase":"collect"},
+    "media-curator": {"mode":"github-action","enabled":true,"workflow":".github/workflows/athlete-library-collect.yml","entrypoint":"scripts/visual/collect-athlete-library.mjs","phase":"prefilter"},
+    "research": {"mode":"model-runtime","enabled":false},
+    "fact-check": {"mode":"model-runtime","enabled":false},
+    "editorial-writer": {"mode":"model-runtime","enabled":false},
+    "visual-director": {"mode":"model-runtime","enabled":false},
+    "qa": {"mode":"local-command","enabled":true,"commands":["npm test","npm run build","npm run test:http"]},
+    "publisher": {"mode":"deterministic-publisher","enabled":false,"reason":"Requires separate authenticated production adapter after gate persistence is live"}
+  }
+}
