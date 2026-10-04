@@ -1,0 +1,21 @@
+import {readFileSync} from 'node:fs';
+import {checkIntakePacket} from './intake-check.mjs';
+const packet=JSON.parse(readFileSync('artifacts/media-watch/packet.json','utf8'));
+checkIntakePacket(packet);
+const refs=[...(packet.delta?.newReferences||[]),...(packet.delta?.changedReferences||[])];
+if(!refs.length){console.log(JSON.stringify({ok:true,skipped:true,reason:'NO_DELTA'}));process.exit(0)}
+if(refs.length>100)throw new Error('DELTA_TOO_LARGE');
+const byId=new Map(packet.items.map(i=>[i.sourceKey+'|'+i.url+'|'+i.revision,i]));
+const items=refs.map(r=>byId.get(r.sourceKey+'|'+r.url+'|'+r.revision)).filter(Boolean);
+if(items.length!==refs.length)throw new Error('DELTA_ITEM_MISMATCH');
+const reqUrl=process.env.ACTIONS_ID_TOKEN_REQUEST_URL,reqToken=process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN;
+if(!reqUrl||!reqToken)throw new Error('OIDC_ENV_MISSING');
+const oidc=await fetch(reqUrl+'&audience='+encodeURIComponent('winter-sports-media-intake'),{headers:{authorization:'Bearer '+reqToken}});
+if(!oidc.ok)throw new Error('OIDC_TOKEN_FAILED_'+oidc.status);
+const {value:token}=await oidc.json();
+const body={schemaVersion:2,packetHash:packet.packetHash,workflowRunId:process.env.GITHUB_RUN_ID||null,items};
+const endpoint='https://wmiypacyraepljalppub.supabase.co/functions/v1/media-intake';
+const res=await fetch(endpoint,{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(20000)});
+const text=await res.text();if(!res.ok)throw new Error('INTAKE_FAILED_'+res.status+'_'+text.slice(0,300));
+const receipt=JSON.parse(text);if(!receipt.ok||receipt.calendarWrites!==0||receipt.publishedFacts!==0)throw new Error('UNSAFE_RECEIPT');
+console.log(JSON.stringify(receipt));
