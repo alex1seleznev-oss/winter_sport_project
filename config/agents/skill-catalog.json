@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "policy": {
     "externalCode": "review-license-pin-test-before-use",
     "credentials": "never-in-job-payload",
@@ -7,15 +7,55 @@
     "namedPersonMedia": "identity-and-rights-reviewed"
   },
   "skills": [
-    {"id":"source.fetch.official","origin":"project","implementation":"scripts/media-watch/run.mjs","risk":"read-network","review":"deterministic-tests"},
-    {"id":"source.fetch.context","origin":"project","implementation":"scripts/media-watch/run.mjs","risk":"read-network","review":"review-only-output"},
-    {"id":"source.snapshot","origin":"project","implementation":"scripts/media-watch/model.mjs","risk":"review-write","review":"provenance-hash"},
-    {"id":"image.search.allowed","origin":"project","implementation":"scripts/visual/collect-athlete-library.mjs","risk":"read-network","review":"allowlisted-hosts-and-licenses"},
-    {"id":"image.provenance.capture","origin":"project","implementation":"scripts/visual/collect-athlete-library.mjs","risk":"review-write","review":"rights-metadata"},
-    {"id":"image.prefilter","origin":"project","implementation":"scripts/visual/athlete-candidate-gate.mjs","risk":"review-write","review":"identity-remains-unreviewed"},
-    {"id":"test.run","origin":"project","implementation":"npm test","risk":"local-execution","review":"ci"},
-    {"id":"build.run","origin":"project","implementation":"npm run build","risk":"local-execution","review":"ci"},
-    {"id":"browser.run","origin":"project","implementation":"playwright","risk":"local-execution","review":"ci"},
-    {"id":"production.publish","origin":"project","implementation":"disabled-pending-adapter","risk":"production-write","review":"fact-check-plus-qa-plus-auth"}
+    {"id":"job.read","origin":"project","status":"active","implementation":"project:lib/agents/store-memory.mjs","risk":"control-plane-read","review":"unit-tests"},
+    {"id":"job.create","origin":"project","status":"active","implementation":"project:lib/agents/contracts.mjs","risk":"review-write","review":"contract-validation"},
+    {"id":"job.route","origin":"project","status":"active","implementation":"project:lib/agents/router.mjs","risk":"control-plane-write","review":"deterministic-routing-tests"},
+    {"id":"job.retry","origin":"project","status":"active","implementation":"project:lib/agents/store-memory.mjs","risk":"control-plane-write","review":"retry-ceiling-tests"},
+    {"id":"audit.append","origin":"project","status":"active","implementation":"project:lib/agents/contracts.mjs","risk":"audit-write","review":"secret-field-guard"},
+
+    {"id":"source.fetch.official","origin":"project","status":"active","implementation":"project:scripts/media-watch/run.mjs","risk":"read-network","review":"allowlisted-source-tests"},
+    {"id":"source.fetch.context","origin":"project","status":"active","implementation":"project:scripts/media-watch/run.mjs","risk":"read-network","review":"review-only-output"},
+    {"id":"source.snapshot","origin":"project","status":"active","implementation":"project:scripts/media-watch/model.mjs","risk":"review-write","review":"provenance-hash"},
+    {"id":"review.event.write","origin":"project","status":"active","implementation":"project:scripts/media-watch/upload.mjs","risk":"review-write","review":"oidc-bounded-intake"},
+
+    {"id":"image.search.allowed","origin":"project","status":"active","implementation":"project:scripts/visual/collect-athlete-library.mjs","risk":"read-network","review":"allowlisted-hosts-and-licenses"},
+    {"id":"image.provenance.capture","origin":"project","status":"active","implementation":"project:scripts/visual/collect-athlete-library.mjs","risk":"review-write","review":"rights-metadata"},
+    {"id":"review.media.write","origin":"project","status":"active","implementation":"project:scripts/visual/collect-athlete-library.mjs","risk":"review-write","review":"never-deployable-by-collector"},
+    {"id":"image.hash","origin":"project","status":"active","implementation":"project:scripts/visual/collect-athlete-library.mjs","risk":"local-compute","review":"sha256-recorded"},
+    {"id":"image.metadata","origin":"project","status":"active","implementation":"project:scripts/visual/collect-athlete-library.mjs","risk":"local-compute","review":"metadata-contract"},
+    {"id":"image.prefilter","origin":"project","status":"active","implementation":"project:scripts/visual/athlete-candidate-gate.mjs","risk":"review-write","review":"identity-remains-unreviewed"},
+    {"id":"manual-review.raise","origin":"project","status":"active","implementation":"project:lib/agents/artifacts.mjs","risk":"review-write","review":"typed-manual-review-artifact"},
+
+    {"id":"source.read.official","origin":"project","status":"contract-only","implementation":"disabled:model-runtime-adapter","risk":"read-network","review":"official-source-priority"},
+    {"id":"source.read.secondary","origin":"project","status":"contract-only","implementation":"disabled:model-runtime-adapter","risk":"read-network","review":"evidence-source-label"},
+    {"id":"source.read.context","origin":"project","status":"contract-only","implementation":"disabled:model-runtime-adapter","risk":"read-network","review":"context-never-authoritative"},
+    {"id":"evidence.write","origin":"project","status":"contract-only","implementation":"project:lib/agents/artifacts.mjs","risk":"review-write","review":"evidence-packet-validator"},
+
+    {"id":"evidence.read","origin":"project","status":"contract-only","implementation":"project:lib/agents/artifacts.mjs","risk":"review-read","review":"typed-evidence-packet"},
+    {"id":"source.compare","origin":"project","status":"contract-only","implementation":"project:lib/agents/artifacts.mjs","risk":"analysis","review":"deterministic-source-authority"},
+    {"id":"fact-report.write","origin":"project","status":"contract-only","implementation":"project:lib/agents/artifacts.mjs","risk":"review-write","review":"blocking-check-consistency"},
+    {"id":"approval.fact-check","origin":"project","status":"contract-only","implementation":"project:lib/agents/artifacts.mjs","risk":"approval-write","review":"pass-only-approved-evidence"},
+
+    {"id":"approved-evidence.read","origin":"project","status":"contract-only","implementation":"project:lib/agents/artifacts.mjs","risk":"review-read","review":"approved-evidence-validator"},
+    {"id":"draft.write","origin":"project","status":"contract-only","implementation":"disabled:model-runtime-adapter","risk":"review-write","review":"article-draft-contract"},
+    {"id":"seo.metadata.prepare","origin":"project","status":"contract-only","implementation":"disabled:model-runtime-adapter","risk":"review-write","review":"draft-only-no-publication"},
+    {"id":"internal-links.prepare","origin":"project","status":"contract-only","implementation":"disabled:model-runtime-adapter","risk":"review-write","review":"validated-internal-refs"},
+
+    {"id":"verified-media.read","origin":"project","status":"contract-only","implementation":"project:lib/agents/artifacts.mjs","risk":"review-read","review":"identity-rights-gates"},
+    {"id":"layout.compose","origin":"project","status":"contract-only","implementation":"disabled:model-runtime-adapter","risk":"review-write","review":"real-person-visual-policy"},
+    {"id":"visual.review.write","origin":"project","status":"contract-only","implementation":"project:lib/agents/artifacts.mjs","risk":"review-write","review":"visual-package-validator"},
+    {"id":"credits.prepare","origin":"project","status":"contract-only","implementation":"disabled:model-runtime-adapter","risk":"review-write","review":"source-credit-required"},
+
+    {"id":"test.run","origin":"project","status":"active","implementation":"command:npm test","risk":"local-execution","review":"ci"},
+    {"id":"build.run","origin":"project","status":"active","implementation":"command:npm run build","risk":"local-execution","review":"ci"},
+    {"id":"browser.run","origin":"project","status":"active","implementation":"command:playwright test","risk":"local-execution","review":"ci-desktop-mobile"},
+    {"id":"accessibility.check","origin":"project","status":"active","implementation":"command:playwright test","risk":"local-execution","review":"browser-regression"},
+    {"id":"policy.check","origin":"project","status":"active","implementation":"command:npm test","risk":"local-execution","review":"deterministic-policy-tests"},
+    {"id":"qa-report.write","origin":"project","status":"active","implementation":"project:lib/agents/artifacts.mjs","risk":"review-write","review":"qa-report-consistency"},
+
+    {"id":"release.read","origin":"project","status":"contract-only","implementation":"project:lib/agents/artifacts.mjs","risk":"review-read","review":"release-gate-validator"},
+    {"id":"approval.read","origin":"project","status":"contract-only","implementation":"project:lib/agents/store-memory.mjs","risk":"approval-read","review":"gate-tests"},
+    {"id":"production.publish","origin":"project","status":"disabled","implementation":"disabled:publisher-auth-adapter","risk":"production-write","review":"fact-check-plus-qa-plus-separate-auth"},
+    {"id":"publication-record.write","origin":"project","status":"contract-only","implementation":"project:lib/agents/artifacts.mjs","risk":"audit-write","review":"publication-record-validator"}
   ]
 }
