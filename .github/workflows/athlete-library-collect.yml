@@ -1,0 +1,45 @@
+name: Athlete library candidate collector
+on:
+  push:
+    branches: ['media/athlete-library-200']
+    paths:
+      - 'content/visual/athlete-library-batch.csv'
+      - 'scripts/visual/collect-athlete-library.mjs'
+      - '.github/workflows/athlete-library-collect.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: athlete-library-candidates
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Collect only explicitly licensed Commons candidates
+        run: node scripts/visual/collect-athlete-library.mjs
+        env:
+          ATHLETE_LIBRARY_BATCH: content/visual/athlete-library-batch.csv
+          ATHLETE_LIBRARY_OUT: artifacts/athlete-library
+      - name: Guard candidate status
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const p=JSON.parse(fs.readFileSync('artifacts/athlete-library/manifest.json','utf8'));
+          if(p.items.some(x=>x.deployable!==false)) throw new Error('Candidate cannot auto-deploy');
+          if(p.items.flatMap(x=>x.candidates).some(x=>x.identityStatus!=='unreviewed'||x.deployable!==false)) throw new Error('Identity gate bypass');
+          console.log({athletes:p.items.length,candidates:p.items.flatMap(x=>x.candidates).length});
+          NODE
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: athlete-library-candidates-${{ github.run_id }}
+          path: artifacts/athlete-library/
+          retention-days: 7
