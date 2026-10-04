@@ -40,6 +40,15 @@ create trigger agent_jobs_legacy_compat
 before insert or update on public.agent_jobs
 for each row execute function public.agent_jobs_legacy_compat_fill();
 
+-- Existing legacy rows received the new boolean column with its DEFAULT false before
+-- the compatibility trigger existed. Normalize them once so the durable projection
+-- matches the legacy status semantics used for all future writes.
+update public.agent_jobs
+set review_required=(status='awaiting_review'),updated_at=now()
+where agent_key is not null
+  and job_type like 'legacy.%'
+  and review_required is distinct from (status='awaiting_review');
+
 -- Keep the existing media-intake/server workflow operational without granting it
 -- access to the durable-runtime columns. All new Agent Fabric mutations remain RPC-only.
 grant insert(agent_key,idempotency_key,status,payload,attempts,available_at,locked_until,created_at,updated_at)
