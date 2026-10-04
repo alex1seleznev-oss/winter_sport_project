@@ -7,10 +7,22 @@ insert into agent_queue_assertions values
 ('anon_no_job_read',not has_table_privilege('anon','public.agent_jobs','SELECT'),'{}'),
 ('authenticated_no_job_read',not has_table_privilege('authenticated','public.agent_jobs','SELECT'),'{}'),
 ('service_role_can_read',has_table_privilege('service_role','public.agent_jobs','SELECT'),'{}'),
-('service_role_no_direct_insert',not has_table_privilege('service_role','public.agent_jobs','INSERT'),'{}'),
+('service_role_no_table_insert',not has_table_privilege('service_role','public.agent_jobs','INSERT'),'{}'),
+('service_role_legacy_insert_column',has_column_privilege('service_role','public.agent_jobs','agent_key','INSERT'),'{}'),
+('service_role_no_runtime_column_insert',not has_column_privilege('service_role','public.agent_jobs','job_type','INSERT'),'{}'),
 ('service_role_no_artifact_update',not has_table_privilege('service_role','public.agent_artifacts','UPDATE'),'{}'),
 ('anon_cannot_enqueue',not has_function_privilege('anon','public.agent_enqueue_job(jsonb,text)','EXECUTE'),'{}'),
 ('service_role_can_enqueue',has_function_privilege('service_role','public.agent_enqueue_job(jsonb,text)','EXECUTE'),'{}');
+
+-- Simulate the pre-existing media-intake style write: only legacy columns are supplied.
+set role service_role;
+insert into public.agent_jobs(agent_key,idempotency_key,status,payload)
+values('source_scout','ci:legacy:1','awaiting_review','{"kind":"compatibility_probe"}'::jsonb);
+reset role;
+insert into agent_queue_assertions
+select 'legacy_insert_bridge',job_type='legacy.source_scout' and agent_id='source_scout' and review_required=true and attempt=attempts,
+       jsonb_build_object('jobType',job_type,'agentId',agent_id,'reviewRequired',review_required)
+from public.agent_jobs where idempotency_key='ci:legacy:1';
 
 set role service_role;
 select public.agent_enqueue_job(
@@ -23,6 +35,8 @@ select public.agent_enqueue_job(
 ) as fact_job;
 reset role;
 
+insert into agent_queue_assertions values
+('runtime_job_detached_from_legacy_registry',(select agent_key is null from public.agent_jobs where id='10000000-0000-4000-8000-000000000001'),'{}');
 insert into agent_queue_assertions
 select 'dependency_blocks_claim',not public.agent_job_ready('10000000-0000-4000-8000-000000000002'::uuid),jsonb_build_object('status',(select status from public.agent_jobs where id='10000000-0000-4000-8000-000000000002'));
 
