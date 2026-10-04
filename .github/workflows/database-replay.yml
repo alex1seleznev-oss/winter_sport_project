@@ -43,6 +43,7 @@ jobs:
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/review-guard.sql | tee artifacts/review-guard.txt
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/negative-review.sql | tee artifacts/negative-review.txt
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/proposed/agent_fabric_jobs.sql
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/proposed/agent_fabric_legacy_compat.sql
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/agent-queue.sql | tee artifacts/agent-queue.txt
       - name: Real concurrent transaction test
         env:
