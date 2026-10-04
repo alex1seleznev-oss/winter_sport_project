@@ -6,6 +6,7 @@
   {"key":"tg-lizzerin","name":"Lizzerin","kind":"community","adapter":"telegram","sport":"cross_country","url":"https://t.me/s/ski_lizzer1n","fetchUrl":"https://t.me/s/ski_lizzer1n","handle":"ski_lizzer1n"},
   {"key":"tg-skiclassics","name":"Лыжная классика","kind":"community","adapter":"telegram","sport":"cross_country","url":"https://t.me/skiclassics","fetchUrl":"https://t.me/s/skiclassics","handle":"skiclassics"},
   {"key":"tg-sbr","name":"Канал СБР","kind":"official_social","adapter":"telegram","sport":"biathlon","url":"https://t.me/russianbiathlon","fetchUrl":"https://t.me/s/russianbiathlon","handle":"russianbiathlon"},
+  {"key":"tg-penalty150","name":"Штрафные 150","kind":"community","adapter":"telegram","sport":"biathlon","url":"https://t.me/penalty150","fetchUrl":"https://t.me/s/penalty150","handle":"penalty150"},
   {"key":"sports-biathlon","name":"Sports.ru · биатлон","kind":"media","adapter":"sports_index","sport":"biathlon","url":"https://www.sports.ru/biathlon/","fetchUrl":"https://www.sports.ru/biathlon/"},
   {"key":"sports-skiing","name":"Sports.ru · лыжные гонки","kind":"media","adapter":"sports_index","sport":"cross_country","url":"https://www.sports.ru/skiing/","fetchUrl":"https://www.sports.ru/skiing/"},
   {"key":"sports-rss","name":"Sports.ru · RSS","kind":"media","adapter":"rss","sport":"mixed","url":"https://www.sports.ru/rss/topnews.xml","fetchUrl":"https://www.sports.ru/rss/topnews.xml"},
