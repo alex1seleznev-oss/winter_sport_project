@@ -29,7 +29,7 @@ jobs:
           node-version: '24'
       - name: Verify exact exported migration text
         run: node scripts/check-migration-history.mjs
-      - name: Replay historical migrations and test review preconditions
+      - name: Replay historical migrations and test guarded control planes
         env:
           PG_CONTAINER: ${{ job.services.postgres.id }}
         run: |
@@ -42,6 +42,9 @@ jobs:
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/proposed/review_receipts.sql
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/review-guard.sql | tee artifacts/review-guard.txt
           docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/negative-review.sql | tee artifacts/negative-review.txt
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/proposed/agent_fabric_jobs.sql
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/proposed/agent_fabric_legacy_compat.sql
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d wsh_ci -v ON_ERROR_STOP=1 < database/tests/agent-queue.sql | tee artifacts/agent-queue.txt
       - name: Real concurrent transaction test
         env:
           PG_CONTAINER: ${{ job.services.postgres.id }}
@@ -64,6 +67,7 @@ jobs:
             artifacts/migration-history.json
             artifacts/review-guard.txt
             artifacts/negative-review.txt
+            artifacts/agent-queue.txt
             artifacts/concurrency-check.json
             artifacts/restore-check.txt
           retention-days: 7
