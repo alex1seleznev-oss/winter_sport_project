@@ -1,0 +1,12 @@
+.heroCollage{position:absolute;z-index:-2;top:9%;right:-1%;bottom:9%;left:56%;display:grid;grid-template-columns:1.05fr .9fr 1fr;gap:7px;pointer-events:none;opacity:.9;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 100%);mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 100%)}
+.heroCollagePanel{display:block;min-width:0;background-size:cover;background-repeat:no-repeat;background-position:50% 24%;box-shadow:inset 0 0 0 1px #d8efff24,0 24px 70px #020b127a}
+.heroCollagePanel[data-collage-index="0"]{clip-path:polygon(14% 0,100% 0,88% 100%,0 100%)}
+.heroCollagePanel[data-collage-index="1"]{clip-path:polygon(10% 0,100% 0,90% 100%,0 100%)}
+.heroCollagePanel[data-collage-index="2"]{clip-path:polygon(8% 0,100% 0,100% 100%,0 100%)}
+.heroCollagePanel[data-collage-athlete="laegreid"]{background-position:50% 0}
+.heroCollagePanel[data-collage-athlete="klaebo"]{background-position:47% 45%}
+.heroCollagePanel[data-collage-athlete="korostelev"]{background-position:50% 0}
+.heroCollagePanel[data-collage-athlete="bjoerndalen"]{background-position:49% 50%}
+@media(max-width:1100px){.heroCollage{left:54%;right:-5%;top:12%;bottom:13%;gap:5px;opacity:.82}}
+@media(max-width:700px){.heroCollage{top:11%;right:-22%;bottom:47%;left:48%;grid-template-columns:1fr .92fr 1fr;gap:3px;opacity:.72;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18%,#000 100%);mask-image:linear-gradient(90deg,transparent 0,#000 18%,#000 100%)}.heroCollagePanel{box-shadow:inset 0 0 0 1px #d8efff1a,0 12px 36px #020b125c}.heroCollagePanel[data-collage-athlete="klaebo"]{background-position:52% 35%}.heroCollagePanel[data-collage-athlete="bjoerndalen"]{background-position:56% 45%}}
+@media(prefers-reduced-motion:reduce){.heroCollage,.heroCollagePanel{animation:none!important;transition:none!important}}
