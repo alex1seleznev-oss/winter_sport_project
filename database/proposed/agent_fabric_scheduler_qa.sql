@@ -1,7 +1,7 @@
--- Return a bounded list of ready durable jobs that the caller is allowed to dispatch.
--- Keep the database fail-closed as well as the application scheduler: only the four
--- reviewed model-runtime specialists plus deterministic QA may ever be returned.
--- Publisher stays excluded at the database layer even if publication gates pass.
+-- Production delta for deterministic QA scheduling.
+-- The application scheduler gained the deterministic-qa worker in Agent Fabric v4;
+-- widen the guarded database candidate RPC by exactly one role. Publisher remains
+-- excluded independently of caller input and publication approvals.
 
 create or replace function public.agent_dispatch_candidates(
   p_agent_ids text[],

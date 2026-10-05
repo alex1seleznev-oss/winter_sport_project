@@ -23,18 +23,23 @@ select public.agent_enqueue_job(
 );
 select public.agent_record_approval('10000000-0000-4000-8000-000000000007','fact-check-passed','approved','[]','ci');
 select public.agent_record_approval('10000000-0000-4000-8000-000000000007','qa-passed','approved','[]','ci');
+select public.agent_enqueue_job(
+ '{"jobId":"10000000-0000-4000-8000-000000000008","type":"qa.scheduler","createdAt":"2026-10-05T08:10:03Z","requestedBy":"ci","agentId":"qa","status":"queued","confidence":"verified","reviewRequired":false,"inputRefs":[],"sourceRefs":[],"dependencies":[],"outputs":[],"auditTrail":[],"attempt":0,"maxAttempts":1,"payload":{"probe":"deterministic-qa-ready"}}'::jsonb,
+ 'ci:scheduler:qa:1'
+);
 
-create temporary table scheduler_model_candidates as
-select * from public.agent_dispatch_candidates(array['research','fact-check','editorial-writer','visual-director'],5);
+create temporary table scheduler_runtime_candidates as
+select * from public.agent_dispatch_candidates(array['research','fact-check','editorial-writer','visual-director','qa'],5);
 create temporary table scheduler_publisher_candidates as
 select * from public.agent_dispatch_candidates(array['publisher'],5);
 reset role;
 
 insert into agent_scheduler_assertions values
-('ready_research_is_returned',exists(select 1 from scheduler_model_candidates where job_id='10000000-0000-4000-8000-000000000005'),jsonb_build_object('candidates',(select jsonb_agg(job_id) from scheduler_model_candidates))),
-('unapproved_named_person_visual_is_blocked',not exists(select 1 from scheduler_model_candidates where job_id='10000000-0000-4000-8000-000000000006'),'{}'),
+('ready_research_is_returned',exists(select 1 from scheduler_runtime_candidates where job_id='10000000-0000-4000-8000-000000000005'),jsonb_build_object('candidates',(select jsonb_agg(job_id) from scheduler_runtime_candidates))),
+('ready_deterministic_qa_is_returned',exists(select 1 from scheduler_runtime_candidates where job_id='10000000-0000-4000-8000-000000000008'),jsonb_build_object('candidates',(select jsonb_agg(job_id) from scheduler_runtime_candidates))),
+('unapproved_named_person_visual_is_blocked',not exists(select 1 from scheduler_runtime_candidates where job_id='10000000-0000-4000-8000-000000000006'),'{}'),
 ('publisher_is_excluded_even_when_publication_gates_pass',(select count(*)=0 from scheduler_publisher_candidates),jsonb_build_object('publisherReady',public.agent_job_ready('10000000-0000-4000-8000-000000000007'))),
-('candidate_batch_is_bounded',(select count(*)<=5 from scheduler_model_candidates),jsonb_build_object('count',(select count(*) from scheduler_model_candidates)));
+('candidate_batch_is_bounded',(select count(*)<=5 from scheduler_runtime_candidates),jsonb_build_object('count',(select count(*) from scheduler_runtime_candidates)));
 
 DO $$ BEGIN
  IF EXISTS(select 1 from agent_scheduler_assertions where not passed) THEN
