@@ -44,17 +44,19 @@ test('scheduler worker loading does not require GitHub workflow files in serverl
  const workers=loadSchedulerWorkers({root,registry});
  assert.equal(workers.workers['media-watch'].mode,'github-action');
  assert.equal(workers.workers.research.mode,'model-runtime');
+ assert.equal(workers.workers.qa.mode,'deterministic-qa');
  assert.equal(workers.workers.publisher.enabled,false);
 });
 
-test('scheduler asks only for enabled non-production model workers and dispatches one job',async()=>{
+test('scheduler asks for enabled bounded model and QA workers, never Publisher',async()=>{
  const {scheduler,store,dispatcher}=schedulerWith({candidates:['10000000-0000-4000-8000-000000000001'],recovered:2});
  const result=await scheduler.runOnce({workerId:'scheduler-ci',candidateLimit:4,leaseSeconds:300});
  assert.equal(result.status,'dispatched');
  assert.equal(result.recovered,2);
  assert.equal(dispatcher.calls.length,1);
  const request=store.calls.find(call=>call.op==='candidates').args;
- assert.deepEqual(new Set(request.agentIds),new Set(['research','fact-check','editorial-writer','visual-director']));
+ assert.deepEqual(new Set(request.agentIds),new Set(['research','fact-check','editorial-writer','visual-director','qa']));
+ assert.equal(request.agentIds.includes('publisher'),false);
  assert.equal(request.limit,4);
 });
 

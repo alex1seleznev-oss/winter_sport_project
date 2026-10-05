@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "workers": {
     "orchestrator": {"mode":"internal","enabled":true},
     "media-watch": {"mode":"github-action","enabled":true,"workflow":".github/workflows/public-media-watch.yml","entrypoint":"scripts/media-watch/run.mjs"},
@@ -9,7 +9,7 @@
     "fact-check": {"mode":"model-runtime","enabled":true},
     "editorial-writer": {"mode":"model-runtime","enabled":true},
     "visual-director": {"mode":"model-runtime","enabled":true},
-    "qa": {"mode":"local-command","enabled":true,"commands":["npm test","npm run build","npm run test:http"]},
+    "qa": {"mode":"deterministic-qa","enabled":true},
     "publisher": {"mode":"deterministic-publisher","enabled":false,"reason":"Requires separate authenticated production adapter after gate persistence is live"}
   }
 }
