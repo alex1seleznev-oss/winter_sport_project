@@ -3,8 +3,14 @@ import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 import { createRemoteJWKSet, jwtVerify } from "npm:jose@6.1.0";
 
 const allowedHosts=new Set(["t.me","www.sports.ru","sports.ru","skisport.ru","www.skisport.ru","vk.ru","www.instagram.com","instagram.com","www.youtube.com","youtube.com"]);
+const EVIDENCE_MAX_CHARS=6000;
 const jwks=createRemoteJWKSet(new URL("https://token.actions.githubusercontent.com/.well-known/jwks"));
 const json=(x:unknown,s=200)=>new Response(JSON.stringify(x),{status:s,headers:{"content-type":"application/json","cache-control":"no-store","x-content-type-options":"nosniff"}});
+
+async function sha256Text(value:string){
+ const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value));
+ return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,"0")).join("");
+}
 
 async function authorize(req:Request){
  const auth=req.headers.get("authorization")||"";
@@ -34,7 +40,11 @@ Deno.serve(async(req:Request)=>{
   try{u=new URL(i.url);su=new URL(i.sourceUrl)}catch{return json({ok:false,code:"BAD_URL"},400)}
   if(u.protocol!=="https:"||su.protocol!=="https:"||!allowedHosts.has(u.hostname)||!allowedHosts.has(su.hostname))return json({ok:false,code:"SOURCE_NOT_ALLOWED"},400);
   if(i.calendarMutationAllowed!==false||i.verificationStatus!=="unverified")return json({ok:false,code:"UNSAFE_ITEM_STATE"},400);
-  if(!/^[a-f0-9]{64}$/.test(i.revision||"")||!/^[a-f0-9]{64}$/.test(i.contentHash||""))return json({ok:false,code:"BAD_ITEM_HASH"},400);
+  if(!/^[a-f0-9]{64}$/.test(i.revision||"")||!/^[a-f0-9]{64}$/.test(i.contentHash||"")||!/^[a-f0-9]{64}$/.test(i.evidenceHash||""))return json({ok:false,code:"BAD_ITEM_HASH"},400);
+  if(typeof i.evidence!=="string"||i.evidence.length>EVIDENCE_MAX_CHARS||typeof i.evidenceTruncated!=="boolean")return json({ok:false,code:"BAD_ITEM_EVIDENCE"},400);
+  if(i.mediaOnly===true&&i.evidence!=="")return json({ok:false,code:"BAD_ITEM_EVIDENCE"},400);
+  if(i.mediaOnly!==true&&!i.evidence.trim())return json({ok:false,code:"BAD_ITEM_EVIDENCE"},400);
+  if(await sha256Text(i.evidence)!==i.evidenceHash)return json({ok:false,code:"BAD_EVIDENCE_HASH"},400);
   clean.push(i);
  }
 
@@ -54,7 +64,8 @@ Deno.serve(async(req:Request)=>{
   written++;
 
   const idem="media:"+i.sourceKey+":"+i.revision;
-  const payload={kind:"media_intake_observation",review_status:"awaiting_review",verification_status:"unverified",sourceKey:i.sourceKey,url:i.url,revision:i.revision,contentHash:i.contentHash,documentHash:i.receipt?.sha256||null,retrievedAt:i.receipt?.fetchedAt||null,publishedAt:i.publishedAt||null,publishedDate:i.publishedDate||null,timePrecision:i.timePrecision||null,forwardedFrom:i.forwardedFrom||null,topics:Array.isArray(i.topics)?i.topics.slice(0,12):[],parserVersion:i.parserVersion,packetHash:body.packetHash,workflowRunId:body.workflowRunId||identity.run_id||null,calendar_mutation_allowed:false,publication_allowed:false};
+  const sourceEvidence=i.evidence? [{url:i.url,evidence:i.evidence,evidenceHash:i.evidenceHash,truncated:i.evidenceTruncated}] : [];
+  const payload={kind:"media_intake_observation",review_status:"awaiting_review",verification_status:"unverified",sourceKey:i.sourceKey,url:i.url,revision:i.revision,contentHash:i.contentHash,evidenceHash:i.evidenceHash,evidenceTruncated:i.evidenceTruncated,sourceEvidence,documentHash:i.receipt?.sha256||null,retrievedAt:i.receipt?.fetchedAt||null,publishedAt:i.publishedAt||null,publishedDate:i.publishedDate||null,timePrecision:i.timePrecision||null,forwardedFrom:i.forwardedFrom||null,topics:Array.isArray(i.topics)?i.topics.slice(0,12):[],parserVersion:i.parserVersion,packetHash:body.packetHash,workflowRunId:body.workflowRunId||identity.run_id||null,calendar_mutation_allowed:false,publication_allowed:false};
   const queued=await db.rpc("agent_record_media_observation",{p_idempotency_key:idem,p_payload:payload,p_source_refs:[i.sourceUrl,i.url]});
   if(queued.error)return json({ok:false,code:"JOB_QUEUE_FAILED"},500);
   jobs++;
