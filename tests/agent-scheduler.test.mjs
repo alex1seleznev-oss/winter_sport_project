@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {BoundedAgentScheduler,modelRuntimeEnvMissing} from '../lib/agents/scheduler-service.mjs';
+import {mkdtempSync,mkdirSync,writeFileSync,readFileSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {BoundedAgentScheduler,modelRuntimeEnvMissing,loadSchedulerWorkers} from '../lib/agents/scheduler-service.mjs';
 import {DispatchError} from '../lib/agents/dispatch-service.mjs';
 import {loadAgentRegistry} from '../lib/agents/registry.mjs';
 import {loadWorkers} from '../lib/agents/workers.mjs';
@@ -31,6 +34,17 @@ test('runtime readiness requires Supabase, OpenAI and model bindings',()=>{
  assert.ok(missing.includes('OPENAI_MODEL_EXPERT'));
  const ready=modelRuntimeEnvMissing({env:{NEXT_PUBLIC_SUPABASE_URL:'https://example.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'secret',OPENAI_API_KEY:'secret',OPENAI_MODEL:'model'},registry,workers});
  assert.deepEqual(ready,[]);
+});
+
+test('scheduler worker loading does not require GitHub workflow files in serverless bundle',()=>{
+ const registry=loadAgentRegistry();
+ const root=mkdtempSync(join(tmpdir(),'agent-scheduler-workers-'));
+ mkdirSync(join(root,'config','agents'),{recursive:true});
+ writeFileSync(join(root,'config','agents','workers.json'),readFileSync(new URL('../config/agents/workers.json',import.meta.url),'utf8'));
+ const workers=loadSchedulerWorkers({root,registry});
+ assert.equal(workers.workers['media-watch'].mode,'github-action');
+ assert.equal(workers.workers.research.mode,'model-runtime');
+ assert.equal(workers.workers.publisher.enabled,false);
 });
 
 test('scheduler asks only for enabled non-production model workers and dispatches one job',async()=>{
