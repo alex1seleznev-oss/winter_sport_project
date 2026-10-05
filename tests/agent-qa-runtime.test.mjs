@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {evaluateReleaseQa} from '../lib/agents/qa-runtime.mjs';
+import {evaluateReleaseQa,evaluateMediaQa} from '../lib/agents/qa-runtime.mjs';
 
 const packet={
  packetId:'packet-qa-1',topic:'QA synthetic',createdAt:'2026-10-05T12:00:00Z',
@@ -22,7 +22,7 @@ function inputs(overrides={}){
   ...(overrides.visual?[{type:'visual-package',ref:'artifact:visual:package:0',value:overrides.visual}]:[])
  ];
 }
-const job={jobId:'10000000-0000-4000-8000-000000000099',agentId:'qa',payload:{namedPersonMedia:false}};
+const job={jobId:'10000000-0000-4000-8000-000000000099',agentId:'qa',type:'qa.release',payload:{namedPersonMedia:false}};
 
 test('QA emits release candidate only after exact fact/evidence/draft gates pass',()=>{
  const result=evaluateReleaseQa({job,inputs:inputs()});
@@ -64,4 +64,21 @@ test('reviewed visual package must target the same draft',()=>{
  const result=evaluateReleaseQa({job,inputs:inputs({visual})});
  assert.equal(result.reviewRequired,true);
  assert.equal(result.qaReport.checks.find(item=>item.name==='visual-draft-match').status,'fail');
+});
+
+test('media QA passes structurally reviewed non-person visual package without creating release candidate',()=>{
+ const visual={packageId:'visual-media-1',draftId:'draft-media-1',namedPersonMedia:false,media:[]};
+ const result=evaluateMediaQa({job:{...job,type:'qa.media-review'},inputs:[{type:'visual-package',ref:'artifact:visual:package:0',value:visual}]});
+ assert.equal(result.reviewRequired,false);
+ assert.equal(result.qaReport.passed,true);
+ assert.equal(result.releaseCandidate,null);
+ assert.deepEqual(result.artifacts.map(item=>item.type),['qa-report']);
+});
+
+test('media QA fails closed when named-person package has no reviewed media',()=>{
+ const visual={packageId:'visual-media-2',draftId:'draft-media-2',namedPersonMedia:true,media:[]};
+ const result=evaluateMediaQa({job:{...job,type:'qa.media-review'},inputs:[{type:'visual-package',ref:'artifact:visual:package:0',value:visual}]});
+ assert.equal(result.reviewRequired,true);
+ assert.equal(result.qaReport.passed,false);
+ assert.equal(result.qaReport.checks.find(item=>item.name==='named-person-media-present').status,'fail');
 });
