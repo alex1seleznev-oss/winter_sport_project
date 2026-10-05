@@ -9,7 +9,7 @@ Required Vercel environment variables:
 - `AGENT_DISPATCH_SECRET` — bearer secret protecting `/api/agent-dispatch`.
 - `CRON_SECRET` — bearer secret used by Vercel Cron to call `/api/agent-scheduler`.
 - `OPENAI_API_KEY` — server-only model provider credential.
-- one or more model bindings: `OPENAI_MODEL_ECONOMY`, `OPENAI_MODEL_BALANCED`, `OPENAI_MODEL_EXPERT` (or a compatible `OPENAI_MODEL` fallback).
+- model binding: the current fallback is `OPENAI_MODEL=gpt-6.1-sol`; profile-specific `OPENAI_MODEL_ECONOMY`, `OPENAI_MODEL_BALANCED`, or `OPENAI_MODEL_EXPERT` may override it later.
 
 Runtime flow:
 
@@ -19,6 +19,6 @@ The dispatcher executes only `model-runtime` workers, loads dependency artifacts
 
 The scheduler is separately protected and deliberately bounded. One invocation recovers expired leases, asks Supabase only for ready jobs belonging to the approved model-specialist roles, then executes at most one job. The database candidate RPC independently excludes Publisher even if a caller requests it.
 
-The production Vercel configuration includes a once-daily `/api/agent-scheduler` fallback. Until `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`, and model bindings are configured, the scheduler returns a successful `skipped` readiness result rather than attempting model work. Higher-frequency scheduling should be added through Supabase `pg_cron` + `pg_net` only after the runtime credentials are present.
+The production Vercel configuration includes a once-daily `/api/agent-scheduler` fallback. Until `SUPABASE_SERVICE_ROLE_KEY` and `OPENAI_API_KEY` are configured, the scheduler returns a successful `skipped` readiness result rather than attempting model work. Higher-frequency scheduling should be added through Supabase `pg_cron` + `pg_net` only after the runtime credentials are present.
 
 `publisher` remains disabled. No model worker has direct production publication permission.
