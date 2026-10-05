@@ -1,3 +1,4 @@
+import {createHash,timingSafeEqual} from 'node:crypto';
 import {validBearer} from '../../../lib/server-security';
 import {safeDispatchErrorCode} from '../../../lib/agents/dispatch-service.mjs';
 import {BoundedAgentScheduler,modelRuntimeEnvMissing} from '../../../lib/agents/scheduler-service.mjs';
@@ -5,6 +6,7 @@ import {BoundedAgentScheduler,modelRuntimeEnvMissing} from '../../../lib/agents/
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
 
+const SUPABASE_SCHEDULER_DIGEST='e139e103ef3a00368944109f2da9a33e8989f26065d223f0ae8a9d89f622ebb1';
 const headers={
  'Cache-Control':'no-store',
  'X-Robots-Tag':'noindex, nofollow',
@@ -15,10 +17,24 @@ function json(body,status=200,extraHeaders={}){
  return new Response(JSON.stringify(body),{status,headers:{...headers,...extraHeaders}});
 }
 
+function validSupabaseBearer(header){
+ if(typeof header!=='string'||!header.startsWith('Bearer '))return false;
+ const token=header.slice(7);
+ if(token.length<32)return false;
+ const actual=Buffer.from(createHash('sha256').update(token).digest('hex'));
+ const expected=Buffer.from(SUPABASE_SCHEDULER_DIGEST);
+ return actual.length===expected.length&&timingSafeEqual(actual,expected);
+}
+
 export async function GET(request){
+ const authorization=request.headers.get('authorization');
  const secret=process.env.CRON_SECRET;
- if(!secret||secret.length<32)return json({ok:false,error:'AGENT_SCHEDULER_NOT_CONFIGURED'},503);
- if(!validBearer(request.headers.get('authorization'),secret))return json({ok:false,error:'UNAUTHORIZED'},401);
+ const vercelCronAuthorized=Boolean(secret&&secret.length>=32&&validBearer(authorization,secret));
+ const supabaseCronAuthorized=validSupabaseBearer(authorization);
+ if(!vercelCronAuthorized&&!supabaseCronAuthorized){
+  if(!secret||secret.length<32)return json({ok:false,error:'AGENT_SCHEDULER_NOT_CONFIGURED'},503);
+  return json({ok:false,error:'UNAUTHORIZED'},401);
+ }
 
  const missing=modelRuntimeEnvMissing();
  if(missing.length)return json({ok:true,status:'skipped',reason:'MODEL_RUNTIME_NOT_CONFIGURED',missing},200);
