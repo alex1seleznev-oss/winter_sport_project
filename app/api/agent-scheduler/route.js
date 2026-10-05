@@ -6,6 +6,8 @@ import {BoundedAgentScheduler,modelRuntimeEnvMissing} from '../../../lib/agents/
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
 
+// Supabase pg_cron uses a Vault-held bearer whose digest is pinned here;
+// Vercel Cron is authenticated independently with CRON_SECRET.
 const SUPABASE_SCHEDULER_DIGEST='2a91f85971f6a7d4ddf950f1e9ed34a883d62be86ba1d08717ad46913ac78800';
 const headers={
  'Cache-Control':'no-store',
