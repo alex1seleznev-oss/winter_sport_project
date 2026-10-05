@@ -11,7 +11,7 @@ Required Vercel environment variables:
 - `OPENAI_API_KEY` — server-only model provider credential.
 - model binding: the current fallback is `OPENAI_MODEL=gpt-6.1-sol`; profile-specific `OPENAI_MODEL_ECONOMY`, `OPENAI_MODEL_BALANCED`, or `OPENAI_MODEL_EXPERT` may override it later.
 
-As of 2026-10-05 all required runtime variable names are configured in Vercel for production, preview, and development. Secret values remain server-only and are not stored in the repository.
+As of 2026-10-05 all required runtime variable names are configured in Vercel for production, preview, and development. Secret values remain server-only and are not stored in the repository. The scheduler bearer in Vercel is synchronized with the Supabase Vault value used by `agent_scheduler_tick()`.
 
 Runtime flow:
 
@@ -21,6 +21,6 @@ Model-runtime workers load dependency artifacts from Supabase, persist model run
 
 The scheduler is separately protected and deliberately bounded. One invocation recovers expired leases, asks Supabase only for ready jobs belonging to the approved executable roles, then executes at most one job. The database candidate RPC independently excludes Publisher even if a caller requests it.
 
-The production Vercel configuration includes a once-daily `/api/agent-scheduler` fallback. Higher-frequency scheduling may be added through Supabase `pg_cron` + `pg_net` only after the production execution path is verified end-to-end.
+The production Vercel configuration includes a once-daily `/api/agent-scheduler` fallback. A Supabase `pg_cron` job also invokes the bounded scheduler through `pg_net`; each invocation still executes at most one ready job.
 
 `publisher` remains disabled. No model worker or deterministic QA worker has direct production publication permission.
