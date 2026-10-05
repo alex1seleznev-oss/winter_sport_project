@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "agents": [
     {"id":"orchestrator","purpose":"Route jobs, dependencies and retries","productionWrite":false,"reviewWrite":true,"modelProfile":"economy","promptPath":"agents/instructions/orchestrator.md","inputs":["event","job-result","curated-media-candidate","manual-review","publication-record"],"outputs":["job"],"maxAttempts":3},
     {"id":"media-watch","purpose":"Monitor approved sources and emit deltas","productionWrite":false,"reviewWrite":true,"modelProfile":"economy","promptPath":"agents/instructions/media-watch.md","inputs":["source-config"],"outputs":["source-snapshot","candidate-event"],"maxAttempts":2},
@@ -9,7 +9,7 @@
     {"id":"fact-check","purpose":"Validate claims and conflicts","productionWrite":false,"reviewWrite":true,"modelProfile":"balanced","promptPath":"agents/instructions/fact-check.md","inputs":["evidence-packet","draft"],"outputs":["fact-check-report","approved-evidence"],"maxAttempts":2},
     {"id":"editorial-writer","purpose":"Create article drafts from approved evidence","productionWrite":false,"reviewWrite":true,"modelProfile":"expert","promptPath":"agents/instructions/editorial-writer.md","inputs":["approved-evidence"],"outputs":["article-draft"],"maxAttempts":2},
     {"id":"visual-director","purpose":"Compose layouts using verified real-person media","productionWrite":false,"reviewWrite":true,"modelProfile":"expert","promptPath":"agents/instructions/visual-director.md","inputs":["article-draft","verified-media"],"outputs":["visual-package"],"maxAttempts":2},
-    {"id":"qa","purpose":"Run build, browser, source, accessibility and policy checks","productionWrite":false,"reviewWrite":true,"modelProfile":"deterministic","promptPath":"agents/instructions/qa.md","inputs":["article-draft","visual-package","code-change"],"outputs":["qa-report","release-candidate"],"maxAttempts":1},
+    {"id":"qa","purpose":"Deterministically revalidate fact-check, evidence, draft and visual gates before release","productionWrite":false,"reviewWrite":true,"modelProfile":"deterministic","promptPath":"agents/instructions/qa.md","inputs":["fact-check-report","approved-evidence","article-draft","visual-package"],"outputs":["qa-report","release-candidate"],"maxAttempts":1},
     {"id":"publisher","purpose":"Promote reviewed release candidates to production-facing state","productionWrite":true,"reviewWrite":true,"modelProfile":"deterministic","promptPath":"agents/instructions/publisher.md","inputs":["release-candidate","qa-report","fact-check-report"],"outputs":["publication-record"],"maxAttempts":1}
   ],
   "gates": {
