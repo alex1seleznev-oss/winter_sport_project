@@ -6,7 +6,7 @@ import {BoundedAgentScheduler,modelRuntimeEnvMissing} from '../../../lib/agents/
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
 
-const SUPABASE_SCHEDULER_DIGEST='da2c73ca798e2562772ecc3b7915cd73d55e23c70118ce8f61c6450061eb808c';
+const SUPABASE_SCHEDULER_DIGEST='2a91f85971f6a7d4ddf950f1e9ed34a883d62be86ba1d08717ad46913ac78800';
 const headers={
  'Cache-Control':'no-store',
  'X-Robots-Tag':'noindex, nofollow',
