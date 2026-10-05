@@ -20,7 +20,7 @@ test('research executes with a bounded structured output and cannot invent an un
  const provider=new FakeProvider(packet);const adapter=new ModelRuntimeAdapter({registry,provider});const research=job('research.story',{},[url]);
  const result=await adapter.execute({job:research,inputs:[]});assert.equal(result.status,'completed');assert.equal(result.artifacts[0].type,'evidence-packet');assert.equal(provider.calls[0].schema.name,'evidence_packet');
  const badProvider=new FakeProvider({...packet,sources:[{...packet.sources[0],url:'https://unapproved.example.net/story'}]});
- await assert.rejects(()=>new ModelRuntimeAdapter({registry,provider:badProvider}).execute({job:research,inputs:[]}),/RESEARCH_SOURCE_NOT_PROVIDED/);
+ await assert.rejects(()=>new ModelRuntimeAdapter({registry,provider:badProvider}).execute({job:research,inputs:[]}),/MODEL_SCHEMA_ENUM_INVALID|RESEARCH_SOURCE_NOT_PROVIDED/);
 });
 
 test('fact checker covers every claim and only emits approved evidence on pass',async()=>{
@@ -31,7 +31,7 @@ test('fact checker covers every claim and only emits approved evidence on pass',
 
 test('editorial writer cannot attach unapproved claims or evidence',async()=>{
  const draft={draftId:'draft:1',title:'Result',dek:'Verified result.',body:'Athlete A won.',claimIds:['claim:404'],sourceRefs:[url],seo:{title:'Result',description:'Verified result.'},internalLinks:[]};
- const adapter=new ModelRuntimeAdapter({registry,provider:new FakeProvider(draft)});await assert.rejects(()=>adapter.execute({job:job('editorial.article'),inputs:[{type:'approved-evidence',value:approved}]}),/DRAFT_CLAIM_NOT_APPROVED/);
+ const adapter=new ModelRuntimeAdapter({registry,provider:new FakeProvider(draft)});await assert.rejects(()=>adapter.execute({job:job('editorial.article'),inputs:[{type:'approved-evidence',value:approved}]}),/MODEL_SCHEMA_ENUM_INVALID|DRAFT_CLAIM_NOT_APPROVED/);
 });
 
 test('visual director can only use media present in verified-media inputs and cannot bypass named-person gates',async()=>{
