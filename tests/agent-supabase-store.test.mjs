@@ -27,3 +27,19 @@ test('claim, heartbeat and completion keep lease ownership explicit',async()=>{c
 test('approval reads honor the latest decision per gate',async()=>{const client=new FakeClient(),job=researchJob();client.tables.agent_approvals=[{job_id:job.jobId,gate:'qa-passed',decision:'revoked',decided_at:'2026-10-04T10:02:00Z',id:3},{job_id:job.jobId,gate:'qa-passed',decision:'approved',decided_at:'2026-10-04T10:01:00Z',id:2},{job_id:job.jobId,gate:'fact-check-passed',decision:'approved',decided_at:'2026-10-04T10:00:00Z',id:1}];const store=new SupabaseAgentStore({client,registry});assert.deepEqual(await store.approvalsFor(job.jobId),['fact-check-passed'])});
 
 test('artifact payloads are reconstructed for downstream handoffs',async()=>{const client=new FakeClient(),job=researchJob();client.tables.agent_artifacts=[{job_id:job.jobId,artifact_type:'evidence-packet',artifact_ref:'artifact:1',payload:{packetId:'p1'},metadata:{verified:true},created_at:'2026-10-04T10:00:00Z'}];const store=new SupabaseAgentStore({client,registry});assert.deepEqual(await store.artifactsForJob(job.jobId),[{type:'evidence-packet',ref:'artifact:1',value:{packetId:'p1'},metadata:{verified:true}}])});
+
+test('scheduler candidates are requested through the bounded RPC and normalized to job ids',async()=>{
+ const client=new FakeClient();
+ const ids=['10000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000002'];
+ client.rpcResults.set('agent_dispatch_candidates',ids.map(job_id=>({job_id})));
+ const store=new SupabaseAgentStore({client,registry});
+ const result=await store.dispatchCandidates({agentIds:['research','fact-check'],limit:2});
+ assert.deepEqual(result,ids);
+ assert.deepEqual(client.calls.at(-1),{name:'agent_dispatch_candidates',args:{p_agent_ids:['research','fact-check'],p_limit:2}});
+});
+
+test('scheduler candidate lookup rejects empty agent sets and oversized batches locally',async()=>{
+ const store=new SupabaseAgentStore({client:new FakeClient(),registry});
+ await assert.rejects(()=>store.dispatchCandidates({agentIds:[],limit:1}),/AGENT_DISPATCH_AGENT_IDS_INVALID/);
+ await assert.rejects(()=>store.dispatchCandidates({agentIds:['research'],limit:21}),/AGENT_DISPATCH_LIMIT_INVALID/);
+});
