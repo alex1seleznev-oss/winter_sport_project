@@ -9,24 +9,36 @@ import {routeJob} from '../lib/agents/router.mjs';
 const registry=loadAgentRegistry();
 const observedAt='2026-10-04T18:00:00.000Z';
 const url='https://example.org/results';
-const packet={packetId:'packet:1',topic:'World Cup result',createdAt:observedAt,sources:[{sourceId:'source:1',kind:'official',url,publishedAt:null,observedAt}],claims:[{claimId:'claim:1',text:'Athlete A won.',kind:'fact',confidence:'high',sourceIds:['source:1'],mutable:false}],conflicts:[]};
-const report={reportId:'report:1',packetId:'packet:1',decision:'pass',checks:[{claimId:'claim:1',decision:'supported',sourceRefs:[url],note:'Official result.'}]};
+const sourceEvidence='Official results list Athlete A in first place.';
+const packet={packetId:'packet:1',topic:'World Cup result',createdAt:observedAt,sources:[{sourceId:'source:1',kind:'official',url,publishedAt:null,observedAt,evidence:sourceEvidence}],claims:[{claimId:'claim:1',text:'Athlete A won.',kind:'fact',confidence:'high',sourceIds:['source:1'],mutable:false}],conflicts:[]};
+const report={reportId:'report:1',packetId:'packet:1',decision:'pass',checks:[{claimId:'claim:1',decision:'supported',sourceRefs:[url],note:'Official result evidence supports the claim.'}]};
 const approved={packet,report};
 
 class FakeProvider{constructor(output){this.output=output;this.calls=[]}async invoke(request){this.calls.push(request);return {output:structuredClone(this.output),model:'fake-model',responseId:'resp:1',usage:{inputTokens:100,outputTokens:50,totalTokens:150}}}}
 function job(type,payload={},sourceRefs=[]){return routeJob(createJob({type,agentId:'orchestrator',payload,sourceRefs,inputRefs:['event:test']}),registry)}
+function researchJob(){return job('research.story',{sourceEvidence:[{url,evidence:sourceEvidence}]},[url])}
 
-test('research executes with a bounded structured output and cannot invent an unsupplied source URL',async()=>{
- const provider=new FakeProvider(packet);const adapter=new ModelRuntimeAdapter({registry,provider});const research=job('research.story',{},[url]);
+test('research executes with supplied source evidence and cannot invent an unsupplied source URL',async()=>{
+ const provider=new FakeProvider(packet);const adapter=new ModelRuntimeAdapter({registry,provider});const research=researchJob();
  const result=await adapter.execute({job:research,inputs:[]});assert.equal(result.status,'completed');assert.equal(result.artifacts[0].type,'evidence-packet');assert.equal(provider.calls[0].schema.name,'evidence_packet');
  const badProvider=new FakeProvider({...packet,sources:[{...packet.sources[0],url:'https://unapproved.example.net/story'}]});
  await assert.rejects(()=>new ModelRuntimeAdapter({registry,provider:badProvider}).execute({job:research,inputs:[]}),/MODEL_SCHEMA_ENUM_INVALID|RESEARCH_SOURCE_NOT_PROVIDED/);
 });
 
-test('fact checker covers every claim and only emits approved evidence on pass',async()=>{
+test('research cannot mutate or invent source evidence',async()=>{
+ const research=researchJob();
+ const mutated={...packet,sources:[{...packet.sources[0],evidence:'Different invented source text.'}]};
+ await assert.rejects(()=>new ModelRuntimeAdapter({registry,provider:new FakeProvider(mutated)}).execute({job:research,inputs:[]}),/MODEL_SCHEMA_ENUM_INVALID|RESEARCH_SOURCE_EVIDENCE_MUTATED/);
+ const noEvidenceJob=job('research.story',{},[url]);
+ await assert.rejects(()=>new ModelRuntimeAdapter({registry,provider:new FakeProvider(packet)}).execute({job:noEvidenceJob,inputs:[]}),/RESEARCH_SOURCE_EVIDENCE_MISSING/);
+});
+
+test('fact checker requires source evidence, covers every claim and only emits approved evidence on pass',async()=>{
  const provider=new FakeProvider({report,approvedEvidence:approved});const adapter=new ModelRuntimeAdapter({registry,provider});const fact=job('fact.story');
  const pass=await adapter.execute({job:fact,inputs:[{type:'evidence-packet',value:packet}]});assert.deepEqual(pass.artifacts.map(a=>a.type),['fact-check-report','approved-evidence']);assert.equal(pass.reviewRequired,false);
  const block={...report,reportId:'report:2',decision:'block',checks:[{...report.checks[0],decision:'conflicted'}]};const blocked=await new ModelRuntimeAdapter({registry,provider:new FakeProvider({report:block,approvedEvidence:null})}).execute({job:fact,inputs:[{type:'evidence-packet',value:packet}]});assert.equal(blocked.reviewRequired,true);assert.deepEqual(blocked.artifacts.map(a=>a.type),['fact-check-report']);
+ const legacyPacket={...packet,sources:packet.sources.map(({evidence,...source})=>source)};
+ await assert.rejects(()=>adapter.execute({job:fact,inputs:[{type:'evidence-packet',value:legacyPacket}]}),/FACT_SOURCE_EVIDENCE_MISSING/);
 });
 
 test('editorial writer cannot attach unapproved claims or evidence',async()=>{
@@ -43,7 +55,7 @@ test('visual director can only use media present in verified-media inputs and ca
 });
 
 test('AgentRuntime executes an enabled model worker and records only bounded run metadata in audit',async()=>{
- const research=job('research.story',{},[url]);const adapter=new ModelRuntimeAdapter({registry,provider:new FakeProvider(packet)});const runtime=new AgentRuntime({registry,modelRuntime:adapter});runtime.enqueue(research);
+ const research=researchJob();const adapter=new ModelRuntimeAdapter({registry,provider:new FakeProvider(packet)});const runtime=new AgentRuntime({registry,modelRuntime:adapter});runtime.enqueue(research);
  const result=await runtime.executeModel(research.jobId);assert.equal(result.job.status,'succeeded');assert.equal(result.job.outputs.length,1);const audit=result.job.auditTrail.find(x=>x.event==='model-run-completed');assert.equal(audit.agentId,'research');assert.equal(audit.model,'fake-model');assert.ok(!('output' in audit));
 });
 

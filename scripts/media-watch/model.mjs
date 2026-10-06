@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';import {isIP} from 'node:net';
-export const VERSION='public-media-watch/2.1.0';
+export const VERSION='public-media-watch/2.2.0';
+export const EVIDENCE_MAX_CHARS=6000;
 export const text=value=>String(value??'').normalize('NFKC').replace(/[\u0000-\u001f\u007f]/g,' ').replace(/\s+/gu,' ').trim();
 export function hash(value){return createHash('sha256').update(typeof value==='string'||Buffer.isBuffer(value)?value:JSON.stringify(value)).digest('hex')}
 export function reference(value,base){if(typeof value!=='string'||value.length>2048||/[\u0000-\u0020\u007f]/.test(value))return null;try{const u=new URL(value,base),h=u.hostname;if(u.protocol!=='https:'||u.username||u.password||u.port||isIP(h)||h.includes(':')||!h.includes('.')||h.endsWith('.local')||h.endsWith('.internal'))return null;for(const k of [...u.searchParams.keys()])if(/^utm_|^(fbclid|gclid|ysclid)$/i.test(k))u.searchParams.delete(k);if([...u.searchParams.keys()].some(k=>/token|password|secret|signature|^sig$/i.test(k)))return null;u.hash='';return u.href}catch{return null}}
@@ -20,9 +21,10 @@ export function normalize(row,source,receipt,now=new Date()){
  if(publishedAt&&Date.parse(publishedAt)<now.getTime()-120*86400000)return {skip:'outside_120_day_window'};
  const tags=classify(body,source,url);if(!tags.sport)return {skip:'unrelated_sport'};if(tags.advert)return {skip:'advertisement'};
  const forwardedFrom=reference(row.forwardedFrom),links=[...new Set((row.links||[]).map(u=>reference(u)).filter(Boolean))].slice(0,8);const contentHash=hash(body.toLowerCase());
+ const evidence=body.slice(0,EVIDENCE_MAX_CHARS),evidenceTruncated=body.length>evidence.length,evidenceHash=hash(evidence);
  const title=tags.sensitive?'Сообщение требует отдельной проверки чувствительных сведений':body?body.split(' ').slice(0,12).join(' ').slice(0,160):'Публикация без текстовой подписи';
  const sourceUrl=source.adapter==='telegram'?'https://t.me/'+source.handle:source.url;
- const item={sourceKey:source.key,sourceUrl,sourceKind:source.kind,url,externalId:String(row.externalId),title,publishedAt,publishedDate:validDate(row.publishedDate)?row.publishedDate:null,timePrecision:publishedAt?'timestamp':validDate(row.publishedDate)?'date':'unknown',timeWarning:row.timeWarning||null,forwardedFrom,links,contentHash,topics:tags.topics,sport:tags.sport,sensitive:tags.sensitive,claimStatus:tags.rumor?'rumor':'unverified',mediaOnly:!body,contentLength:body.length};
+ const item={sourceKey:source.key,sourceUrl,sourceKind:source.kind,url,externalId:String(row.externalId),title,publishedAt,publishedDate:validDate(row.publishedDate)?row.publishedDate:null,timePrecision:publishedAt?'timestamp':validDate(row.publishedDate)?'date':'unknown',timeWarning:row.timeWarning||null,forwardedFrom,links,contentHash,evidence,evidenceHash,evidenceTruncated,topics:tags.topics,sport:tags.sport,sensitive:tags.sensitive,claimStatus:tags.rumor?'rumor':'unverified',mediaOnly:!body,contentLength:body.length};
  const revision=hash(item);return {item:{...item,revision,parserVersion:VERSION,verificationStatus:'unverified',calendarMutationAllowed:false,receipt:{...receipt}}};
 }
 export function syndication(items){const groups=new Map(),byUrl=new Map(items.map(i=>[i.url,i]));const root=item=>{let url=item.url;const seen=new Set();for(let i=0;i<10;i++){if(seen.has(url))return null;seen.add(url);const next=byUrl.get(url)?.forwardedFrom;if(!next)return url;url=next;}return null;};
