@@ -23,4 +23,16 @@ The scheduler is separately protected and deliberately bounded. One invocation r
 
 The production Vercel configuration includes a once-daily `/api/agent-scheduler` fallback. A Supabase `pg_cron` job also invokes the bounded scheduler through `pg_net`; each invocation still executes at most one ready job.
 
+## Guarded official-source story intake
+
+`agent_enqueue_official_story_pipeline(...)` is the service-role-only bridge for already captured official-source evidence. It accepts only an active `source_feeds` row with `authority_level >= 5`, requires the submitted HTTPS URL to use the same host as that approved feed, and requires non-empty bounded evidence. The exact evidence is placed in `job.payload.sourceEvidence`, so Research cannot replace URL-only provenance with invented source contents.
+
+One accepted intake creates exactly four durable jobs:
+
+`Research -> Fact Check -> Editorial Writer -> QA`
+
+The chain is text-only in v1. `namedPersonMedia=true` is rejected because named-person material must go through the separate Visual Director identity/rights gates. Public and community sources continue to enter through the review-required media-watch path and are not promoted into this official-source chain.
+
+The caller supplies a stable `storyKey` that includes its source revision or equivalent change identifier. Calls for the same story key are serialized and reused only when the guarded source, evidence, topic, language and dependency graph still match; conflicting reuse fails closed. No Visual Director job and no Publisher job are created by this RPC.
+
 `publisher` remains disabled. No model worker or deterministic QA worker has direct production publication permission.
