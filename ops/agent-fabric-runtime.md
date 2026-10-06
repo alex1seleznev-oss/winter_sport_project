@@ -33,6 +33,14 @@ One accepted intake creates exactly four durable jobs:
 
 The chain is text-only in v1. `namedPersonMedia=true` is rejected because named-person material must go through the separate Visual Director identity/rights gates. Public and community sources continue to enter through the review-required media-watch path and are not promoted into this official-source chain.
 
-The caller supplies a stable `storyKey` that includes its source revision or equivalent change identifier. Calls for the same story key are serialized and reused only when the guarded source, evidence, topic, language and dependency graph still match; conflicting reuse fails closed. No Visual Director job and no Publisher job are created by this RPC.
+The caller supplies a stable `storyKey` that includes its source revision or equivalent change identifier. Calls for the same story key are serialized and reused only when the prior four-job graph exactly matches the new request; conflicting reuse fails closed. No Visual Director job and no Publisher job are created by this RPC.
 
-`publisher` remains disabled. No model worker or deterministic QA worker has direct production publication permission.
+### Secretless GitHub OIDC observer
+
+`.github/workflows/official-story-intake.yml` is the first bounded automatic observer for the official-source chain. It runs every three hours or by explicit workflow dispatch, reads the official IBU page through the hardened HTTPS fetch helper, extracts only the configured 2026/27 Kontiolahti World Cup event, and writes a bounded candidate artifact. The parser requires the expected season, event identifier, venue and date-range shape; missing or ambiguous evidence fails closed.
+
+The workflow does not store a Supabase service-role key in GitHub. It requests a short-lived GitHub Actions OIDC token for audience `winter-sports-official-story-intake` and sends the candidate to the `official-story-intake` Supabase Edge Function. The function independently validates the exact repository, `refs/heads/main`, workflow reference, allowed event type and audience. It also hard-binds `sourceKey=ibu` to the approved IBU calendar feed and to the configured `BT2627SWRLCP01` / season `2627` URL contract before resolving the authority-level-5 feed server-side.
+
+The candidate revision is derived from the normalized official evidence. Unchanged evidence therefore reuses the existing four-job graph through the database idempotency guard; a genuine evidence change produces a new story key and a new Research -> Fact Check -> Editorial Writer -> QA chain. This observer has no calendar mutation capability, cannot choose an agent or source-feed ID, rejects named-person media, and cannot create Publisher work.
+
+`publisher` remains disabled. No model worker, deterministic QA worker, OIDC observer, or official-source intake endpoint has direct production publication permission.
