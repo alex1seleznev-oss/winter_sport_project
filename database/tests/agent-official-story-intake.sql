@@ -20,6 +20,12 @@ insert into public.source_feeds(name,kind,url,authority_level,active)
 values('CI low authority feed','media','https://media.example.com/feed',3,true)
 returning id as low_feed_id \gset
 
+create temporary table agent_official_story_fixture(
+  official_feed_id bigint not null,
+  low_feed_id bigint not null
+);
+insert into agent_official_story_fixture values (:'official_feed_id'::bigint,:'low_feed_id'::bigint);
+
 set role service_role;
 select
   result->>'researchJobId' as research_job_id,
@@ -122,10 +128,17 @@ insert into agent_official_story_assertions values
 
 set role service_role;
 DO $$
+DECLARE
+  v_official_feed_id bigint;
+  v_low_feed_id bigint;
 BEGIN
+  select official_feed_id,low_feed_id
+    into v_official_feed_id,v_low_feed_id
+    from agent_official_story_fixture;
+
   begin
     perform public.agent_enqueue_official_story_pipeline(
-      :'low_feed_id'::bigint,
+      v_low_feed_id,
       'ci-low-authority',
       'Low authority story',
       'https://media.example.com/feed/item',
@@ -142,7 +155,7 @@ BEGIN
 
   begin
     perform public.agent_enqueue_official_story_pipeline(
-      :'official_feed_id'::bigint,
+      v_official_feed_id,
       'ci-host-mismatch',
       'Host mismatch story',
       'https://evil.example.net/item',
@@ -159,7 +172,7 @@ BEGIN
 
   begin
     perform public.agent_enqueue_official_story_pipeline(
-      :'official_feed_id'::bigint,
+      v_official_feed_id,
       'ci-named-media',
       'Named-person media story',
       'https://official.example.com/calendar/person',
@@ -176,7 +189,7 @@ BEGIN
 
   begin
     perform public.agent_enqueue_official_story_pipeline(
-      :'official_feed_id'::bigint,
+      v_official_feed_id,
       'ci-official-001',
       'Synthetic official story',
       'https://official.example.com/calendar/event-1',
