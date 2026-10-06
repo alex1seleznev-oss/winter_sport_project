@@ -1,5 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "npm:@supabase/supabase-js@2.117.2";
+import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 import { createRemoteJWKSet, jwtVerify } from "npm:jose@6.1.0";
 
 const AUDIENCE="winter-sports-official-story-intake";
@@ -7,7 +7,7 @@ const REPOSITORY="alex1seleznev-oss/winter_sport_project";
 const WORKFLOW="alex1seleznev-oss/winter_sport_project/.github/workflows/official-story-intake.yml@refs/heads/main";
 const MAX_EVIDENCE_CHARS=12000;
 const SOURCES={
-  ibu:{feedUrl:"https://www.biathlonworld.com/calendar",host:"www.biathlonworld.com"}
+  ibu:{feedUrl:"https://www.biathlonworld.com/calendar",host:"www.biathlonworld.com",path:"/calendar",eventId:"BT2627SWRLCP01",seasonId:"2627",cupLevel:"all"}
 } as const;
 const jwks=createRemoteJWKSet(new URL("https://token.actions.githubusercontent.com/.well-known/jwks"));
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json","cache-control":"no-store","x-content-type-options":"nosniff"}});
@@ -45,6 +45,7 @@ Deno.serve(async(req:Request)=>{
   let sourceUrl:URL;
   try{sourceUrl=new URL(body.sourceUrl)}catch{return json({ok:false,code:"BAD_SOURCE_URL"},400)}
   if(sourceUrl.protocol!=="https:"||sourceUrl.username||sourceUrl.password||sourceUrl.port||sourceUrl.hostname!==source.host)return json({ok:false,code:"BAD_SOURCE_URL"},400);
+  if(sourceUrl.pathname!==source.path||sourceUrl.searchParams.get("EventId")!==source.eventId||sourceUrl.searchParams.get("SeasonId")!==source.seasonId||sourceUrl.searchParams.get("CupLevel")!==source.cupLevel)return json({ok:false,code:"SOURCE_SCOPE_DENIED"},400);
   if(typeof body.evidence!=="string"||!body.evidence.trim()||body.evidence.length>MAX_EVIDENCE_CHARS)return json({ok:false,code:"BAD_EVIDENCE"},400);
   if(!validIso(body.observedAt))return json({ok:false,code:"BAD_OBSERVED_AT"},400);
   if(body.language!=="ru"&&body.language!=="en")return json({ok:false,code:"BAD_LANGUAGE"},400);
