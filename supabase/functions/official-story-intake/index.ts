@@ -37,7 +37,7 @@ Deno.serve(async(req:Request)=>{
   let body:any;
   try{body=await req.json()}catch{return json({ok:false,code:"BAD_JSON"},400)}
   if(body?.schemaVersion!==1)return json({ok:false,code:"BAD_SCHEMA_VERSION"},400);
-  if(typeof body.sourceKey!=="string"||!(body.sourceKey in SOURCES))return json({ok:false,code:"SOURCE_NOT_ALLOWED"},400);
+  if(typeof body.sourceKey!=="string"||!Object.hasOwn(SOURCES,body.sourceKey))return json({ok:false,code:"SOURCE_NOT_ALLOWED"},400);
   const source=SOURCES[body.sourceKey as keyof typeof SOURCES];
   if(typeof body.storyKey!=="string"||body.storyKey.length<3||body.storyKey.length>180||!/^[a-z0-9][a-z0-9._:-]*[a-z0-9]$/.test(body.storyKey))return json({ok:false,code:"BAD_STORY_KEY"},400);
   if(typeof body.topic!=="string"||!body.topic.trim()||body.topic.length>300)return json({ok:false,code:"BAD_TOPIC"},400);
