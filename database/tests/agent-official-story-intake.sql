@@ -25,6 +25,7 @@ create temporary table agent_official_story_fixture(
   low_feed_id bigint not null
 );
 insert into agent_official_story_fixture values (:'official_feed_id'::bigint,:'low_feed_id'::bigint);
+grant select on agent_official_story_fixture to service_role;
 
 set role service_role;
 select
