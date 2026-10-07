@@ -1,42 +1,55 @@
 import {createHash} from 'node:crypto';
-import {load} from 'cheerio';
+import {IBU_EVENTS_API_URL,assertIbuEventsApiUrl} from '../lib/fetch-ibu-datacenter.mjs';
 
-export const IBU_KONTIOLAHTI_SOURCE_URL='https://www.biathlonworld.com/calendar?CupLevel=all&EventId=BT2627SWRLCP01&SeasonId=2627';
+export const IBU_KONTIOLAHTI_SOURCE_URL=IBU_EVENTS_API_URL;
 const EVENT_ID='BT2627SWRLCP01';
 const VENUE='Kontiolahti';
-const SEASON='2026/2027';
+const SEASON_START='2026-07-01';
+const SEASON_END='2027-05-01';
 
 export function normalizeOfficialText(value){
   return String(value??'').replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim();
 }
 
-export function extractIbuKontiolahtiEvidence(html){
-  if(typeof html!=='string'||!html.trim())throw new Error('IBU_DOCUMENT_EMPTY');
-  const $=load(html);
-  const bodyText=normalizeOfficialText($('body').text());
-  if(!bodyText.includes(`Season ${SEASON}`))throw new Error('IBU_SEASON_NOT_FOUND');
-
-  const matches=[];
-  $(`a[href*="EventId=${EVENT_ID}"]`).each((_,element)=>{
-    const text=normalizeOfficialText($(element).text());
-    if(text.includes(VENUE)&&/\b2026\b/.test(text))matches.push(text);
-  });
-  const unique=[...new Set(matches)];
-  if(unique.length===0)throw new Error('IBU_EVENT_NOT_FOUND');
-  if(unique.length!==1)throw new Error('IBU_EVENT_AMBIGUOUS');
-  const eventText=unique[0];
-  if(!/\b\d{1,2}\s*[—–-]\s*\d{1,2}\s+Nov\s+2026\b/.test(eventText))throw new Error('IBU_EVENT_DATE_CONTRACT_FAILED');
-  if(eventText.length>160)throw new Error('IBU_EVENT_TEXT_TOO_LONG');
-  return `Season ${SEASON}. ${eventText}.`;
+function normalizeApiDate(value,label){
+  const text=normalizeOfficialText(value);
+  const iso=text.match(/^(\d{4}-\d{2}-\d{2})(?:T|$)/)?.[1];
+  if(iso){
+    const ms=Date.parse(`${iso}T00:00:00Z`);
+    if(Number.isFinite(ms))return iso;
+  }
+  const dotNet=text.match(/^\/Date\((\d{10,14})(?:[+-]\d{4})?\)\/$/);
+  if(dotNet){
+    const raw=Number(dotNet[1]);
+    const ms=dotNet[1].length===10?raw*1000:raw;
+    if(Number.isFinite(ms))return new Date(ms).toISOString().slice(0,10);
+  }
+  throw new Error(`IBU_EVENT_${label}_INVALID`);
 }
 
-export function buildIbuKontiolahtiCandidate({html,observedAt,sourceUrl=IBU_KONTIOLAHTI_SOURCE_URL,language='ru'}){
-  const url=new URL(sourceUrl);
-  if(url.protocol!=='https:'||url.hostname!=='www.biathlonworld.com'||url.searchParams.get('EventId')!==EVENT_ID||url.searchParams.get('SeasonId')!=='2627')throw new Error('IBU_SOURCE_URL_CONTRACT_FAILED');
+export function extractIbuKontiolahtiEvidence(events){
+  if(!Array.isArray(events))throw new Error('IBU_API_SHAPE_INVALID');
+  const matches=events.filter((event)=>event&&typeof event==='object'&&event.EventId===EVENT_ID);
+  if(matches.length===0)throw new Error('IBU_EVENT_NOT_FOUND');
+  if(matches.length!==1)throw new Error('IBU_EVENT_AMBIGUOUS');
+  const event=matches[0];
+  const venueFields=[event.ShortDescription,event.Description,event.Organizer,event.Venue,event.Location].map(normalizeOfficialText).filter(Boolean);
+  if(!venueFields.some((value)=>value.toLowerCase().includes(VENUE.toLowerCase())))throw new Error('IBU_EVENT_VENUE_CONTRACT_FAILED');
+  const venue=venueFields.find((value)=>value.toLowerCase().includes(VENUE.toLowerCase()))||VENUE;
+  if(venue.length>160)throw new Error('IBU_EVENT_TEXT_TOO_LONG');
+  const startDate=normalizeApiDate(event.StartDate,'START_DATE');
+  const endDate=normalizeApiDate(event.EndDate,'END_DATE');
+  if(startDate>endDate)throw new Error('IBU_EVENT_DATE_ORDER_INVALID');
+  if(startDate<SEASON_START||endDate>SEASON_END)throw new Error('IBU_EVENT_SEASON_WINDOW_INVALID');
+  return `IBU Datacenter event ${EVENT_ID}. Venue: ${venue}. Start: ${startDate}. End: ${endDate}.`;
+}
+
+export function buildIbuKontiolahtiCandidate({events,observedAt,sourceUrl=IBU_KONTIOLAHTI_SOURCE_URL,language='ru'}){
+  const url=assertIbuEventsApiUrl(sourceUrl);
   const observedMs=Date.parse(observedAt);
   if(!Number.isFinite(observedMs)||observedMs>Date.now()+5*60_000)throw new Error('IBU_OBSERVED_AT_INVALID');
   if(!['ru','en'].includes(language))throw new Error('IBU_LANGUAGE_INVALID');
-  const evidence=extractIbuKontiolahtiEvidence(html);
+  const evidence=extractIbuKontiolahtiEvidence(events);
   const revision=createHash('sha256').update(`ibu|${evidence}`,'utf8').digest('hex');
   return {
     schemaVersion:1,
