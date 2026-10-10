@@ -2,11 +2,14 @@ import {mkdirSync,writeFileSync,readFileSync} from 'node:fs';
 import {isDeepStrictEqual} from 'node:util';
 import {fetchOfficialHtml,describeSourceError} from './lib/fetch-official.mjs';
 import {parseFisEventDetail,summarizeFisSessions,FIS_EVENT_DETAIL_VERSION} from './lib/parse-fis-event-detail.mjs';
+import {applyReviewedFisOverrides} from './lib/apply-fis-session-overrides.mjs';
 
 const baseline=JSON.parse(readFileSync(new URL('../data/fis-event-sessions-2627.json',import.meta.url),'utf8'));
+const reviewedOverrides=JSON.parse(readFileSync(new URL('../data/fis-event-session-overrides-2627.json',import.meta.url),'utf8'));
 mkdirSync('artifacts',{recursive:true});
 const checks=[];
-for(const stage of baseline.stages){
+for(const rawStage of baseline.stages){
+ const stage=applyReviewedFisOverrides(rawStage,reviewedOverrides);
  let provenance;
  try{
   const fetched=await fetchOfficialHtml(stage.sourceUrl);
@@ -16,8 +19,9 @@ for(const stage of baseline.stages){
   const sort=rows=>[...rows].sort((a,b)=>a.codex.localeCompare(b.codex));
   const matchesBaseline=isDeepStrictEqual(sort(parsed.rows),sort(stage.rows));
   checks.push({venue:stage.venue,eventId:stage.eventId,competitionKey:stage.competitionKey,...summarizeFisSessions(parsed),ok:matchesBaseline,rows:parsed.rows,provenance,
+   ...(stage.reviewOverride?{reviewOverride:stage.reviewOverride}:{}),
    ...(matchesBaseline?{}:{error:'FIS_EVENT_REVIEWED_STRUCTURE_CHANGED',expectedRows:stage.rows})});
- }catch(error){checks.push({venue:stage.venue,eventId:stage.eventId,competitionKey:stage.competitionKey,ok:false,error:error.message,failure:describeSourceError(error),...(provenance?{provenance}:{})});}
+ }catch(error){checks.push({venue:stage.venue,eventId:stage.eventId,competitionKey:stage.competitionKey,ok:false,error:error.message,failure:describeSourceError(error),...(provenance?{provenance}:{}),...(stage.reviewOverride?{reviewOverride:stage.reviewOverride}:{})});}
 }
 const rows=checks.flatMap(check=>check.rows||[]);
 const duplicateIdentity=new Set(rows.map(row=>row.codex)).size!==rows.length||new Set(rows.map(row=>row.raceId)).size!==rows.length;
