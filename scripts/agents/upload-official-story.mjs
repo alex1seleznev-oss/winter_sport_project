@@ -7,7 +7,7 @@ const sourceKey=required('sourceKey',40);if(sourceKey!=='ibu')throw new Error('O
 const storyKey=required('storyKey',180);if(storyKey.length<3||!/^[a-z0-9][a-z0-9._:-]*[a-z0-9]$/.test(storyKey))throw new Error('OFFICIAL_STORY_KEY_INVALID');
 const topic=required('topic',300);
 const sourceUrlText=required('sourceUrl',2048);let sourceUrl;try{sourceUrl=new URL(sourceUrlText)}catch{throw new Error('OFFICIAL_STORY_SOURCE_URL_INVALID')}
-if(sourceUrl.protocol!=='https:'||sourceUrl.hostname!=='www.biathlonworld.com'||sourceUrl.username||sourceUrl.password||sourceUrl.port)throw new Error('OFFICIAL_STORY_SOURCE_URL_INVALID');
+if(sourceUrl.protocol!=='https:'||sourceUrl.hostname!=='biathlonresults.com'||sourceUrl.pathname!=='/modules/sportapi/api/Events'||sourceUrl.username||sourceUrl.password||sourceUrl.port||sourceUrl.hash||sourceUrl.searchParams.size!==2||sourceUrl.searchParams.get('SeasonId')!=='2627'||sourceUrl.searchParams.get('Level')!=='1')throw new Error('OFFICIAL_STORY_SOURCE_URL_INVALID');
 const evidence=required('evidence',12000);
 const observedAt=required('observedAt',64);const observedMs=Date.parse(observedAt);if(!Number.isFinite(observedMs)||observedMs>Date.now()+5*60_000)throw new Error('OFFICIAL_STORY_OBSERVED_AT_INVALID');
 const language=(candidate.language||'ru').trim();if(!['ru','en'].includes(language))throw new Error('OFFICIAL_STORY_LANGUAGE_INVALID');
