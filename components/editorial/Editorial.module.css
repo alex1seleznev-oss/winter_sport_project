@@ -5,3 +5,5 @@
 @media(max-width:800px){.readingLayout{display:block}.tocDisclosure{position:static;border:1px solid #3b5368;border-radius:8px;padding:0 18px}.tocDisclosure summary{min-height:48px;cursor:pointer}.toc{border:0;padding:4px 0 18px;border-radius:0}.readingLayout>aside{margin-bottom:24px}}
 @media(max-width:650px){.card{padding:22px 0}.cardVisual{margin:20px 0}.cardVisual img{aspect-ratio:16/10}.cardVisual figcaption{margin-top:10px}.card h2{font-size:27px}.card>p{font-size:16px}.body{font-size:17px;line-height:1.85}.articleHeader h1{font-size:36px}.dek{font-size:18px}.takeaway{font-size:21px}.mark{font-size:54px;min-height:100px}.references{font-size:14px}}
 @media print{.tocDisclosure{display:none}}
+
+.mark{display:block;min-height:0;margin:22px 0}.markValue{display:flex;align-items:center;aspect-ratio:16/10;font:inherit;font-weight:700}.mark span{display:block;min-height:44px;margin-top:10px;font-size:13px;line-height:1.55}.cardVisual figcaption{min-height:44px}.cardVisual figcaption span,.cardVisual figcaption a{line-height:1.55}
