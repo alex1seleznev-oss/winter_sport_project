@@ -1,0 +1,23 @@
+[
+  {
+    "slug": "kontiolahti-dates-2026",
+    "title": "Контиолахти-2026: 23 или 26 ноября — когда начинаются гонки?",
+    "dek": "В календаре IBU и программе организатора разные диапазоны. Объясняем, какие даты сохранить зрителю и где проверять отдельные старты.",
+    "articleType": "preview",
+    "category": "Календарь без путаницы",
+    "athletes": [],
+    "season": "2026/27",
+    "eventDate": "2026-11-26",
+    "reviewedOn": "2026-10-10",
+    "graphic": "calendar-dates",
+    "takeaway": "Гонки в программе организатора — 26–29 ноября. Диапазон 23–29 ноября в записи IBU не заменяет расписание стартов.",
+    "sourceIds": [
+      "kontiolahti-programme-current",
+      "ibu-calendar-2627"
+    ],
+    "bodySha256": "50decf3a3eddb33b3fbd26fad7a231c7bef298119efe3f2ad01421b165097c07",
+    "wordCount": 346,
+    "readMinutes": 3,
+    "stageKey": "ibu-wc-2627-kontiolahti"
+  }
+]

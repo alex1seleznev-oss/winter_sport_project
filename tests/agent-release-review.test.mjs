@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {evaluateReleaseQa} from '../lib/agents/qa-runtime.mjs';import {reviewedReleasePackage} from '../lib/agents/release-review.mjs';
+const packet={packetId:'p',topic:'Calendar',createdAt:'2026-10-10T06:00:00Z',sources:[{sourceId:'s',url:'https://example.org/calendar',kind:'official',observedAt:'2026-10-10T06:00:00Z',publishedAt:null}],claims:[{claimId:'c',text:'An event date',kind:'fact',confidence:'verified',sourceIds:['s'],mutable:true}],conflicts:[]};
+const report={reportId:'f',packetId:'p',decision:'pass',checks:[{claimId:'c',decision:'supported',sourceRefs:['s'],note:'Checked'}]};
+const draft={draftId:'d',title:'Calendar dates',dek:'A checked date',body:'A checked calendar brief',claimIds:['c'],sourceRefs:['s'],seo:{title:'Calendar',description:'Event dates'},internalLinks:['/calendar']};
+const inputs=[{type:'fact-check-report',ref:'artifact:f:report:0',value:report},{type:'approved-evidence',ref:'artifact:f:evidence:1',value:{packet,report}},{type:'article-draft',ref:'artifact:d:draft:0',value:draft}];
+const job={jobId:'qa-review',type:'qa.release',agentId:'qa',status:'succeeded',payload:{namedPersonMedia:false}};
+const outputs=evaluateReleaseQa({job,inputs}).artifacts;
+test('release review exports the exact draft and evidence without a publication permission',()=>{const r=reviewedReleasePackage({job,inputs,outputs});assert.equal(r.publicationAllowed,false);assert.equal(r.calendarMutationAllowed,false);assert.deepEqual(r.draft,draft)});
+test('modified evidence or draft cannot reuse an earlier release approval',()=>{assert.throws(()=>reviewedReleasePackage({job,inputs:inputs.map(a=>a.type==='article-draft'?{...a,value:{...draft,body:'Changed after QA'}}:a),outputs}),/REVISION_CHANGED/);assert.throws(()=>reviewedReleasePackage({job:{...job,status:'queued'},inputs,outputs}),/NOT_SUCCEEDED/)});

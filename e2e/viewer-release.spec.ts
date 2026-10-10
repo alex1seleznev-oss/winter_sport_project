@@ -7,7 +7,7 @@ test('guide hub and article render sources, navigation and no horizontal overflo
  await page.screenshot({path:`artifacts/screenshots/${info.project.name}-guide-hub.png`,fullPage:false});
  await page.locator('.guideCard h2 a').first().click();await expect(page.locator('h1')).toContainText('Как читать календарь');
  await page.screenshot({path:`artifacts/screenshots/${info.project.name}-guide.png`,fullPage:false});
- await page.getByRole('navigation',{name:'Содержание материала'}).getByRole('link',{name:'Источники',exact:true}).click();
+ if(!await page.getByRole('navigation',{name:'Содержание материала'}).isVisible())await page.getByText('В этом материале',{exact:true}).click();await page.getByRole('navigation',{name:'Содержание материала'}).getByRole('link',{name:'Источники',exact:true}).click();
  await expect(page).toHaveURL(/#references$/);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);expect(errors).toEqual([]);
 });

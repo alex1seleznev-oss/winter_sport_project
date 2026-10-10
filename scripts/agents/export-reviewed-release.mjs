@@ -1,0 +1,13 @@
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {SupabaseAgentStore} from '../../lib/agents/store-supabase.mjs';
+import {dependencyArtifacts} from '../../lib/agents/dispatch-service.mjs';
+import {reviewedReleasePackage} from '../../lib/agents/release-review.mjs';
+const id=process.argv[2];
+if(!/^[a-f0-9-]{36}$/i.test(id??''))throw new Error('QA_RELEASE_JOB_ID_REQUIRED');
+const store=new SupabaseAgentStore(),job=await store.get(id,{withAudit:false});
+const review=reviewedReleasePackage({job,inputs:await dependencyArtifacts(store,job),outputs:await store.artifactsForJob(id)});
+const out=resolve('artifacts/editorial-review',id);mkdirSync(out,{recursive:true});
+writeFileSync(resolve(out,'review.json'),JSON.stringify(review,null,2)+'\n');
+writeFileSync(resolve(out,'draft.md'),`# ${review.draft.title}\n\n${review.draft.dek}\n\n${review.draft.body}\n\n## Sources\n\n${review.evidence.sources.map(s=>'- '+s.url+' (observed '+s.observedAt+')').join('\n')}\n`);
+console.log(JSON.stringify({ok:true,jobId:id,revision:review.release.revision,output:out,publicationAllowed:false}));
