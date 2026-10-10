@@ -34,8 +34,8 @@ jobs:
           cache: npm
       - name: Reproducible installation
         run: npm ci --ignore-scripts
-      - name: Verify bounded official-story parser
-        run: node --test tests/official-story-intake.test.mjs tests/fetch-ibu-datacenter.test.mjs tests/fetch-official.test.mjs
+      - name: Verify bounded official-story contracts
+        run: node --test tests/official-story-intake.test.mjs tests/fetch-ibu-datacenter.test.mjs tests/fetch-official.test.mjs tests/official-story-upload-contract.test.mjs tests/official-story-edge-contract.test.mjs
       - name: Prepare IBU candidate from official Datacenter
         run: node scripts/agents/prepare-ibu-official-story.mjs
       - name: Upload candidate through GitHub OIDC
