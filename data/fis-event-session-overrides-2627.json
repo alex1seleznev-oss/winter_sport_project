@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "seasonCode": "2027",
+  "reviews": [
+    {
+      "eventId": "63004",
+      "venue": "Davos",
+      "reviewedAt": "2026-10-10T06:20:51.793Z",
+      "evidenceRun": "https://github.com/alex1seleznev-oss/winter_sport_project/actions/runs/38030582148",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63004&seasoncode=2027&sectorcode=CC",
+      "reason": "FIS moved the 5 km heat mass starts from 11 Dec to 13 Dec and the team sprint sessions from 13 Dec to 11 Dec; race IDs and codex identities are unchanged.",
+      "changes": [
+        {"codex":"0015","raceId":"52101","fromDate":"2026-12-11","toDate":"2026-12-13"},
+        {"codex":"0580","raceId":"52100","fromDate":"2026-12-11","toDate":"2026-12-13"},
+        {"codex":"0021","raceId":"52107","fromDate":"2026-12-13","toDate":"2026-12-11"},
+        {"codex":"0023","raceId":"52109","fromDate":"2026-12-13","toDate":"2026-12-11"},
+        {"codex":"0020","raceId":"52106","fromDate":"2026-12-13","toDate":"2026-12-11"},
+        {"codex":"0022","raceId":"52108","fromDate":"2026-12-13","toDate":"2026-12-11"}
+      ]
+    }
+  ]
+}

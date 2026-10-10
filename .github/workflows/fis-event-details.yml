@@ -4,14 +4,16 @@ on:
   schedule:
     - cron: '41 */12 * * *'
   push:
-    branches: [main, 'fix/fis-event-detail-sessions']
+    branches: [main, 'fix/fis-event-detail-sessions', 'fix/fis-davos-reviewed-delta-v1']
     paths:
       - '.github/workflows/fis-event-details.yml'
       - 'scripts/check-fis-event-details.mjs'
       - 'scripts/lib/parse-fis-event-detail.mjs'
+      - 'scripts/lib/apply-fis-session-overrides.mjs'
       - 'tests/fis-*.test.mjs'
       - 'scripts/lib/reconcile-fis-sessions.mjs'
       - 'data/fis-event-sessions-2627.json'
+      - 'data/fis-event-session-overrides-2627.json'
 permissions:
   contents: read
 concurrency:
