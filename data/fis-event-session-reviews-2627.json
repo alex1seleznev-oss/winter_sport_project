@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-10T06:20:51.793Z",
+  "captureRun": "https://github.com/alex1seleznev-oss/winter_sport_project/actions/runs/38030582148",
+  "events": {
+    "63004": {
+      "competitionKey": "fis-wc-2627-davos",
+      "sourceUrl": "https://www.fis-ski.com/DB/general/event-details.html?eventid=63004&seasoncode=2027&sectorcode=CC",
+      "documentSha256": "4fa37018c984c8dcf7f01d16d6c30ffc002e492d72dcbcd94dad8e84d9ca96f5",
+      "reason": "Official FIS moved the Team Sprint programme to 11 December and the 5km Heat Mass Start programme to 13 December. Codex and race IDs are unchanged.",
+      "rows": [
+        {"date":"2026-12-11","codex":"0021","raceId":"52107","event":"1.4km Team Sprint Qualification Free","category":"WC","gender":"men","localTime":null,"sourceTimezone":"Europe/Zurich","cancelled":false},
+        {"date":"2026-12-11","codex":"0023","raceId":"52109","event":"1.4km Team Sprint Free","category":"WC","gender":"men","localTime":null,"sourceTimezone":"Europe/Zurich","cancelled":false},
+        {"date":"2026-12-11","codex":"0020","raceId":"52106","event":"1.4km Team Sprint Qualification Free","category":"WC","gender":"women","localTime":null,"sourceTimezone":"Europe/Zurich","cancelled":false},
+        {"date":"2026-12-11","codex":"0022","raceId":"52108","event":"1.4km Team Sprint Free","category":"WC","gender":"women","localTime":null,"sourceTimezone":"Europe/Zurich","cancelled":false},
+        {"date":"2026-12-12","codex":"0017","raceId":"52103","event":"1.2km Sprint Qualification Free","category":"WC","gender":"men","localTime":null,"sourceTimezone":"Europe/Zurich","cancelled":false},
+        {"date":"2026-12-12","codex":"0019","raceId":"52105","event":"1.2km Sprint Final Free","category":"WC","gender":"men","localTime":null,"sourceTimezone":"Europe/Zurich","cancelled":false},
+        {"date":"2026-12-12","codex":"0016","raceId":"52102","event":"1.2km Sprint Qualification Free","category":"WC","gender":"women","localTime":null,"sourceTimezone":"Europe/Zurich","cancelled":false},
+        {"date":"2026-12-12","codex":"0018","raceId":"52104","event":"1.2km Sprint Final Free","category":"WC","gender":"women","localTime":null,"sourceTimezone":"Europe/Zurich","cancelled":false},
+        {"date":"2026-12-13","codex":"0015","raceId":"52101","event":"5km Heat Mass Start Free","category":"WC","gender":"men","localTime":null,"sourceTimezone":"Europe/Zurich","cancelled":false},
+        {"date":"2026-12-13","codex":"0580","raceId":"52100","event":"5km Heat Mass Start Free","category":"WC","gender":"women","localTime":null,"sourceTimezone":"Europe/Zurich","cancelled":false}
+      ]
+    }
+  }
+}
