@@ -1,9 +1,9 @@
 import {mkdirSync,writeFileSync} from 'node:fs';
-import {fetchOfficialHtml} from '../lib/fetch-official.mjs';
+import {fetchIbuDatacenterEvents} from '../lib/fetch-ibu-datacenter.mjs';
 import {buildIbuKontiolahtiCandidate,IBU_KONTIOLAHTI_SOURCE_URL} from './official-story-candidate.mjs';
 
-const fetched=await fetchOfficialHtml(IBU_KONTIOLAHTI_SOURCE_URL);
-const candidate=buildIbuKontiolahtiCandidate({html:fetched.html,observedAt:fetched.fetchedAt,sourceUrl:fetched.sourceUrl,language:'ru'});
+const fetched=await fetchIbuDatacenterEvents(IBU_KONTIOLAHTI_SOURCE_URL);
+const candidate=buildIbuKontiolahtiCandidate({events:fetched.data,observedAt:fetched.fetchedAt,sourceUrl:fetched.sourceUrl,language:'ru'});
 mkdirSync('artifacts/official-story',{recursive:true});
 writeFileSync('artifacts/official-story/candidate.json',JSON.stringify(candidate,null,2));
 writeFileSync('artifacts/official-story/source-receipt.json',JSON.stringify({

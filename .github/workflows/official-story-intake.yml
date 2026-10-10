@@ -3,6 +3,15 @@ on:
   schedule:
     - cron: '41 */3 * * *'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/official-story-intake.yml'
+      - 'scripts/agents/official-story-candidate.mjs'
+      - 'scripts/agents/prepare-ibu-official-story.mjs'
+      - 'scripts/agents/upload-official-story.mjs'
+      - 'scripts/lib/fetch-ibu-datacenter.mjs'
+      - 'supabase/functions/official-story-intake/**'
 permissions:
   contents: read
 concurrency:
@@ -26,8 +35,8 @@ jobs:
       - name: Reproducible installation
         run: npm ci --ignore-scripts
       - name: Verify bounded official-story parser
-        run: node --test tests/official-story-intake.test.mjs tests/fetch-official.test.mjs
-      - name: Prepare IBU candidate from official HTML
+        run: node --test tests/official-story-intake.test.mjs tests/fetch-ibu-datacenter.test.mjs tests/fetch-official.test.mjs
+      - name: Prepare IBU candidate from official Datacenter
         run: node scripts/agents/prepare-ibu-official-story.mjs
       - name: Upload candidate through GitHub OIDC
         run: node scripts/agents/upload-official-story.mjs

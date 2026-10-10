@@ -7,7 +7,7 @@ const REPOSITORY="alex1seleznev-oss/winter_sport_project";
 const WORKFLOW="alex1seleznev-oss/winter_sport_project/.github/workflows/official-story-intake.yml@refs/heads/main";
 const MAX_EVIDENCE_CHARS=12000;
 const SOURCES={
-  ibu:{feedUrl:"https://www.biathlonworld.com/calendar",host:"www.biathlonworld.com",path:"/calendar",eventId:"BT2627SWRLCP01",seasonId:"2627",cupLevel:"all"}
+  ibu:{feedUrl:"https://biathlonresults.com/modules/sportapi/api/Events",host:"biathlonresults.com",path:"/modules/sportapi/api/Events",seasonId:"2627",level:"1"}
 } as const;
 const jwks=createRemoteJWKSet(new URL("https://token.actions.githubusercontent.com/.well-known/jwks"));
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json","cache-control":"no-store","x-content-type-options":"nosniff"}});
@@ -19,7 +19,7 @@ async function authorize(req:Request){
   if(payload.repository!==REPOSITORY) throw new Error("REPOSITORY_DENIED");
   if(payload.ref!=="refs/heads/main") throw new Error("REF_DENIED");
   if(String(payload.workflow_ref||"")!==WORKFLOW) throw new Error("WORKFLOW_DENIED");
-  if(!["schedule","workflow_dispatch"].includes(String(payload.event_name||""))) throw new Error("EVENT_DENIED");
+  if(!["schedule","workflow_dispatch","push"].includes(String(payload.event_name||""))) throw new Error("EVENT_DENIED");
   return payload;
 }
 
@@ -44,8 +44,8 @@ Deno.serve(async(req:Request)=>{
   if(typeof body.sourceUrl!=="string"||body.sourceUrl.length>2048)return json({ok:false,code:"BAD_SOURCE_URL"},400);
   let sourceUrl:URL;
   try{sourceUrl=new URL(body.sourceUrl)}catch{return json({ok:false,code:"BAD_SOURCE_URL"},400)}
-  if(sourceUrl.protocol!=="https:"||sourceUrl.username||sourceUrl.password||sourceUrl.port||sourceUrl.hostname!==source.host)return json({ok:false,code:"BAD_SOURCE_URL"},400);
-  if(sourceUrl.pathname!==source.path||sourceUrl.searchParams.get("EventId")!==source.eventId||sourceUrl.searchParams.get("SeasonId")!==source.seasonId||sourceUrl.searchParams.get("CupLevel")!==source.cupLevel)return json({ok:false,code:"SOURCE_SCOPE_DENIED"},400);
+  if(sourceUrl.protocol!=="https:"||sourceUrl.username||sourceUrl.password||sourceUrl.port||sourceUrl.hash||sourceUrl.hostname!==source.host)return json({ok:false,code:"BAD_SOURCE_URL"},400);
+  if(sourceUrl.pathname!==source.path||sourceUrl.searchParams.size!==2||sourceUrl.searchParams.get("SeasonId")!==source.seasonId||sourceUrl.searchParams.get("Level")!==source.level)return json({ok:false,code:"SOURCE_SCOPE_DENIED"},400);
   if(typeof body.evidence!=="string"||!body.evidence.trim()||body.evidence.length>MAX_EVIDENCE_CHARS)return json({ok:false,code:"BAD_EVIDENCE"},400);
   if(!validIso(body.observedAt))return json({ok:false,code:"BAD_OBSERVED_AT"},400);
   if(body.language!=="ru"&&body.language!=="en")return json({ok:false,code:"BAD_LANGUAGE"},400);
