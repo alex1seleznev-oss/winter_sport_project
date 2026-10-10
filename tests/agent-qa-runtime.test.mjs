@@ -82,3 +82,20 @@ test('media QA fails closed when named-person package has no reviewed media',()=
  assert.equal(result.qaReport.passed,false);
  assert.equal(result.qaReport.checks.find(item=>item.name==='named-person-media-present').status,'fail');
 });
+
+test('a pass report cannot release a used claim that was not checked',()=>{
+ const emptyReport={...report,checks:[]},emptyApproved={packet,report:emptyReport};
+ const result=evaluateReleaseQa({job,inputs:inputs({report:emptyReport,approved:emptyApproved})});
+ assert.equal(result.reviewRequired,true);assert.equal(result.qaReport.checks.find(c=>c.name==='fact-check-covers-draft').status,'fail');
+});
+test('not applicable and unrelated sources do not support an article claim',()=>{
+ for(const check of [{...report.checks[0],decision:'not_applicable'},{...report.checks[0],sourceRefs:['https://unapproved.example/source']}]){
+  const changed={...report,checks:[check]};const result=evaluateReleaseQa({job,inputs:inputs({report:changed,approved:{packet,report:changed}})});assert.equal(result.reviewRequired,true);
+ }
+});
+test('QA prevents unresolved conflicts and invented internal destinations',()=>{
+ const conflictPacket={...packet,conflicts:[{claimId:'claim-1',note:'Two versions disagree'}]};
+ assert.equal(evaluateReleaseQa({job,inputs:inputs({approved:{packet:conflictPacket,report}})}).reviewRequired,true);
+ assert.equal(evaluateReleaseQa({job,inputs:inputs({draft:{...draft,internalLinks:['/admin']}})}).reviewRequired,true);
+ assert.equal(evaluateReleaseQa({job,inputs:inputs({draft:{...draft,internalLinks:['/calendar']}})}).reviewRequired,false);
+});

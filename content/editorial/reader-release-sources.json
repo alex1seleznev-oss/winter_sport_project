@@ -1,0 +1,26 @@
+[
+  {
+    "id": "kontiolahti-programme-current",
+    "publisher": "Организатор Контиолахти",
+    "title": "Программа соревнований 26–29 ноября 2026",
+    "url": "https://kontiolahtibiathlon.com/kontiolahti-biathlon-world-cup/ohjelma-ja-liput/ohjelma",
+    "date": null,
+    "reviewedOn": "2026-10-10",
+    "type": "official_programme",
+    "facts": [
+      "26.11 мужчины 20 км; 27.11 женщины 15 км; 28.11 одиночная смешанная и смешанная эстафеты; 29.11 спринты мужчин 10 км и женщин 7,5 км. Организатор допускает изменение программы."
+    ]
+  },
+  {
+    "id": "ibu-calendar-2627",
+    "publisher": "IBU Datacenter",
+    "title": "Календарь Кубка мира 2026/27 — событие BT2627SWRLCP01",
+    "url": "https://biathlonresults.com/modules/sportapi/api/Events?SeasonId=2627&Level=1",
+    "date": null,
+    "reviewedOn": "2026-10-10",
+    "type": "official_calendar_snapshot",
+    "facts": [
+      "Срез 2026-10-10T06:38:53.317Z: Контиолахти, начало мероприятия 2026-11-23, окончание 2026-11-29. Это интервал события, не расписание отдельных гонок."
+    ]
+  }
+]
