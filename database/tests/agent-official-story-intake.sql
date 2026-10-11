@@ -111,7 +111,7 @@ from (
     'Synthetic official story',
     'https://official.example.com/calendar/event-1',
     'Official evidence says event one is scheduled on the synthetic test date.',
-    '2026-10-06T04:00:00Z'::timestamptz,
+    '2026-10-06T07:00:00Z'::timestamptz,
     'ru',
     false
   ) as result
@@ -126,6 +126,14 @@ insert into agent_official_story_assertions values
  and :'qa_job_id'=:'repeated_qa_job_id'
  and :'repeated_reused'='true',
  jsonb_build_object('reused',:'repeated_reused'));
+
+insert into agent_official_story_assertions values
+('repeat_preserves_original_capture',exists(
+  select 1 from public.agent_jobs
+  where id=:'research_job_id'::uuid
+    and (payload->>'observedAt')::timestamptz='2026-10-06T04:00:00Z'::timestamptz
+),'{}'),
+('repeat_creates_no_duplicate_jobs',(select count(*)=4 from public.agent_jobs where idempotency_key like 'official-story:ci-official-001:%'),'{}');
 
 set role service_role;
 DO $$

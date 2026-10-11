@@ -154,7 +154,9 @@ begin
 
     if v_research.agent_id<>'research'
        or v_research.job_type<>'research.official-story'
-       or v_research.payload<>v_research_payload
+       -- The story key tracks evidence, while observedAt changes on every poll.
+       -- Keep the original capture time and reuse the existing verified chain.
+       or (v_research.payload - 'observedAt') is distinct from (v_research_payload - 'observedAt')
        or v_research.source_refs<>jsonb_build_array(p_source_url)
        or v_research.dependencies<>'[]'::jsonb
        or v_fact.agent_id<>'fact-check'

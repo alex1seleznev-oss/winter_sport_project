@@ -12,6 +12,8 @@ on:
       - 'scripts/agents/upload-official-story.mjs'
       - 'scripts/lib/fetch-ibu-datacenter.mjs'
       - 'supabase/functions/official-story-intake/**'
+      - 'database/proposed/agent_fabric_official_story_intake.sql'
+      - 'database/tests/agent-official-story-intake.sql'
 permissions:
   contents: read
 concurrency:
