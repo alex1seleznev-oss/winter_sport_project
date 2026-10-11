@@ -10,7 +10,7 @@ test('article photographs have visible archive captions and retain reading order
   await expect(inline).toHaveCount(1);
   await inline.scrollIntoViewIfNeeded();
   await expect(inline.locator('img')).toBeVisible();
-  expect(await inline.locator('img').evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBe(true);
+  await expect.poll(()=>inline.locator('img').evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBe(true);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content',/perrot/);
   await page.screenshot({path:`artifacts/screenshots/${info.project.name}-article-inline-photo.png`});
