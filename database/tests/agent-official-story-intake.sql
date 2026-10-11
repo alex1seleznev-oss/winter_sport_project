@@ -111,7 +111,7 @@ from (
     'Synthetic official story',
     'https://official.example.com/calendar/event-1',
     'Official evidence says event one is scheduled on the synthetic test date.',
-    '2026-10-06T04:00:00Z'::timestamptz,
+    '2026-10-06T05:00:00Z'::timestamptz,
     'ru',
     false
   ) as result
@@ -119,6 +119,8 @@ from (
 reset role;
 
 insert into agent_official_story_assertions values
+('repeat_preserves_first_observation',exists(select 1 from public.agent_jobs where id=:'research_job_id'::uuid and (payload->>'observedAt')::timestamptz='2026-10-06T04:00:00Z'::timestamptz),'{}'),
+('repeat_creates_no_extra_jobs',(select count(*)=4 from public.agent_jobs where idempotency_key like 'official-story:ci-official-001:%'),'{}'),
 ('repeat_is_idempotent',
  :'research_job_id'=:'repeated_research_job_id'
  and :'fact_job_id'=:'repeated_fact_job_id'
