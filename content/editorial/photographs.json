@@ -1,0 +1,372 @@
+[
+  {
+    "key": "diggins-18439004",
+    "athlete": "diggins",
+    "name": "Джесси Диггинс",
+    "scene": "Хольменколлен · 2011",
+    "capturedOn": "2011-03-03",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jessica_Diggins_at_FIS_Nordic_World_Ski_Championships_2011.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Jessica_Diggins_at_FIS_Nordic_World_Ski_Championships_2011.jpg",
+    "author": "Oskarlin",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceSha256": "8d31a88c97e0bfbf3d948efc44c9ae3a8c9b40701be49c49035937ecdac32c1b",
+    "sourceSha1": "fd1a940744c80bf7564ecd90bfc6fa626afbe226",
+    "originalWidth": 5616,
+    "originalHeight": 3744,
+    "archival": true,
+    "derivativeNote": "Уменьшение и перекодирование в WebP. Лицо и экипировка не перерисованы.",
+    "variants": [
+      {
+        "src": "/editorial/diggins-18439004-720.webp",
+        "width": 720,
+        "height": 480,
+        "bytes": 44492,
+        "sha256": "3de83471b59eccc60d14ae89af7d00d1cefaf9f80fe287b71b3b12d30a4a2be2"
+      },
+      {
+        "src": "/editorial/diggins-18439004-1280.webp",
+        "width": 1280,
+        "height": 853,
+        "bytes": 129550,
+        "sha256": "92a24293d60b078af14bf19468b870f2ff457664a58a5233c4a64faacdd390ee"
+      }
+    ],
+    "reviewedOn": "2026-10-11"
+  },
+  {
+    "key": "diggins-23167297",
+    "athlete": "diggins",
+    "name": "Джесси Диггинс",
+    "scene": "Квебек · 2012",
+    "capturedOn": "2012-12-08",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jessica_Diggins_FIS_Cross-Country_World_Cup_2012-2012_Quebec_B.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Jessica_Diggins_FIS_Cross-Country_World_Cup_2012-2012_Quebec_B.jpg",
+    "author": "Cephas",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceSha256": "fa81b93b1b1b6bcea15361b62af2496cba7d89824a528e024e563bc3738f56f2",
+    "sourceSha1": "4af87a148e4ebe5bc5d0a5feff005c0baac95997",
+    "originalWidth": 3456,
+    "originalHeight": 5184,
+    "archival": true,
+    "derivativeNote": "Уменьшение и перекодирование в WebP. Лицо и экипировка не перерисованы.",
+    "variants": [
+      {
+        "src": "/editorial/diggins-23167297-720.webp",
+        "width": 720,
+        "height": 1080,
+        "bytes": 76986,
+        "sha256": "cab988ae0b3813caae42fbfc64eacb2693cecbc391252bc4686b238b3a2f6f19"
+      },
+      {
+        "src": "/editorial/diggins-23167297-1280.webp",
+        "width": 1280,
+        "height": 1920,
+        "bytes": 162868,
+        "sha256": "647e612d856d224bd62d0c79c744bde2403e5da1c8b16faecca7048e82276b0e"
+      }
+    ],
+    "reviewedOn": "2026-10-11"
+  },
+  {
+    "key": "dahlqvist-131336905",
+    "athlete": "dahlqvist",
+    "name": "Майя Дальквист",
+    "scene": "Дрезден · 2019",
+    "capturedOn": "2019-01-12",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Maja_Dahlqvist_in_2019_(cropped)01.JPG",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ac/Maja_Dahlqvist_in_2019_%28cropped%2901.JPG",
+    "author": "Sandro Halank , Wikimedia Commons",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceSha256": "5135511c2f9d91773b676574dd7a5aa8bd943216d7ba1d0c52301b851f8d81f9",
+    "sourceSha1": "1639697a40998bbe4ea9469266fede4e5f64a51c",
+    "originalWidth": 1800,
+    "originalHeight": 2400,
+    "archival": true,
+    "derivativeNote": "Уменьшение и перекодирование в WebP. Лицо и экипировка не перерисованы.",
+    "variants": [
+      {
+        "src": "/editorial/dahlqvist-131336905-720.webp",
+        "width": 720,
+        "height": 960,
+        "bytes": 67668,
+        "sha256": "05b530f9058d0eb3ab64241fc8bd0fb6b3d85ab3a1bb6dee38715c75d5e6cdda"
+      },
+      {
+        "src": "/editorial/dahlqvist-131336905-1280.webp",
+        "width": 1280,
+        "height": 1707,
+        "bytes": 169124,
+        "sha256": "60a807819faa8c787bd76f8c8d041e01deeb928dc933ec130b597f43254e36a8"
+      }
+    ],
+    "reviewedOn": "2026-10-11"
+  },
+  {
+    "key": "perrot-147220215",
+    "athlete": "perrot",
+    "name": "Эрик Перро",
+    "scene": "Нове-Место · 2024",
+    "capturedOn": "2024-02-10",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Perrot_E._%E2%80%93_Biathlon_WCh_2024_Nove_Mesto_2829.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Perrot_E._%E2%80%93_Biathlon_WCh_2024_Nove_Mesto_2829.jpg",
+    "author": "Pavel Hrdlička (Czech Wikipedia user Packa )",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceSha256": "9592cec2ad8268b3b19523774830c7b2e7d12350b5723c1305a4fda9b92c71b3",
+    "sourceSha1": "87386c009aa658d26beb898cc27cced7f6e2f77b",
+    "originalWidth": 2773,
+    "originalHeight": 3746,
+    "archival": true,
+    "derivativeNote": "Уменьшение и перекодирование в WebP. Лицо и экипировка не перерисованы.",
+    "variants": [
+      {
+        "src": "/editorial/perrot-147220215-720.webp",
+        "width": 720,
+        "height": 973,
+        "bytes": 47756,
+        "sha256": "833b15bacf43087886f76a64720a369215c828681e5b6f23fe3db07a656e4e0f"
+      },
+      {
+        "src": "/editorial/perrot-147220215-1280.webp",
+        "width": 1280,
+        "height": 1729,
+        "bytes": 99428,
+        "sha256": "314e47377637cc45ea2c254b3eb66a26c9b9a15c99139b66ec2a4926f5693762"
+      }
+    ],
+    "reviewedOn": "2026-10-11"
+  },
+  {
+    "key": "perrot-135791872",
+    "athlete": "perrot",
+    "name": "Эрик Перро",
+    "scene": "Нове-Место · 2023",
+    "capturedOn": "2023-03-01",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Perrot_E._%E2%80%93_Biathlon_2023_Nove_Mesto_4268.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Perrot_E._%E2%80%93_Biathlon_2023_Nove_Mesto_4268.jpg",
+    "author": "Pavel Hrdlička (Czech Wikipedia user Packa )",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceSha256": "d06e76aa34cbd3f61217535219f24bcf17e1baea5f4af2a594fa32e9117a9b84",
+    "sourceSha1": "b12b9ea7d28f951174b97e63dc94c378ddafafb3",
+    "originalWidth": 2576,
+    "originalHeight": 3640,
+    "archival": true,
+    "derivativeNote": "Уменьшение и перекодирование в WebP. Лицо и экипировка не перерисованы.",
+    "variants": [
+      {
+        "src": "/editorial/perrot-135791872-720.webp",
+        "width": 720,
+        "height": 1017,
+        "bytes": 71150,
+        "sha256": "9e8e706751fc1bb5bf95eae00932658465ee38962119be25669338679d0aac65"
+      },
+      {
+        "src": "/editorial/perrot-135791872-1280.webp",
+        "width": 1280,
+        "height": 1809,
+        "bytes": 175780,
+        "sha256": "de604141a8451162b58ecd93f250a2571535115873318b8b73476d090161dccf"
+      }
+    ],
+    "reviewedOn": "2026-10-11"
+  },
+  {
+    "key": "giacomel-131423396",
+    "athlete": "giacomel",
+    "name": "Томмазо Джакомель",
+    "scene": "Нове-Место · 2023",
+    "capturedOn": "2023-03-02",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Giacomel_T._%E2%80%93_Biathlon_2023_Nove_Mesto_7535.jpg",
+    "originalUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Giacomel_T._%E2%80%93_Biathlon_2023_Nove_Mesto_7535.jpg/1280px-Giacomel_T._%E2%80%93_Biathlon_2023_Nove_Mesto_7535.jpg",
+    "author": "Pavel Hrdlička (Czech Wikipedia user Packa )",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "downloadedUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Giacomel_T._%E2%80%93_Biathlon_2023_Nove_Mesto_7535.jpg/1280px-Giacomel_T._%E2%80%93_Biathlon_2023_Nove_Mesto_7535.jpg",
+    "downloadedSha256": "37a9a52e65bfd909c9b62294de437b6272db2f84107f3695b2865459016898d5",
+    "sourceSha256": null,
+    "sourceSha1": "fcb2a2376cbaa8eb4229a0539cd7e26c00d3d07d",
+    "originalWidth": 1778,
+    "originalHeight": 2139,
+    "archival": true,
+    "derivativeNote": "Уменьшение и перекодирование в WebP. Лицо и экипировка не перерисованы.",
+    "variants": [
+      {
+        "src": "/editorial/giacomel-131423396-720.webp",
+        "width": 720,
+        "height": 866,
+        "bytes": 60816,
+        "sha256": "4700d172309b49fb586ebe41c6ffc04c1694b80ca2cb1715d64d63bfe0657740"
+      },
+      {
+        "src": "/editorial/giacomel-131423396-1280.webp",
+        "width": 1280,
+        "height": 1540,
+        "bytes": 158358,
+        "sha256": "d9012796e5e098cc17828687bd1a6fef41f6c73d94d6169a48d01d9230c321ad"
+      }
+    ],
+    "downloadedWidth": 1280,
+    "downloadedHeight": 1540,
+    "reviewedOn": "2026-10-11"
+  },
+  {
+    "key": "jeanmonnot-135785557",
+    "athlete": "jeanmonnot",
+    "name": "Лу Жанмонно",
+    "scene": "Нове-Место · 2023",
+    "capturedOn": "2023-03-01",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jeanmonnot_L._%E2%80%93_Biathlon_2023_Nove_Mesto_7062.jpg",
+    "originalUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Jeanmonnot_L._%E2%80%93_Biathlon_2023_Nove_Mesto_7062.jpg/1280px-Jeanmonnot_L._%E2%80%93_Biathlon_2023_Nove_Mesto_7062.jpg",
+    "author": "Pavel Hrdlička (Czech Wikipedia user Packa )",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "downloadedUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Jeanmonnot_L._%E2%80%93_Biathlon_2023_Nove_Mesto_7062.jpg/1280px-Jeanmonnot_L._%E2%80%93_Biathlon_2023_Nove_Mesto_7062.jpg",
+    "downloadedSha256": "d2fe38f07c79b014eb68db7795f83929c71d92b4128b7a56294174dfbfb567c2",
+    "sourceSha256": null,
+    "sourceSha1": "d1dab18022869830abf76cf19cb6f7f440717501",
+    "originalWidth": 2024,
+    "originalHeight": 2256,
+    "archival": true,
+    "derivativeNote": "Уменьшение и перекодирование в WebP. Лицо и экипировка не перерисованы.",
+    "variants": [
+      {
+        "src": "/editorial/jeanmonnot-135785557-720.webp",
+        "width": 720,
+        "height": 803,
+        "bytes": 48538,
+        "sha256": "e975ccb142b6633510907d7ab6a13f0be4cfb979ee39074ba080c8b9421c6cb2"
+      },
+      {
+        "src": "/editorial/jeanmonnot-135785557-1280.webp",
+        "width": 1280,
+        "height": 1427,
+        "bytes": 122382,
+        "sha256": "b92e2be22b1d9b566f25f83e4a7adad0df51289917b0b17a64b4549e6147d323"
+      }
+    ],
+    "downloadedWidth": 1280,
+    "downloadedHeight": 1427,
+    "reviewedOn": "2026-10-11"
+  },
+  {
+    "key": "hanna-oeberg-132355018",
+    "athlete": "hanna-oeberg",
+    "name": "Ханна Эберг",
+    "scene": "Нове-Место · 2023",
+    "capturedOn": "2023-03-04",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Oeberg_H._%E2%80%93_Biathlon_2023_Nove_Mesto_9391.jpg",
+    "originalUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Oeberg_H._%E2%80%93_Biathlon_2023_Nove_Mesto_9391.jpg/1280px-Oeberg_H._%E2%80%93_Biathlon_2023_Nove_Mesto_9391.jpg",
+    "author": "Pavel Hrdlička (Czech Wikipedia user Packa )",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "downloadedUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Oeberg_H._%E2%80%93_Biathlon_2023_Nove_Mesto_9391.jpg/1280px-Oeberg_H._%E2%80%93_Biathlon_2023_Nove_Mesto_9391.jpg",
+    "downloadedSha256": "9aa825d0c8e81afc7df2f44ce8fc91835b69c8884f0ab97ca3b602c57ef9ac2a",
+    "sourceSha256": null,
+    "sourceSha1": "c9bc61d9ce247bc5d753a6edbab0901e8e3ea8bf",
+    "originalWidth": 2356,
+    "originalHeight": 3020,
+    "archival": true,
+    "derivativeNote": "Уменьшение и перекодирование в WebP. Лицо и экипировка не перерисованы.",
+    "variants": [
+      {
+        "src": "/editorial/hanna-oeberg-132355018-720.webp",
+        "width": 720,
+        "height": 923,
+        "bytes": 82946,
+        "sha256": "22746eef70c481764547b695145479b4866ba04b202a54b6a564418e7dc5b3e4"
+      },
+      {
+        "src": "/editorial/hanna-oeberg-132355018-1280.webp",
+        "width": 1280,
+        "height": 1641,
+        "bytes": 238278,
+        "sha256": "a80ec7a471fbad707e4d607477f0f34d32347dc2a215d2d376fb663d1738dce1"
+      }
+    ],
+    "downloadedWidth": 1280,
+    "downloadedHeight": 1641,
+    "reviewedOn": "2026-10-11"
+  },
+  {
+    "key": "hanna-oeberg-128870981",
+    "athlete": "hanna-oeberg",
+    "name": "Ханна Эберг",
+    "scene": "Оберхоф · 2023",
+    "capturedOn": "2023-02-19",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:2023-02-19_BMW_IBU_World_Championships_Biathlon_Oberhof_2023_%E2%80%93_Hanna_Linnea_%C3%96berg_by_Sandro_Halank%E2%80%93003.jpg",
+    "originalUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/2023-02-19_BMW_IBU_World_Championships_Biathlon_Oberhof_2023_%E2%80%93_Hanna_Linnea_%C3%96berg_by_Sandro_Halank%E2%80%93003.jpg/1280px-2023-02-19_BMW_IBU_World_Championships_Biathlon_Oberhof_2023_%E2%80%93_Hanna_Linnea_%C3%96berg_by_Sandro_Halank%E2%80%93003.jpg",
+    "author": "Sandro Halank , Wikimedia Commons",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "downloadedUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/2023-02-19_BMW_IBU_World_Championships_Biathlon_Oberhof_2023_%E2%80%93_Hanna_Linnea_%C3%96berg_by_Sandro_Halank%E2%80%93003.jpg/1280px-2023-02-19_BMW_IBU_World_Championships_Biathlon_Oberhof_2023_%E2%80%93_Hanna_Linnea_%C3%96berg_by_Sandro_Halank%E2%80%93003.jpg",
+    "downloadedSha256": "c6a3a1cad855d6c97af74a5ffe42375d612b97aeb7e9d818bc1dfee0359e5652",
+    "sourceSha256": null,
+    "sourceSha1": "a384bd5224f16cfd466fad733e408a3bb84e1d91",
+    "originalWidth": 2904,
+    "originalHeight": 2955,
+    "archival": true,
+    "derivativeNote": "Уменьшение и перекодирование в WebP. Лицо и экипировка не перерисованы.",
+    "variants": [
+      {
+        "src": "/editorial/hanna-oeberg-128870981-720.webp",
+        "width": 720,
+        "height": 732,
+        "bytes": 60160,
+        "sha256": "d4b73c81e1093dea3d26e96bb36ecd1613c4cc0703a08105dd079d5a349cd10a"
+      },
+      {
+        "src": "/editorial/hanna-oeberg-128870981-1280.webp",
+        "width": 1280,
+        "height": 1302,
+        "bytes": 205892,
+        "sha256": "a1fbc90516f283a59e3394d3ec4671a6b15899dfbce315cf6f219edf11e0e6dd"
+      }
+    ],
+    "downloadedWidth": 1280,
+    "downloadedHeight": 1302,
+    "reviewedOn": "2026-10-11"
+  },
+  {
+    "key": "samuelsson-77360984",
+    "athlete": "samuelsson",
+    "name": "Себастьян Самуэльссон",
+    "scene": "Эстерсунд · 2019",
+    "capturedOn": "2019-03-14",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sebastian_Samuelsson_2019.jpg",
+    "originalUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Sebastian_Samuelsson_2019.jpg/1280px-Sebastian_Samuelsson_2019.jpg",
+    "author": "Andreaze",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "downloadedUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Sebastian_Samuelsson_2019.jpg/1280px-Sebastian_Samuelsson_2019.jpg",
+    "downloadedSha256": "45e1058b0445edc3346b3b64546937125b8d85bf14e270d55e3deb8039550398",
+    "sourceSha256": null,
+    "sourceSha1": "bd226c147bea71da02f8fb0cbd5ad665c5e57a91",
+    "originalWidth": 1396,
+    "originalHeight": 2056,
+    "archival": true,
+    "derivativeNote": "Уменьшение и перекодирование в WebP. Лицо и экипировка не перерисованы.",
+    "variants": [
+      {
+        "src": "/editorial/samuelsson-77360984-720.webp",
+        "width": 720,
+        "height": 1060,
+        "bytes": 87718,
+        "sha256": "13ad91df216a944fb26ed8c3c4e15d1aa3ab0f2100279e681d7d1e273becf252"
+      },
+      {
+        "src": "/editorial/samuelsson-77360984-1280.webp",
+        "width": 1280,
+        "height": 1885,
+        "bytes": 221520,
+        "sha256": "471d9db0f1b87eefce1c59b92af072a95dc8f49f6de88c6a1d31cbc7a6000bc9"
+      }
+    ],
+    "downloadedWidth": 1280,
+    "downloadedHeight": 1885,
+    "reviewedOn": "2026-10-11"
+  }
+]
