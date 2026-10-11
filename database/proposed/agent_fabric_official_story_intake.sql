@@ -154,7 +154,8 @@ begin
 
     if v_research.agent_id<>'research'
        or v_research.job_type<>'research.official-story'
-       or v_research.payload<>v_research_payload
+       -- A later fetch changes receipt time, not the story revision.
+       or (v_research.payload - 'observedAt') is distinct from (v_research_payload - 'observedAt')
        or v_research.source_refs<>jsonb_build_array(p_source_url)
        or v_research.dependencies<>'[]'::jsonb
        or v_fact.agent_id<>'fact-check'
