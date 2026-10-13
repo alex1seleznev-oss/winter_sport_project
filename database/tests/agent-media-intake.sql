@@ -23,6 +23,11 @@ select public.agent_record_media_observation(
   '{"kind":"media_intake_observation","verification_status":"unverified","calendar_mutation_allowed":false,"publication_allowed":false,"sourceKey":"ci-source","url":"https://example.com/item","revision":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}'::jsonb,
   '["https://example.com/feed","https://example.com/item"]'::jsonb
 ) as media_job_id_repeat \gset
+select public.agent_record_media_observation(
+  'media:ci-source:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+  '{"kind":"media_intake_observation","verification_status":"unverified","calendar_mutation_allowed":false,"publication_allowed":false,"sourceKey":"ci-source","url":"https://example.com/item","revision":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","retrievedAt":"2026-10-13T10:00:00Z","documentHash":"new-fetch-hash","packetHash":"new-packet-hash","workflowRunId":"new-run"}'::jsonb,
+  '["https://example.com/feed","https://example.com/item"]'::jsonb
+) as media_job_id_new_receipt \gset
 reset role;
 
 insert into agent_media_intake_assertions values
@@ -38,6 +43,9 @@ insert into agent_media_intake_assertions values
     and max_attempts=1
 ),jsonb_build_object('jobId',:'media_job_id')),
 ('media_job_is_idempotent',:'media_job_id'=:'media_job_id_repeat',jsonb_build_object('first',:'media_job_id','repeat',:'media_job_id_repeat')),
+('receipt_changes_reuse_original_job',:'media_job_id'=:'media_job_id_new_receipt','{}'),
+('retry_does_not_rewrite_original_evidence',exists(select 1 from public.agent_jobs where id=:'media_job_id'::uuid and not (payload ? 'workflowRunId') and not (payload ? 'retrievedAt')),'{}'),
+('retry_does_not_duplicate_job',1=(select count(*) from public.agent_jobs where idempotency_key='media:ci-source:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),'{}'),
 ('media_job_never_ready',not public.agent_job_ready(:'media_job_id'::uuid),'{}'),
 ('media_job_has_audit',exists(
   select 1 from public.agent_audit_events
