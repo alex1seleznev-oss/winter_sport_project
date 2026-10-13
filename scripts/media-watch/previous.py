@@ -11,7 +11,9 @@ try:
     listing=json.loads(api(f'repos/{REPO}/actions/workflows/public-media-watch.yml/runs?branch={ref}&per_page=10&status=completed'))
     saved=False
     for run in listing.get('workflow_runs',[]):
-        if run['id']==current or run.get('event') not in ('push','schedule','workflow_dispatch') or run.get('head_repository',{}).get('full_name')!=REPO: continue
+        # A collected packet is not acknowledged until its intake step succeeds.
+        # Failed uploads must never advance the baseline and hide unsent records.
+        if run['id']==current or run.get('conclusion')!='success' or run.get('event') not in ('push','schedule','workflow_dispatch') or run.get('head_repository',{}).get('full_name')!=REPO: continue
         artifacts=json.loads(api(f'repos/{REPO}/actions/runs/{run["id"]}/artifacts')).get('artifacts',[])
         artifact=next((a for a in artifacts if a.get('name')=='public-media-review' and not a.get('expired') and a.get('size_in_bytes',0)<2_000_000),None)
         if not artifact: continue

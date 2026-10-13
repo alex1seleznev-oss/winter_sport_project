@@ -65,7 +65,10 @@ begin
   if found then
     if v_existing.agent_id<>'media-watch'
        or v_existing.job_type<>'media.intake.observation'
-       or v_existing.payload<>p_payload
+       -- A retry has the same source revision but a new fetch/run receipt.
+       -- Keep the original observation immutable; changed evidence still conflicts.
+       or (v_existing.payload - array['retrievedAt','documentHash','packetHash','workflowRunId'])
+          is distinct from (p_payload - array['retrievedAt','documentHash','packetHash','workflowRunId'])
        or v_existing.source_refs<>p_source_refs
     then
       raise exception 'MEDIA_INTAKE_IDEMPOTENCY_CONFLICT';
