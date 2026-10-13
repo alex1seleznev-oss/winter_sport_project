@@ -23,6 +23,8 @@ try:
             names=[i for i in archive.infolist() if i.filename=='packet.json']
             if len(names)!=1 or names[0].file_size>3_000_000: raise ValueError('Invalid artifact member')
             packet=json.loads(archive.read(names[0]))
+        # Old successful NO_DELTA runs did not prove all observations were uploaded.
+        if packet.get('intakeContractVersion')!=1: continue
         if packet.get('schemaVersion')!=2 or not isinstance(packet.get('items'),list) or len(packet['items'])>500: raise ValueError('Packet contract')
         if not isinstance(packet.get('sources'),list) or len(packet['sources'])>20: raise ValueError('Source contract')
         if any(not isinstance(i,dict) or not isinstance(i.get('url'),str) or not isinstance(i.get('sourceKey'),str) or not re.fullmatch('[a-f0-9]{64}',i.get('revision','')) for i in packet['items']): raise ValueError('Record contract')

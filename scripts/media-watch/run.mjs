@@ -1,10 +1,10 @@
 // Public source GETs only. No source credentials, private API or database client.
-import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';import {hash,normalize,syndication,delta,VERSION} from './model.mjs';import {telegram,rss,mediaIndex} from './parsers.mjs';
+import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';import {hash,normalize,syndication,delta,VERSION,INTAKE_CONTRACT_VERSION} from './model.mjs';import {telegram,rss,mediaIndex} from './parsers.mjs';
 const config=JSON.parse(readFileSync(new URL('../../config/public-media-watch.json',import.meta.url),'utf8'));
 const allowed=new Set(['https://t.me/s/radiolyzhi','https://t.me/s/ski_lizzer1n','https://t.me/s/skiclassics','https://t.me/s/russianbiathlon','https://t.me/s/penalty150','https://www.sports.ru/biathlon/','https://www.sports.ru/skiing/','https://www.sports.ru/rss/topnews.xml','https://skisport.ru/']);
 const out='artifacts/media-watch';mkdirSync(out,{recursive:true});
 async function fetchPublic(url){let last;for(let attempt=1;attempt<=2;attempt++){try{const r=await fetch(url,{redirect:'manual',signal:AbortSignal.timeout(18000),headers:{'user-agent':'WinterSportsHub/1.7 public-reference-watch'}});if(r.ok)return r;if(r.status<500&&r.status!==429)return r;await r.body?.cancel();last=new Error('HTTP_'+r.status);}catch(e){last=e}if(attempt<2)await new Promise(resolve=>setTimeout(resolve,750));}throw last||new Error('FETCH_FAILED')}
-const now=new Date();const packet={schemaVersion:2,parserVersion:VERSION,configHash:hash(config),startedAt:now.toISOString(),sources:[],items:[],notConnected:config.notConnected,calendarWrites:0,databaseWrites:0,publishedFacts:0};
+const now=new Date();const packet={schemaVersion:2,intakeContractVersion:INTAKE_CONTRACT_VERSION,parserVersion:VERSION,configHash:hash(config),startedAt:now.toISOString(),sources:[],items:[],notConnected:config.notConnected,calendarWrites:0,databaseWrites:0,publishedFacts:0};
 for(const source of config.sources){let receipt=null;
  try{
   if(!allowed.has(source.fetchUrl))throw new Error('SOURCE_NOT_ALLOWED');const startedAt=new Date().toISOString();

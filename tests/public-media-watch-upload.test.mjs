@@ -24,4 +24,9 @@ test('missing revisions, old string contracts, duplicates and tampered packets f
  const t=packet();t.items[0].evidence='tampered';assert.throws(()=>intakeBatches(t),/HASH/);
 });
 test('full bounded intake preserves all 500 records and each request remains at most 100',()=>{const batches=intakeBatches(packet(500));assert.equal(batches.flat().length,500);assert.ok(batches.every(b=>b.length<=100))});
+test('legacy successful no-delta reports cannot hide observations never acknowledged by intake',()=>{
+ const old=packet(138),next={...old,intakeContractVersion:1};next.delta=delta(old,next);
+ assert.equal(next.delta.baselineAvailable,false);assert.equal(intakeBatches(next).flat().length,138);
+ assert.match(readFileSync(new URL('../scripts/media-watch/previous.py',import.meta.url),'utf8'),/packet\.get\('intakeContractVersion'\)!=1/);
+});
 test('failed uploads cannot become the trusted baseline',()=>{assert.match(readFileSync(new URL('../scripts/media-watch/previous.py',import.meta.url),'utf8'),/run\.get\('conclusion'\)!='success'/)});

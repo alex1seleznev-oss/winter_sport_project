@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';import {isIP} from 'node:net';
 export const VERSION='public-media-watch/2.2.0';
+export const INTAKE_CONTRACT_VERSION=1;
 export const EVIDENCE_MAX_CHARS=6000;
 export const text=value=>String(value??'').normalize('NFKC').replace(/[\u0000-\u001f\u007f]/g,' ').replace(/\s+/gu,' ').trim();
 export function hash(value){return createHash('sha256').update(typeof value==='string'||Buffer.isBuffer(value)?value:JSON.stringify(value)).digest('hex')}
@@ -33,7 +34,7 @@ export function syndication(items){const groups=new Map(),byUrl=new Map(items.ma
 export function delta(previous,current){
  const empty={baselineAvailable:false,newReferences:[],changedReferences:[],missingNotDeletion:[],sourceStateChanges:[],notify:false};
  const ref=i=>({sourceKey:i.sourceKey,url:i.url,revision:i.revision});
- if(!previous||previous.parserVersion!==current.parserVersion||previous.configHash!==current.configHash)return {...empty,newReferences:current.items.map(ref)};
+ if(!previous||previous.intakeContractVersion!==current.intakeContractVersion||previous.parserVersion!==current.parserVersion||previous.configHash!==current.configHash)return {...empty,newReferences:current.items.map(ref)};
  const key=i=>i.sourceKey+'|'+i.url,old=new Map(previous.items.map(i=>[key(i),i])),next=new Map(current.items.map(i=>[key(i),i]));
  const newReferences=[...next.keys()].filter(k=>!old.has(k)).map(k=>ref(next.get(k))),changedReferences=[...next.keys()].filter(k=>old.has(k)&&old.get(k).revision!==next.get(k).revision).map(k=>ref(next.get(k))),missingNotDeletion=[...old.keys()].filter(k=>!next.has(k));
  const oldStates=new Map(previous.sources.map(s=>[s.key,s.status]));const sourceStateChanges=current.sources.filter(s=>oldStates.get(s.key)!==s.status).map(s=>({key:s.key,from:oldStates.get(s.key)||'unknown',to:s.status}));
