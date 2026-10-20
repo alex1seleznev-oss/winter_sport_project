@@ -1,0 +1,4 @@
+/* Shared light palette for every route, including loading and error states. */
+:root{color-scheme:light;--bg:#f7fafc;--panel:#ffffff;--surface-soft:#edf4f9;--line:#cddce6;--text:#163348;--muted:#486579;--accent:#216b9a;--accent-soft:#e2eff8;--focus:#247caf;--success-ink:#276748;--success-soft:#edf7f1;--success-line:#b9d4c4;--warning-ink:#80591b;--warning-soft:#fff6e6;--warning-line:#dfcca2;--danger-ink:#a43e3b;--danger-soft:#fff0ef;--danger-line:#e3c2c3;--orange:#3a88b8;--teal:#358579}
+html{background:var(--bg)}::selection{background:#cce5f5;color:#13374d}input,select,textarea{color-scheme:light}
+main{min-width:0}h1,h2,h3{overflow-wrap:anywhere}

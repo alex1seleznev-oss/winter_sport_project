@@ -42,6 +42,9 @@ jobs:
       - name: Small public design previews
         if: github.event_name == 'pull_request' && github.head_ref == 'design/viewer-first-home'
         run: node scripts/design/review-previews.mjs
+      - name: Review light theme on all page families
+        if: github.event_name == 'pull_request' && github.head_ref == 'design/sitewide-light-theme'
+        run: node scripts/design/review-light-theme.mjs
       - name: Agent-browser verification of production build
         run: |
           set -euo pipefail
