@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import {SiteNav} from '../../components/SiteNav';
 import {pageMetadata} from '../../lib/seo';
-import {createAgentSupabaseClient} from '../../lib/agents/store-supabase.mjs';
+import {createClient} from '@supabase/supabase-js';
 import {readOperationsSnapshot,type OperationsSnapshot} from '../../lib/agents/operations.mjs';
 import workers from '../../config/agents/workers.json';
 import styles from './Platform.module.css';
@@ -13,7 +13,12 @@ const modes:Record<string,string>={'github-action':'Сбор по расписа
 const summaries:Record<string,string>={unknown:'Телеметрия недоступна',attention:'Есть задания с ошибками',review:'Материалы ждут проверки',running:'Есть задания в работе',ready:'Есть готовые задания',idle:'Нет готовых заданий'};
 function time(value:string|null){return value?new Intl.DateTimeFormat('ru-RU',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Moscow'}).format(new Date(value))+' МСК':'Нет данных'}
 async function snapshot():Promise<OperationsSnapshot>{
- try{return await readOperationsSnapshot(createAgentSupabaseClient())}
+ try{
+  const url=process.env.NEXT_PUBLIC_SUPABASE_URL,key=process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if(!url||!key)throw new Error('OPERATIONS_NOT_CONFIGURED');
+  const client=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},global:{fetch:(input,init)=>fetch(input,{...init,cache:'no-store',signal:init?.signal??AbortSignal.timeout(10000)})}});
+  return await readOperationsSnapshot(client);
+ }
  catch{return {available:false,checkedAt:new Date().toISOString(),counts:null,readyCandidates:null,readyCapped:false,latestCompletedAt:null,state:'unknown'}}
 }
 export default async function Platform(){
