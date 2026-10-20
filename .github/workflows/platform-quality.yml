@@ -39,6 +39,9 @@ jobs:
         run: npx --no-install playwright install --with-deps chromium webkit
       - name: Browser tests on desktop Chromium and mobile WebKit
         run: npx --no-install playwright test
+      - name: Small public design previews
+        if: github.event_name == 'pull_request' && github.head_ref == 'design/viewer-first-home'
+        run: node scripts/design/review-previews.mjs
       - name: Agent-browser verification of production build
         run: |
           set -euo pipefail
