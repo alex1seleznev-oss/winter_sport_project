@@ -1,0 +1,38 @@
+{
+  "key": "alpine-winter-2026",
+  "title": "Зимнее плато в Австрийских Альпах",
+  "author": "Mike is Michi",
+  "capturedOn": "2026-03-07",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snow-covered_alpine_plateau_with_ski_tracks_Austrian_Alps_2026.JPG",
+  "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Snow-covered_alpine_plateau_with_ski_tracks_Austrian_Alps_2026.JPG",
+  "sourceSha1": "5f3755e01f824287344323fadfffcc460f89cc75",
+  "originalWidth": 5660,
+  "originalHeight": 4240,
+  "derivativeNote": "Кадрирование до 16:9, уменьшение и WebP. Цвет, детали пейзажа и содержимое кадра не дорисовывались. Производные файлы — CC BY-SA 4.0.",
+  "sourceSha256": "909b0725861c29bde66fa7d266a81d6aefcfed7df1bb1772211b82eaf2bf3348",
+  "variants": [
+    {
+      "src": "/home/winter-landscape-720.webp",
+      "width": 720,
+      "height": 405,
+      "bytes": 25714,
+      "sha256": "2106bc6382da6847edcbc54b1d94f6087e4df0ef284960c08eb0f9c771a1bce9"
+    },
+    {
+      "src": "/home/winter-landscape-1280.webp",
+      "width": 1280,
+      "height": 720,
+      "bytes": 74638,
+      "sha256": "d6bed5defc306b4d4fdad2494a592c3acbcf849bf32493ede99d8c1a3d248d55"
+    },
+    {
+      "src": "/home/winter-landscape-1920.webp",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 156174,
+      "sha256": "0d70240cd16bb4d44fba56429a71ec010ef0398e76c73c40489cf1c13ea585ba"
+    }
+  ]
+}
