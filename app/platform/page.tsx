@@ -1,7 +1,34 @@
+import Link from 'next/link';
 import {SiteNav} from '../../components/SiteNav';
-import {supabase} from '../../lib/supabase';
 import {pageMetadata} from '../../lib/seo';
+import {createAgentSupabaseClient} from '../../lib/agents/store-supabase.mjs';
+import {readOperationsSnapshot,type OperationsSnapshot} from '../../lib/agents/operations.mjs';
+import workers from '../../config/agents/workers.json';
+import styles from './Platform.module.css';
+
 export const dynamic='force-dynamic';
-export const metadata=pageMetadata('Архитектура и помощники','Роли помощников, границы полномочий и состояние инфраструктуры Winter Sports Hub.','/platform',false);
-const states:Record<string,string>={planned:'Спроектирован',configured:'Настроен',running:'Запущен',paused:'Приостановлен',error:'Ошибка'};
-export default async function Platform(){const {data,error}=await supabase.from('agent_registry').select('key,title,responsibility,enabled,execution_status,may_publish').order('key');return <main id="main-content"><SiteNav/><header><div className="eyebrow">ПЛАТФОРМА</div><h1 className="detailTitle">Помощники с границами полномочий</h1><p className="lead">Реестр ролей не означает, что боты уже работают. Ни один новый помощник не получает права публиковать материалы по умолчанию.</p></header><div className="stepsGrid"><article className="panel"><small>01 · ИСТОЧНИКИ</small><h2>Получить и проверить</h2><p>URL, сезон, версия документа и границы данных.</p></article><article className="panel"><small>02 · ЗАКРЫТАЯ ОЧЕРЕДЬ</small><h2>Предложить изменение</h2><p>Предыдущее значение, доказательство и проверка конфликта.</p></article><article className="panel"><small>03 · ПУБЛИЧНАЯ БАЗА</small><h2>Опубликовать решение</h2><p>Только после проверки. Сайт не читает закрытые черновики.</p></article></div>{error?<div className="notice">Реестр временно недоступен.</div>:<div className="mediaGrid">{(data||[]).map(a=><article className="panel agentCard" key={a.key}><small>{states[a.execution_status]||'Статус неизвестен'} · {a.enabled?'включён':'выключен'}</small><h2>{a.title}</h2><p>{a.responsibility}</p><span className="statusPill">{a.may_publish?'Публикация разрешена':'Без права публикации'}</span></article>)}</div>}<section className="prose"><h2>Медиатека</h2><p>Оригиналы, проверенные производные файлы и публичные публикации должны храниться раздельно. Выдача загрузочных разрешений отключена до проверки персональных данных, настройки закрытого хранилища, квот и обработки файлов. Размещать крупное видео в GitHub или в таблицах PostgreSQL не предусмотрено.</p></section></main>}
+export const metadata=pageMetadata('Состояние помощников и редакции','Реальные очереди, исполнители и границы публикации Winter Sports Hub.','/platform',false);
+const names:Record<string,string>={'media-watch':'Сбор источников','photo-scout':'Поиск фотографий','media-curator':'Проверка медиатеки',research:'Исследование','fact-check':'Проверка фактов','editorial-writer':'Редактор','visual-director':'Оформление',qa:'Контроль качества',publisher:'Публикация',orchestrator:'Маршрутизация'};
+const modes:Record<string,string>={'github-action':'Сбор по расписанию','model-runtime':'Модельный исполнитель','deterministic-qa':'Проверка без модели','deterministic-publisher':'Выпуск материала',internal:'Внутренний модуль'};
+const summaries:Record<string,string>={unknown:'Телеметрия недоступна',attention:'Есть задания с ошибками',review:'Материалы ждут проверки',running:'Есть задания в работе',ready:'Есть готовые задания',idle:'Нет готовых заданий'};
+function time(value:string|null){return value?new Intl.DateTimeFormat('ru-RU',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Moscow'}).format(new Date(value))+' МСК':'Нет данных'}
+async function snapshot():Promise<OperationsSnapshot>{
+ try{return await readOperationsSnapshot(createAgentSupabaseClient())}
+ catch{return {available:false,checkedAt:new Date().toISOString(),counts:null,readyCandidates:null,readyCapped:false,latestCompletedAt:null,state:'unknown'}}
+}
+export default async function Platform(){
+ const data=await snapshot(),count=(key:'queued'|'running'|'review'|'failed'|'legacy')=>data.counts?.[key]??'—';
+ return <main id="main-content"><SiteNav/>
+  <header className={styles.header}><div><span className={styles.kicker}>WINTER SPORTS HUB / КОНТРОЛЬ РАБОТЫ</span><h1>От источника<br/><span>до публикации.</span></h1><p>Состояние очередей на момент загрузки страницы. Включённый исполнитель и завершённая работа показаны отдельно.</p></div><div className={styles.signal} data-state={data.state}><span>{summaries[data.state]}</span><small>Проверка: {time(data.checkedAt)}</small><small>Последний завершённый вызов модели: {time(data.latestCompletedAt)}</small></div></header>
+  {!data.available&&<p className={styles.notice} role="status">Не удалось получить состояние закрытых очередей. Прочерки означают отсутствие данных, а не отсутствие ошибок. Параметры подключения и содержимое заданий здесь не выводятся.</p>}
+  <section className={styles.metrics} aria-label="Состояние очередей">
+   {[['Готовы к исполнению',data.readyCandidates===null?'—':String(data.readyCandidates)+(data.readyCapped?'+':''),'Прошли условия зависимостей и допуска.'],['В работе',count('running'),'Задания в состоянии running.'],['Нужна проверка',count('review'),'Сюда входит приём наблюдений из медиа.'],['Ошибки',count('failed'),'Задания, завершившиеся неудачно.']].map(([label,value,note])=><article key={label}><small>{label}</small><strong>{value}</strong><p>{note}</p></article>)}
+  </section>
+  <section className={styles.flow} aria-label="Путь материала">
+   {[['01','Собрать','Новые сообщения и изменения поступают в отдельную очередь.'],['02','Подтвердить','Исследование и проверка фактов работают с сохранёнными доказательствами.'],['03','Подготовить','Редактор создаёт черновик, затем выполняется контроль качества.'],['04','Выпустить','Публикация отключена до подключения проверенного адаптера выпуска.']].map(([n,title,text])=><article key={n}><span>{n}</span><h2>{title}</h2><p>{text}</p></article>)}
+  </section>
+  <section className={styles.queue}><div><span className={styles.kicker}>ПЕРЕДАЧА МАТЕРИАЛОВ</span><h2>Что ожидает следующего шага</h2><p>Ожидание проверки не означает сбой сборщика. Старые задания превью и итогов не выполняются новым движком автоматически.</p></div><dl><div><dt>Очередь нового движка</dt><dd>{count('queued')}</dd></div><div><dt>Старая редакционная очередь</dt><dd>{count('legacy')}</dd></div></dl></section>
+  <section className={styles.workers}><div className={styles.sectionHead}><h2>Исполнители</h2><p>Настройки кода, а не подтверждение последнего успешного запуска.</p></div><div className={styles.workerGrid}>{Object.entries(workers.workers).map(([id,worker])=><article key={id}><div><h3>{names[id]||id}</h3><span data-enabled={worker.enabled}>{worker.enabled?'Включён':'Отключён'}</span></div><p>{modes[worker.mode]||worker.mode}</p>{id==='publisher'&&<small>Готовый черновик ещё не является опубликованной статьёй.</small>}</article>)}</div></section>
+  <div className={styles.footerLinks}><Link href="/data-health">Качество календаря ↗</Link><Link href="/methodology">Как проверяются факты ↗</Link><Link href="/media">Опубликованные материалы ↗</Link></div>
+ </main>;
+}

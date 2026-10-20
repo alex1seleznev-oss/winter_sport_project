@@ -1,6 +1,7 @@
 import {mkdirSync,writeFileSync,readFileSync} from 'node:fs';
 import {isDeepStrictEqual} from 'node:util';
-import {fetchOfficialHtml,describeSourceError} from './lib/fetch-official.mjs';
+import {describeSourceError} from './lib/fetch-official.mjs';
+import {fetchOfficialWithRetry} from './lib/fetch-official-retry.mjs';
 import {parseFisEventDetail,summarizeFisSessions,FIS_EVENT_DETAIL_VERSION} from './lib/parse-fis-event-detail.mjs';
 import {applyReviewedFisOverrides} from './lib/apply-fis-session-overrides.mjs';
 
@@ -12,7 +13,7 @@ for(const rawStage of baseline.stages){
  const stage=applyReviewedFisOverrides(rawStage,reviewedOverrides);
  let provenance;
  try{
-  const fetched=await fetchOfficialHtml(stage.sourceUrl);
+  const fetched=await fetchOfficialWithRetry(stage.sourceUrl);
   const {html,...metadata}=fetched;provenance=metadata;
   writeFileSync('artifacts/fis-event-'+stage.eventId+'.html',html);
   const parsed=parseFisEventDetail(html,{sourceUrl:stage.sourceUrl,expected:stage});
