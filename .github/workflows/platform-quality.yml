@@ -76,9 +76,15 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run test:source
+      - name: Read-only IBU observer contract beyond Kontiolahti
+        run: node scripts/agents/prepare-ibu-official-story.mjs
+        env:
+          IBU_OBSERVER_RUN_NUMBER: '2'
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
           name: followthrough-fis-live-evidence
-          path: artifacts/fis-live-contract.json
+          path: |
+            artifacts/fis-live-contract.json
+            artifacts/official-story/
           retention-days: 3

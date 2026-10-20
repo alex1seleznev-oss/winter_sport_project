@@ -38,8 +38,10 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Verify bounded official-story contracts
         run: node --test tests/official-story-intake.test.mjs tests/fetch-ibu-datacenter.test.mjs tests/fetch-official.test.mjs tests/official-story-upload-contract.test.mjs tests/official-story-edge-contract.test.mjs
-      - name: Prepare IBU candidate from official Datacenter
+      - name: Prepare one rotating IBU World Cup candidate
         run: node scripts/agents/prepare-ibu-official-story.mjs
+        env:
+          IBU_OBSERVER_RUN_NUMBER: ${{ github.run_number }}
       - name: Upload candidate through GitHub OIDC
         run: node scripts/agents/upload-official-story.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

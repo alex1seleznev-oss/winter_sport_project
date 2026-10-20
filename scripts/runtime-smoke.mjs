@@ -35,7 +35,7 @@ try{
  await check('/api/media/upload-ticket',503,body=>assert.match(body,/MEDIA_UPLOADS_DISABLED/),{method:'POST'});
  await check('/api/source-status',200,body=>{const data=JSON.parse(body);assert.equal(data.ok,true);assert.ok(data.sources.length>=4)});
  await check('/data-health',200,body=>assert.match(body,/Гонки с источником/));
- await check('/platform',200,body=>{assert.match(body,/Помощники с границами/);assert.match(body,/выключен/)});
+ await check('/platform',200,body=>{assert.match(body,/aria-label="Состояние очередей"/);assert.match(body,/data-enabled="false"/);assert.match(body,/Публикация отключена/);assert.match(body,/noindex/)});
  await check('/robots.txt',200,body=>assert.match(body,/Disallow: \//));
  await stop(); await start();
  await check('/api/sync',503,body=>assert.match(body,/SOURCE_CHECK_NOT_CONFIGURED/));

@@ -1,13 +1,15 @@
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {fetchIbuDatacenterEvents} from '../lib/fetch-ibu-datacenter.mjs';
-import {buildIbuKontiolahtiCandidate,IBU_KONTIOLAHTI_SOURCE_URL} from './official-story-candidate.mjs';
+import {buildIbuWorldCupCandidate,IBU_KONTIOLAHTI_SOURCE_URL} from './official-story-candidate.mjs';
 
 const fetched=await fetchIbuDatacenterEvents(IBU_KONTIOLAHTI_SOURCE_URL);
-const candidate=buildIbuKontiolahtiCandidate({events:fetched.data,observedAt:fetched.fetchedAt,sourceUrl:fetched.sourceUrl,language:'ru'});
+const runNumber=Number(process.env.IBU_OBSERVER_RUN_NUMBER||'1');
+if(!Number.isSafeInteger(runNumber)||runNumber<1)throw new Error('IBU_OBSERVER_RUN_NUMBER_INVALID');
+const {candidate,eventId,coverage}=buildIbuWorldCupCandidate({events:fetched.data,rotation:runNumber-1,observedAt:fetched.fetchedAt,sourceUrl:fetched.sourceUrl,language:'ru'});
 mkdirSync('artifacts/official-story',{recursive:true});
 writeFileSync('artifacts/official-story/candidate.json',JSON.stringify(candidate,null,2));
 writeFileSync('artifacts/official-story/source-receipt.json',JSON.stringify({
-  sourceKey:candidate.sourceKey,
+  eventId,coverage,sourceKey:candidate.sourceKey,
   sourceUrl:candidate.sourceUrl,
   storyKey:candidate.storyKey,
   revision:candidate.revision,
@@ -18,4 +20,4 @@ writeFileSync('artifacts/official-story/source-receipt.json',JSON.stringify({
   transport:fetched.transport,
   tlsVerified:fetched.tlsVerified===true
 },null,2));
-console.log(JSON.stringify({ok:true,storyKey:candidate.storyKey,revision:candidate.revision,sourceKey:candidate.sourceKey}));
+console.log(JSON.stringify({ok:true,storyKey:candidate.storyKey,revision:candidate.revision,sourceKey:candidate.sourceKey,eventId,coverage,candidates:1}));

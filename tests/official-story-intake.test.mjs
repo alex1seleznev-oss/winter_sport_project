@@ -50,3 +50,31 @@ test('legacy .NET date values remain readable without weakening the event contra
   const end=Date.parse('2026-11-29T00:00:00Z');
   assert.equal(extractIbuKontiolahtiEvidence(events({StartDate:`/Date(${start})/`,EndDate:`/Date(${end})/`})),'IBU Datacenter event BT2627SWRLCP01. Venue: Kontiolahti. Start: 2026-11-26. End: 2026-11-29.');
 });
+
+import {selectIbuWorldCupEvent,buildIbuWorldCupCandidate} from '../scripts/agents/official-story-candidate.mjs';
+
+test('observer rotates across official World Cup events without changing Kontiolahti identity',()=>{
+ const options={events:events(),observedAt:'2026-10-20T12:00:00Z'};
+ const first=buildIbuWorldCupCandidate({...options,rotation:0}),next=buildIbuWorldCupCandidate({...options,rotation:1});
+ assert.equal(first.coverage,2);
+ assert.equal(first.candidate.storyKey,buildIbuKontiolahtiCandidate(options).storyKey);
+ assert.equal(next.eventId,'BT2627SWRLCP02');
+ assert.match(next.candidate.evidence,/Venue: Hochfilzen/);
+ assert.equal(selectIbuWorldCupEvent([...events()].reverse(),3).event.EventId,next.eventId);
+ assert.equal(next.candidate.namedPersonMedia,false);
+ assert.equal(next.candidate.sourceUrl,IBU_KONTIOLAHTI_SOURCE_URL);
+});
+test('rotating candidates reuse evidence revisions across observation times',()=>{
+ const options={events:events(),rotation:1,observedAt:'2026-10-20T12:00:00Z'};
+ const a=buildIbuWorldCupCandidate(options).candidate,b=buildIbuWorldCupCandidate({...options,observedAt:'2026-10-20T12:01:00Z'}).candidate;
+ assert.equal(a.storyKey,b.storyKey);
+ const changed=events();changed[2].EndDate='2026-12-07T00:00:00Z';
+ assert.notEqual(a.storyKey,buildIbuWorldCupCandidate({...options,events:changed}).candidate.storyKey);
+});
+test('rotation rejects duplicate events, empty coverage and invalid calendar dates',()=>{
+ assert.throws(()=>selectIbuWorldCupEvent([...events(),events()[2]],0),/AMBIGUOUS/);
+ assert.throws(()=>selectIbuWorldCupEvent([],0),/EVENTS_MISSING/);
+ assert.throws(()=>selectIbuWorldCupEvent(events(),-1),/ROTATION_INVALID/);
+ assert.throws(()=>selectIbuWorldCupEvent(events(),1.5),/ROTATION_INVALID/);
+ assert.throws(()=>extractIbuKontiolahtiEvidence(events({StartDate:'2027-02-30T00:00:00Z'})),/START_DATE_INVALID/);
+});
