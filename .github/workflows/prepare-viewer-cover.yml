@@ -1,0 +1,54 @@
+name: Prepare reviewed viewer landscape
+on:
+  push:
+    branches: ['design/viewer-first-home']
+    paths: ['scripts/visual/prepare-viewer-cover.mjs','content/visual/viewer-cover-source.json','.github/workflows/prepare-viewer-cover.yml']
+permissions:
+  contents: read
+concurrency:
+  group: reviewed-viewer-cover
+  cancel-in-progress: false
+jobs:
+  prepare:
+    if: github.repository == 'alex1seleznev-oss/winter_sport_project' && github.ref == 'refs/heads/design/viewer-first-home'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Verify original hash and create bounded local WebP versions
+        run: node scripts/visual/prepare-viewer-cover.mjs
+      - name: Commit only the reviewed landscape assets
+        env:
+          PUSH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- public/home/winter-landscape-720.webp public/home/winter-landscape-1280.webp public/home/winter-landscape-1920.webp content/visual/viewer-cover.json
+          git diff --cached --name-only | while read -r f; do case "$f" in public/home/winter-landscape-720.webp|public/home/winter-landscape-1280.webp|public/home/winter-landscape-1920.webp|content/visual/viewer-cover.json) ;; *) exit 1 ;; esac; done
+          git diff --cached --quiet && exit 0
+          askpass="$RUNNER_TEMP/wsh-cover-askpass"
+          cat > "$askpass" <<'SH'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' x-access-token ;;
+            *Password*) printf '%s\n' "$PUSH_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          SH
+          chmod 700 "$askpass"
+          trap 'rm -f "$askpass"' EXIT
+          export GIT_ASKPASS="$askpass" GIT_TERMINAL_PROMPT=0
+          current=$(git -c credential.helper= ls-remote origin refs/heads/design/viewer-first-home | cut -f1)
+          test "$current" = "$GITHUB_SHA"
+          git commit -m 'Add verified local wide winter landscape and attribution'
+          git -c credential.helper= push origin HEAD:refs/heads/design/viewer-first-home

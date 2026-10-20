@@ -1,0 +1,38 @@
+{
+  "key": "la-rosiere-winter-2025",
+  "title": "Лыжная трасса в Ла-Розьер, Французские Альпы",
+  "author": "Florian Pépellin",
+  "capturedOn": "2025-12-27",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sentier_des_Cr%C3%AAtes_enneig%C3%A9_%C3%A0_La_Rosi%C3%A8re_(d%C3%A9cembre_2025).JPG",
+  "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Sentier_des_Cr%C3%AAtes_enneig%C3%A9_%C3%A0_La_Rosi%C3%A8re_%28d%C3%A9cembre_2025%29.JPG",
+  "sourceSha1": "dcfee43ee48023bb0ea46bfb258cec79281f3bd3",
+  "originalWidth": 3616,
+  "originalHeight": 2684,
+  "derivativeNote": "Кадрирование до 16:9, уменьшение и WebP. Цвет, детали пейзажа и содержимое кадра не дорисовывались. Производные файлы — CC BY-SA 4.0.",
+  "sourceSha256": "1df72acd73d47d99f8e6308af9c71b3ff2aa24c509d8af985dfe9396e796f2cc",
+  "variants": [
+    {
+      "src": "/home/winter-landscape-720.webp",
+      "width": 720,
+      "height": 405,
+      "bytes": 37864,
+      "sha256": "71a317b9fef9436457b9c75a1b002e32f6988161590f987ed25551ba2bebf026"
+    },
+    {
+      "src": "/home/winter-landscape-1280.webp",
+      "width": 1280,
+      "height": 720,
+      "bytes": 113956,
+      "sha256": "af7b96aff3852faefb996ba2da87131fcef8c54123f70c3baa02076343ef372b"
+    },
+    {
+      "src": "/home/winter-landscape-1920.webp",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 227398,
+      "sha256": "d0c75bb27da78bc3395508c32db3db7b8ed69bf5324878c577b37ef4aa927a9f"
+    }
+  ]
+}
