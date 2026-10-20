@@ -16,6 +16,7 @@ import {guides} from '../lib/guides';
 import {pageMetadata,siteOrigin} from '../lib/seo';
 import styles from '../components/home/ViewerHome.module.css';
 export const dynamic='force-dynamic';
+export const viewport={themeColor:'#f7fafc'};
 export const metadata=pageMetadata('Биатлон и лыжные гонки 2026–2027: календарь и трансляции','Календарь зимних гонок, время стартов по Москве, информация о трансляциях и материалы о сезоне. Сохраните важные этапы в «Мой сезон».','/');
 export default async function Home(){
  const data=await getStageCatalogue(),snapshot=homeSeason(data.models,moscowDate()),featured=snapshot.stage,c=featured?.competition;
