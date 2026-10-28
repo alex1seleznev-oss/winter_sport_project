@@ -27,4 +27,7 @@ packet.delta=delta(previous,packet);
 try{packet.previousReceipt=JSON.parse(readFileSync('artifacts/previous-media-watch/receipt.json','utf8'))}catch{packet.previousReceipt=null}
 writeFileSync(out+'/packet.json',JSON.stringify(packet,null,2)+'\n');
 const health={schemaVersion:2,parserVersion:VERSION,completedAt:packet.completedAt,totals:packet.totals,sources:packet.sources.map(({key,status,error,retained,warnings,replayStable})=>({key,status,error,retained,warningsCount:warnings?.length||0,replayStable})),notConnected:packet.notConnected,packetHash:packet.packetHash,delta:{baselineAvailable:packet.delta.baselineAvailable,newReferences:packet.delta.newReferences.length,changedReferences:packet.delta.changedReferences.length,sourceStateChanges:packet.delta.sourceStateChanges},databaseWrites:0};writeFileSync(out+'/health.json',JSON.stringify(health,null,2)+'\n');console.log(JSON.stringify(health,null,2));
-if(!packet.totals.parsedSources||packet.sources.some(s=>s.status==='error'))process.exitCode=1;
+// A timed-out source must not block validated observations from healthy sources.
+// Keep its error in the report; parser and integrity failures still stop intake.
+for(const source of packet.sources.filter(s=>s.status==='error'&&s.error==='TIMEOUT'))console.warn(`::warning::Public media source ${source.key} timed out; coverage is incomplete.`);
+if(!packet.totals.parsedSources||packet.sources.some(s=>s.status==='error'&&s.error!=='TIMEOUT'))process.exitCode=1;
