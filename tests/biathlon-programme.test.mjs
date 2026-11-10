@@ -9,3 +9,13 @@ test('wrong venue or dates fail instead of mixing Munich with Kontiolahti',()=>{
 test('preproduction and unknown paths are never official publication sources',()=>{for(const u of ['https://preprod.biathlon-annecy-legrandbornand.com/','https://kontiolahtibiathlon.com/unknown','http://kontiolahtibiathlon.com/','https://user:pass@kontiolahtibiathlon.com/en/kontiolahti-biathlon-world-cup/program-and-tickets'])assert.throws(()=>checkProgrammeUrl(u));});
 test('duplicate and empty race sets fail closed; source scripts cannot become data',()=>{assert.throws(()=>parseOrganizerProgramme(html().replace('</ul>','<li>17.10 Individual, Men 20 km</li></ul>'),e),/DUPLICATE/);assert.throws(()=>parseOrganizerProgramme('<body>Kontiolahti 2026<script>Thursday 26.11.2026\n17.10 Individual, Men 20 km</script></body>',e),/EMPTY/)});
 test('missing record is not cancellation',()=>{const p=parseOrganizerProgramme(html(),e);const d=compareOrganizerProgramme({...e,rows:[...e.rows,['2026-11-27','individual','women','17:10']]},p);assert.equal(d.changes[0].kind,'missing_slot_not_cancellation')});
+
+test('Hochfilzen numbered English day headings and official training are handled',()=>{
+ const h={key:'hochfilzen-en',stage:'hochfilzen',venue:'Hochfilzen',from:'2026-12-04',to:'2026-12-06',url:'https://www.biathlon-hochfilzen.at/competition-program.html',rows:[]};
+ const page='<html><body><h1>LaVita IBU Worldcup Biathlon (Hochfilzen, AUT) 02 December until 06 December 2026</h1><ol><li>03 Thursday 03.12.2026<p>Official training</p></li><li>04 Friday 04.12.2026<ul><li>11:25 Sprint Women</li><li>14:15 Sprint Men</li></ul></li><li>05 Saturday 05.12.2026<ul><li>12:15 Pursuit Women</li><li>14:30 Pursuit Men</li></ul></li><li>06 Sunday 06.12.2026<ul><li>11:30 Relay Women</li><li>14:15 Relay Men</li></ul></li></ol></body></html>';
+ const parsed=parseOrganizerProgramme(page,h);
+ assert.deepEqual(parsed.rows.map(r=>[r.date,r.kind,r.gender,r.rawClock]),[
+  ['2026-12-04','sprint','women','11:25'],['2026-12-04','sprint','men','14:15'],
+  ['2026-12-05','pursuit','women','12:15'],['2026-12-05','pursuit','men','14:30'],
+  ['2026-12-06','relay','women','11:30'],['2026-12-06','relay','men','14:15']]);
+});
