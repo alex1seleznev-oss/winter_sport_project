@@ -12,3 +12,15 @@ test('programme days and source lists preserve distinct race records',()=>{const
 test('same city in Russia and international sport does not leak through filters',()=>{const m=catalogueModels([stage,{...stage,id:25,sport:'biathlon',scope:'russia'}],[]);assert.equal(filterStageModels(m,normalizeStageFilters({sport:'biathlon',scope:'russia'})).length,1)});
 test('unknown rights and generated lookalikes cannot reach photo renderer',()=>{const valid={competitionKey:'test-ruka',publicationStatus:'published',rightsStatus:'licensed',identityReview:'verified',originalPreserved:true,src:'/media/stages/ruka.jpg',width:800,height:534,credit:'Test photographer',licence:'Test licence',rightsEvidence:'Test verified document reference',alt:'Test original',photoDate:'2026-01-01',sourcePage:'https://example.org/photo'};assert.ok(approvedStagePhoto(valid,'test-ruka'));for(const change of [{rightsStatus:'unverified'},{originalPreserved:false},{identityReview:'unreviewed'},{src:'https://olympteka.ru/image.jpg'},{credit:''},{rightsEvidence:''}])assert.equal(approvedStagePhoto({...valid,...change},'test-ruka'),null)});
 test('candidate set covers four directions, remains link-only, and never supplies a winner claim',()=>{const candidates=JSON.parse(readFileSync(new URL('../content/stage-photo-candidates.json',import.meta.url),'utf8'));assert.equal(new Set(candidates.map(c=>c.sport+'|'+c.scope)).size,4);assert.ok(candidates.every(c=>c.usage==='source_link_only'&&c.rightsStatus==='unverified'&&!c.winner));const approved=JSON.parse(readFileSync(new URL('../content/stage-photo-approved.json',import.meta.url),'utf8'));assert.ok(approved.every(a=>approvedStagePhoto(a,a.competitionKey)))});
+
+test('Creative Commons stage photos need source-bound rights evidence',()=>{
+ const approved=JSON.parse(readFileSync(new URL('../content/stage-photo-approved.json',import.meta.url),'utf8'));
+ assert.equal(approved.length,2);
+ for(const photo of approved){
+  assert.ok(approvedStagePhoto(photo,photo.competitionKey));
+  assert.equal(approvedStagePhoto({...photo,rightsEvidence:'Unknown permission'},photo.competitionKey),null);
+  assert.equal(approvedStagePhoto({...photo,licenceUrl:'https://fake.example/cc'},photo.competitionKey),null);
+  assert.equal(approvedStagePhoto({...photo,src:'https://random.example/picture.jpg'},photo.competitionKey),null);
+  assert.equal(approvedStagePhoto({...photo,originalPreserved:false},photo.competitionKey),null);
+ }
+});
