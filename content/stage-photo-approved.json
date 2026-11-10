@@ -1,1 +1,36 @@
-[]
+[
+  {
+    "competitionKey": "ibu-wc-2627-kontiolahti",
+    "publicationStatus": "published",
+    "rightsStatus": "licensed",
+    "identityReview": "verified",
+    "originalPreserved": true,
+    "src": "https://upload.wikimedia.org/wikipedia/commons/4/46/Kontiolahti_Biathlon_World_Cup_2014_1.jpg",
+    "width": 4614,
+    "height": 3018,
+    "credit": "Guillaume Baviere",
+    "licence": "CC BY-SA 2.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "rightsEvidence": "https://commons.wikimedia.org/wiki/File:Kontiolahti_Biathlon_World_Cup_2014_1.jpg",
+    "alt": "Биатлонный Кубок мира в Контиолахти — архивный снимок 2014 года",
+    "photoDate": "2014-03-16",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Kontiolahti_Biathlon_World_Cup_2014_1.jpg"
+  },
+  {
+    "competitionKey": "ibu-wc-2627-hochfilzen",
+    "publicationStatus": "published",
+    "rightsStatus": "licensed",
+    "identityReview": "verified",
+    "originalPreserved": true,
+    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7b/WM_Hochfilzen_2017-1.jpg",
+    "width": 4128,
+    "height": 2322,
+    "credit": "AnToni",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "rightsEvidence": "https://commons.wikimedia.org/wiki/File:WM_Hochfilzen_2017-1.jpg",
+    "alt": "Чемпионат мира по биатлону в Хохфильцене — архив 2017 года",
+    "photoDate": "2017-02-19",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:WM_Hochfilzen_2017-1.jpg"
+  }
+]
