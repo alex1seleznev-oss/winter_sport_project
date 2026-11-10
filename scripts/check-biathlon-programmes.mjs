@@ -1,5 +1,5 @@
 // Read-only organizer source checks. No database keys, writes, approvals or timezone guesses.
-import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';import {createHash} from 'node:crypto';
+import {readFileSync,mkdirSync,writeFileSync,appendFileSync} from 'node:fs';import {createHash} from 'node:crypto';
 import {checkProgrammeUrl,parseOrganizerProgramme,compareOrganizerProgramme,sourceClockConflicts} from './lib/biathlon-programme.mjs';
 const baseline=JSON.parse(readFileSync(new URL('../config/biathlon-programmes.json',import.meta.url),'utf8'));
 const reports=[],parsed=[];
@@ -14,7 +14,17 @@ for(const expected of baseline.sources){try{
  const raw=Buffer.concat(chunks);const programme=parseOrganizerProgramme(raw.toString('utf8'),expected);parsed.push(programme);
  reports.push({sourceKey:expected.key,ok:true,receipt:{url,fetchedAt:new Date().toISOString(),sha256:createHash('sha256').update(raw).digest('hex'),bytes,httpStatus:response.status},...programme,...compareOrganizerProgramme(expected,programme)});
  }catch(e){reports.push({sourceKey:expected.key,url:expected.url,ok:false,error:e.message,networkCause:e.cause?.code??null})}}
-const conflicts=sourceClockConflicts(parsed);const changed=reports.some(r=>!r.ok||r.changes.length>0);
-const report={checkedAt:new Date().toISOString(),ok:reports.every(r=>r.ok),requiresReview:changed,status:changed?'source_error_or_changed_programme':'baseline_matched_with_time_caveats',sources:reports,conflicts,knownClockConflict:'kontiolahti|2026-11-29|sprint|women',databaseWrites:0,publishedTimes:0,scope:'Two organizer programmes, three language pages; compares stored source baseline, not live Supabase'};
+const conflicts=sourceClockConflicts(parsed);const sourceErrors=reports.filter(r=>!r.ok);
+const baselineChanges=reports.some(r=>r.ok&&r.changes.length>0);
+const requiresReview=sourceErrors.length>0||baselineChanges||conflicts.length>0;
+const status=sourceErrors.length?'source_error':requiresReview?'review_required':'baseline_matched_with_time_caveats';
+const report={checkedAt:new Date().toISOString(),ok:sourceErrors.length===0,requiresReview,status,sources:reports,conflicts,knownClockConflict:'kontiolahti|2026-11-29|sprint|women',databaseWrites:0,publishedTimes:0,scope:'Two organizer programmes, three language pages; compares stored source baseline, not live Supabase'};
 mkdirSync('artifacts',{recursive:true});writeFileSync('artifacts/biathlon-programme-review.json',JSON.stringify(report,null,2));console.log(JSON.stringify({status:report.status,sourceChecks:reports.map(r=>({key:r.sourceKey,ok:r.ok,error:r.error,changes:r.changes?.length})),conflicts:conflicts.length,databaseWrites:0},null,2));
-if(changed)process.exitCode=1;
+if(requiresReview){
+ const differenceCount=reports.reduce((count,r)=>count+(r.changes?.length??0),0);
+ const message=`${sourceErrors.length} source errors, ${differenceCount} baseline changes and ${conflicts.length} cross-language clock conflicts. No times were published.`;
+ console.log(`::warning title=Biathlon organizer review::${message}`);
+ if(process.env.GITHUB_STEP_SUMMARY)appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+  `## Biathlon organizer review\n\n- Status: **${status}**\n- Source errors: ${sourceErrors.length}\n- Baseline changes: ${differenceCount}\n- Cross-language clock conflicts: ${conflicts.length}\n- Database writes: 0\n\nReview the uploaded **biathlon-programme-review** artifact before accepting changed start times.\n`);
+}
+if(sourceErrors.length)process.exitCode=1;
