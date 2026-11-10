@@ -27,7 +27,7 @@ export function parseOrganizerProgramme(html,expected){
  const lines=$('body').text().split(/\n+/).map(clean).filter(Boolean);
  const rows=[];let date=null;const warnings=[];
  for(const line of lines){
-  const day=line.match(/^(?:Thursday|Friday|Saturday|Sunday|Torstai|Perjantai|Lauantai|Sunnuntai)[,\s]+(\d{2})[./](\d{2})[./](20\d{2})\s*:?$/i);
+  const day=line.match(/^(?:\d{2}\s+)?(?:Thursday|Friday|Saturday|Sunday|Torstai|Perjantai|Lauantai|Sunnuntai)[,\s]+(\d{2})[./](\d{2})[./](20\d{2})\s*:?$/i);
   if(day){const candidate=`${day[3]}-${day[2]}-${day[1]}`;const parsed=new Date(candidate+'T12:00:00Z');if(Number.isNaN(parsed.getTime())||parsed.toISOString().slice(0,10)!==candidate)throw new Error('ORGANIZER_INVALID_DATE');date=candidate;continue;}
   const timed=line.match(/^([01]?\d|2[0-3])[.:]([0-5]\d)\s*:?\s+(.+)$/u);if(!timed)continue;
   const label=timed[3],event=classify(label);if(!event)continue;
